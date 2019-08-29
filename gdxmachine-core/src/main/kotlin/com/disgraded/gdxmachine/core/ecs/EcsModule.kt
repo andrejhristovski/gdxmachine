@@ -38,6 +38,10 @@ class EcsModule(val game: Game) : EngineModule {
         for (group in groups) {
             group.value.clear()
         }
+
+        for (groupListener in groupListeners) {
+            groupListener.value.clear()
+        }
     }
 
     fun update() {
@@ -57,6 +61,10 @@ class EcsModule(val game: Game) : EngineModule {
             if (!groups.containsKey(entity.group)) {
                 groups[entity.group] = arrayListOf()
                 groupListeners[entity.group] = arrayListOf()
+            } else {
+                for (groupListener in groupListeners[entity.group]!!) {
+                    groupListener.entityAdded(entity)
+                }
             }
             groups[entity.group]!!.add(entity)
         }
@@ -65,6 +73,9 @@ class EcsModule(val game: Game) : EngineModule {
     fun removeFromGroup(entity: Entity) {
         if (entity.group !== null) {
             groups[entity.group]!!.remove(entity)
+            for (groupListener in groupListeners[entity.group]!!) {
+                groupListener.entityRemoved(entity)
+            }
         }
     }
 
