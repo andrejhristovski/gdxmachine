@@ -9,11 +9,13 @@ import kotlin.reflect.KClass
 class EcsApi(private val ecsModule: EcsModule) : ModuleApi {
     fun add(entity: Entity) {
         ecsModule.engine.addEntity(entity)
+        ecsModule.addToGroup(entity)
         entity.initialize(ecsModule.game)
     }
 
     fun remove(entity: Entity) {
         ecsModule.engine.removeEntity(entity)
+        ecsModule.removeFromGroup(entity)
         entity.destroy()
     }
 
@@ -31,6 +33,10 @@ class EcsApi(private val ecsModule: EcsModule) : ModuleApi {
             list.add(entity as Entity)
         }
         return list
+    }
+
+    fun get(group: String) : ArrayList<Entity> {
+        return ecsModule.getByGroup(group)
     }
 
     fun removeAll() {
@@ -57,7 +63,12 @@ class EcsApi(private val ecsModule: EcsModule) : ModuleApi {
         ecsModule.engine.addEntityListener(family, listener)
     }
 
+    fun addListener(group: String, listener: EntityListener) {
+        ecsModule.addGroupListener(group, listener)
+    }
+
     fun removeListener(listener: EntityListener) {
         ecsModule.engine.removeEntityListener(listener)
+        ecsModule.removeGroupListener(listener)
     }
 }

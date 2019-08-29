@@ -1,6 +1,5 @@
 package com.disgraded.gdxmachine.core.engine
 
-import com.badlogic.ashley.signals.Listener
 import com.badlogic.gdx.ApplicationListener
 import com.disgraded.gdxmachine.core.EntryPoint
 import com.disgraded.gdxmachine.core.ecs.EcsApi
@@ -65,13 +64,11 @@ class Engine private constructor(private val entryPoint: EntryPoint) : Applicati
     }
 
     override fun dispose() {
-        sceneModule.destroyCurrentScene()
-
-        entryPoint.destroy()
-
         ecsModule.unload()
         sceneModule.unload()
         resourceModule.unload()
+
+        entryPoint.destroy()
     }
 
     fun reset() {
