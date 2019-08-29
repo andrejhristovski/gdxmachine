@@ -4,6 +4,8 @@ import com.badlogic.gdx.ApplicationListener
 import com.disgraded.gdxmachine.core.EntryPoint
 import com.disgraded.gdxmachine.core.resources.ResourceApi
 import com.disgraded.gdxmachine.core.resources.ResourceModule
+import com.disgraded.gdxmachine.core.scene.SceneApi
+import com.disgraded.gdxmachine.core.scene.SceneModule
 
 class Engine private constructor(private val entryPoint: EntryPoint) : ApplicationListener {
 
@@ -20,19 +22,24 @@ class Engine private constructor(private val entryPoint: EntryPoint) : Applicati
 
     private var game = Game
     private lateinit var resourceModule: ResourceModule
+    private lateinit var sceneModule: SceneModule
 
     override fun create() {
         resourceModule = ResourceModule(game)
+        sceneModule = SceneModule(game)
 
         resourceModule.load()
+        sceneModule.load()
 
         game.resources = resourceModule.api as ResourceApi
+        game.scene = sceneModule.api as SceneApi
 
         entryPoint.initialize(game)
     }
 
     override fun render() {
         resourceModule.update()
+        sceneModule.update()
     }
 
     override fun pause() {
@@ -50,6 +57,7 @@ class Engine private constructor(private val entryPoint: EntryPoint) : Applicati
     override fun dispose() {
         entryPoint.destroy()
 
+        sceneModule.unload()
         resourceModule.unload()
     }
 }
