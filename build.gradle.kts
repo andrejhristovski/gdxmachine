@@ -29,7 +29,7 @@ buildscript {
 
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        classpath("com.android.tools.build:gradle:3.4.1")
+        classpath("com.android.tools.build:gradle:3.5.0")
     }
 }
 
@@ -37,7 +37,7 @@ allprojects {
 
     group = "com.disgraded.gdxmachine"
     version = "0.0.0-prototype"
-    extra["versionNumber"] = 5
+    extra["versionNumber"] = 1
 
     extra["gdxVersion"] = "1.9.10"
     extra["ashleyVersion"] = "1.7.3"
