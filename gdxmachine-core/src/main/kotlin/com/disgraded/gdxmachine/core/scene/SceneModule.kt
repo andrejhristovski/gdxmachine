@@ -1,5 +1,6 @@
 package com.disgraded.gdxmachine.core.scene
 
+import com.badlogic.ashley.signals.Signal
 import com.disgraded.gdxmachine.core.engine.Game
 import com.disgraded.gdxmachine.core.engine.module.EngineModule
 import com.disgraded.gdxmachine.core.engine.module.ModuleApi
@@ -12,6 +13,9 @@ class SceneModule(private val game: Game) : EngineModule {
 
     override val api: ModuleApi
         get() = sceneApi
+
+
+    val onReset = Signal<Boolean>()
 
     private var nextScene: KClass<out Scene>? = null
     private var currentScene : Scene? = null
@@ -26,7 +30,10 @@ class SceneModule(private val game: Game) : EngineModule {
 
     fun update() {
         if (nextScene !== null) {
-            if (currentScene !== null) currentScene!!.destroy()
+            if (currentScene !== null) {
+                currentScene!!.destroy()
+                onReset.dispatch(true)
+            }
             currentScene = nextScene!!.createInstance()
             nextScene = null
             currentScene!!.initialize(game)

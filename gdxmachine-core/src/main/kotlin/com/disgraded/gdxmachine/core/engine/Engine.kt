@@ -1,5 +1,6 @@
 package com.disgraded.gdxmachine.core.engine
 
+import com.badlogic.ashley.signals.Listener
 import com.badlogic.gdx.ApplicationListener
 import com.disgraded.gdxmachine.core.EntryPoint
 import com.disgraded.gdxmachine.core.ecs.EcsApi
@@ -41,12 +42,14 @@ class Engine private constructor(private val entryPoint: EntryPoint) : Applicati
         game.scene = sceneModule.api as SceneApi
 
         entryPoint.initialize(game)
+
+        sceneModule.onReset.add { signal, `object` -> reset() }
     }
 
     override fun render() {
+        ecsModule.update()
         resourceModule.update()
         sceneModule.update()
-        ecsModule.update()
     }
 
     override fun pause() {
@@ -69,5 +72,9 @@ class Engine private constructor(private val entryPoint: EntryPoint) : Applicati
         ecsModule.unload()
         sceneModule.unload()
         resourceModule.unload()
+    }
+
+    fun reset() {
+        ecsModule.reset()
     }
 }

@@ -10,7 +10,6 @@ class SandboxGame : EntryPoint {
     override fun initialize(game: Game) {
         println("game was initialized")
         game.resources.load(InitialAssets::class)
-
         game.scene.set(FirstScene::class)
     }
 
