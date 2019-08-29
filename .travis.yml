@@ -21,12 +21,12 @@ android:
 
 before_install:
   - yes | sdkmanager "platforms;android-28"
-  - chmod -R +x quariq-framework/src
-  - chmod -R +x quariq-platform-desktop/src
-  - chmod -R +x quariq-platform-android/src
-  - chmod -R +x quariq-sandbox-desktop/src
-  - chmod -R +x quariq-sandbox-android/src
-  - chmod -R +x quariq-sandbox-source/src
+  - chmod -R +x gdxmachine-core/src
+  - chmod -R +x gdxmachine-platform-desktop/src
+  - chmod -R +x gdxmachine-platform-android/src
+  - chmod -R +x gdxmachine-sandbox-desktop/src
+  - chmod -R +x gdxmachine-sandbox-android/src
+  - chmod -R +x gdxmachine-sandbox-source/src
   - chmod +x gradlew
 
 script: ./gradlew clean build
