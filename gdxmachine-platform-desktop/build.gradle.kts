@@ -61,7 +61,6 @@ publishing {
 
             pom {
                 name.set(project.name)
-                url.set("https://www.disgraded.com")
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
@@ -71,15 +70,15 @@ publishing {
 
                 developers {
                     developer {
-                        id.set("disgraded")
-                        name.set("DisGraded")
-                        email.set("disgraded@outlook.com")
+                        id.set("kalevski")
+                        name.set("Daniel Kalevski")
+                        email.set("kalevski@outlook.com")
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://github.com/disgraded/gdxmachine.git")
-                    developerConnection.set("scm:git:ssh://github.com:disgraded/gdxmachine.git")
-                    url.set("https://github.com/disgraded/gdxmachine")
+                    connection.set("scm:git:git://github.com/kalevski/gdxmachine.git")
+                    developerConnection.set("scm:git:ssh://github.com:kalevski/gdxmachine.git")
+                    url.set("https://github.com/kalevski/gdxmachine")
                 }
             }
         }
