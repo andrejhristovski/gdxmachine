@@ -1,0 +1,32 @@
+language: android
+jdk: oraclejdk8
+
+env:
+  global:
+    - ANDROID_API_LEVEL=28
+    - ANDROID_BUILD_TOOLS_VERSION=28.0.3
+
+android:
+  licenses:
+    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
+  components:
+    - tools
+    - platform-tools
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
+    - build-tools-28.0.3
+
+before_install:
+  - yes | sdkmanager "platforms;android-28"
+  - chmod -R +x quariq-framework/src
+  - chmod -R +x quariq-platform-desktop/src
+  - chmod -R +x quariq-platform-android/src
+  - chmod -R +x quariq-sandbox-desktop/src
+  - chmod -R +x quariq-sandbox-android/src
+  - chmod -R +x quariq-sandbox-source/src
+  - chmod +x gradlew
+
+script: ./gradlew clean build
