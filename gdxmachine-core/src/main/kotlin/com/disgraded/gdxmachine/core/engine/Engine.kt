@@ -2,6 +2,8 @@ package com.disgraded.gdxmachine.core.engine
 
 import com.badlogic.gdx.ApplicationListener
 import com.disgraded.gdxmachine.core.EntryPoint
+import com.disgraded.gdxmachine.core.ecs.EcsApi
+import com.disgraded.gdxmachine.core.ecs.EcsModule
 import com.disgraded.gdxmachine.core.resources.ResourceApi
 import com.disgraded.gdxmachine.core.resources.ResourceModule
 import com.disgraded.gdxmachine.core.scene.SceneApi
@@ -21,16 +23,20 @@ class Engine private constructor(private val entryPoint: EntryPoint) : Applicati
     }
 
     private var game = Game
+    private lateinit var ecsModule: EcsModule
     private lateinit var resourceModule: ResourceModule
     private lateinit var sceneModule: SceneModule
 
     override fun create() {
+        ecsModule = EcsModule(game)
         resourceModule = ResourceModule(game)
         sceneModule = SceneModule(game)
 
+        ecsModule.load()
         resourceModule.load()
         sceneModule.load()
 
+        game.ecs = ecsModule.api as EcsApi
         game.resources = resourceModule.api as ResourceApi
         game.scene = sceneModule.api as SceneApi
 
@@ -40,6 +46,7 @@ class Engine private constructor(private val entryPoint: EntryPoint) : Applicati
     override fun render() {
         resourceModule.update()
         sceneModule.update()
+        ecsModule.update()
     }
 
     override fun pause() {
@@ -59,6 +66,7 @@ class Engine private constructor(private val entryPoint: EntryPoint) : Applicati
 
         entryPoint.destroy()
 
+        ecsModule.unload()
         sceneModule.unload()
         resourceModule.unload()
     }
