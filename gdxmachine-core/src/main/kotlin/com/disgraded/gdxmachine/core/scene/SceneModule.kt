@@ -21,9 +21,7 @@ class SceneModule(private val game: Game) : EngineModule {
     }
 
     override fun unload() {
-        if (currentScene !== null) currentScene!!.destroy()
-        currentScene = null
-        nextScene = null
+
     }
 
     fun update() {
@@ -36,6 +34,12 @@ class SceneModule(private val game: Game) : EngineModule {
         if (currentScene !== null) {
             currentScene!!.update()
         }
+    }
+
+    fun destroyCurrentScene() {
+        if (currentScene !== null) currentScene!!.destroy()
+        currentScene = null
+        nextScene = null
     }
 
     fun setScene(sceneClass: KClass<out Scene>) {

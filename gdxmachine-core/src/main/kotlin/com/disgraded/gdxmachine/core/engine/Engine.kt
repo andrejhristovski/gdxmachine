@@ -55,6 +55,8 @@ class Engine private constructor(private val entryPoint: EntryPoint) : Applicati
     }
 
     override fun dispose() {
+        sceneModule.destroyCurrentScene()
+
         entryPoint.destroy()
 
         sceneModule.unload()
