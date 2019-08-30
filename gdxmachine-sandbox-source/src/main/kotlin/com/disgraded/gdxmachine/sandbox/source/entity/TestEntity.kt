@@ -1,12 +1,11 @@
 package com.disgraded.gdxmachine.sandbox.source.entity
 
-import com.disgraded.gdxmachine.core.ecs.Entity
-import com.disgraded.gdxmachine.core.engine.Game
+import com.disgraded.gdxmachine.core.api.engine.Entity
 
-class TestEntity : Entity() {
+class TestEntity : Entity("test") {
 
-    override fun initialize(game: Game) {
-        println("entity initialized")
+    override fun initialize() {
+        println("entity created")
     }
 
     override fun update() {

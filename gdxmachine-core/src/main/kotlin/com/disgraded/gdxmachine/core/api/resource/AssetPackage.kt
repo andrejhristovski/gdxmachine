@@ -1,6 +1,9 @@
-package com.disgraded.gdxmachine.core.resources
+package com.disgraded.gdxmachine.core.api.resource
 
-import com.badlogic.gdx.assets.loaders.*
+import com.badlogic.gdx.assets.loaders.BitmapFontLoader
+import com.badlogic.gdx.assets.loaders.TextureAtlasLoader
+import com.badlogic.gdx.assets.loaders.TextureLoader
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Pixmap
@@ -10,17 +13,19 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
-import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.assets.AssetManager as GdxAssetManager
+import com.badlogic.gdx.utils.Disposable
 
-open class AssetPackage(val key: String): Disposable {
+open class AssetPackage(val packageKey: String) : Disposable {
 
-    private val manager = GdxAssetManager(FileHandleResolver(), true)
-    private val keys: HashMap<String, String> = hashMapOf()
+    private val gdxAssetManager = GdxAssetManager(InternalFileHandleResolver(), true)
+    private val assetKeys = hashMapOf<String, String>()
 
     init {
-        manager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(manager.fileHandleResolver))
-        manager.setLoader(BitmapFont::class.java, ".ttf", FreetypeFontLoader(manager.fileHandleResolver))
+        gdxAssetManager.setLoader(FreeTypeFontGenerator::class.java,
+                FreeTypeFontGeneratorLoader(gdxAssetManager.fileHandleResolver))
+        gdxAssetManager.setLoader(BitmapFont::class.java, ".ttf",
+                FreetypeFontLoader(gdxAssetManager.fileHandleResolver))
     }
 
     fun loadTexture(key: String, path: String, format: Pixmap.Format? = null, genMipMaps: Boolean = false,
@@ -28,7 +33,7 @@ open class AssetPackage(val key: String): Disposable {
                     magFilter: Texture.TextureFilter = Texture.TextureFilter.Nearest,
                     wrapU: Texture.TextureWrap = Texture.TextureWrap.ClampToEdge,
                     wrapV: Texture.TextureWrap = Texture.TextureWrap.ClampToEdge
-                    ) {
+    ) {
         val params = TextureLoader.TextureParameter()
         params.format = format
         params.genMipMaps = genMipMaps
@@ -36,13 +41,13 @@ open class AssetPackage(val key: String): Disposable {
         params.magFilter = magFilter
         params.wrapU = wrapU
         params.wrapV = wrapV
-        manager.load(path, Texture::class.java, params)
-        keys[key] = path
+        gdxAssetManager.load(path, Texture::class.java, params)
+        assetKeys[key] = path
     }
 
     fun loadPixelMap(key: String, path: String) {
-        manager.load(path, Pixmap::class.java)
-        keys[key] = path
+        gdxAssetManager.load(path, Pixmap::class.java)
+        assetKeys[key] = path
     }
 
     fun loadBitmapFont(key: String, path: String, flip: Boolean = false, genMipMaps: Boolean = false,
@@ -53,54 +58,54 @@ open class AssetPackage(val key: String): Disposable {
         params.genMipMaps = genMipMaps
         params.minFilter = minFilter
         params.magFilter = magFilter
-        manager.load(path, BitmapFont::class.java, params)
-        keys[key] = path
+        gdxAssetManager.load(path, BitmapFont::class.java, params)
+        assetKeys[key] = path
     }
 
     fun loadFreeTypeFont(key: String, path: String, fontParams: FreeTypeFontGenerator.FreeTypeFontParameter
-                         = FreeTypeFontGenerator.FreeTypeFontParameter()) {
+    = FreeTypeFontGenerator.FreeTypeFontParameter()) {
         val params = FreetypeFontLoader.FreeTypeFontLoaderParameter()
         params.fontFileName = path
         params.fontParameters = fontParams
-        manager.load(path, BitmapFont::class.java, params)
-        keys[key] = path
+        gdxAssetManager.load(path, BitmapFont::class.java, params)
+        assetKeys[key] = path
     }
 
     fun loadTextureAtlas(key: String, path: String, flip: Boolean = false) {
         val params = TextureAtlasLoader.TextureAtlasParameter()
         params.flip = flip
-        manager.load(path, TextureAtlas::class.java, params)
-        keys[key] = path
+        gdxAssetManager.load(path, TextureAtlas::class.java, params)
+        assetKeys[key] = path
     }
 
     fun loadMusic(key: String, path: String) {
-        manager.load(path, Music::class.java)
-        keys[key] = path
+        gdxAssetManager.load(path, Music::class.java)
+        assetKeys[key] = path
     }
 
     fun loadSound(key: String, path: String) {
-        manager.load(path, Sound::class.java)
-        keys[key] = path
+        gdxAssetManager.load(path, Sound::class.java)
+        assetKeys[key] = path
     }
 
     fun update(): Boolean {
-        return manager.update()
+        return gdxAssetManager.update()
     }
 
-    fun instant() {
-        manager.finishLoading()
+    fun sync() {
+        gdxAssetManager.finishLoading()
     }
 
     fun <T> get(key: String): T {
-        if (keys.containsKey(key)) {
-            return manager.get(keys[key])
+        if (assetKeys.containsKey(key)) {
+            return gdxAssetManager.get(assetKeys[key])
         } else {
-            throw RuntimeException("Asset named as \"$key\" not found in the package [ ${this.key} ]")
+            throw RuntimeException("Asset named as \"$key\" not found in the package [ $packageKey ]")
         }
     }
 
     override fun dispose() {
-        manager.clear()
-        keys.clear()
+        gdxAssetManager.clear()
+        assetKeys.clear()
     }
 }

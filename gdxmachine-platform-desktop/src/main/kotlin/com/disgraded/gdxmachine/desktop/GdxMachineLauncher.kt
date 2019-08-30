@@ -3,14 +3,14 @@ package com.disgraded.gdxmachine.desktop
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 import com.disgraded.gdxmachine.core.EntryPoint
-import com.disgraded.gdxmachine.core.engine.Engine
+import com.disgraded.gdxmachine.core.Core
 
 class GdxMachineLauncher {
 
     fun run(entryPoint: EntryPoint) {
-        Engine.boot(entryPoint)
+        Core.run(entryPoint)
         val cfg = generateConfig()
-        Lwjgl3Application(Engine.get(), cfg)
+        Lwjgl3Application(Core.appListener, cfg)
     }
 
     private fun generateConfig() : Lwjgl3ApplicationConfiguration {

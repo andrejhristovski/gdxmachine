@@ -1,21 +1,21 @@
 package com.disgraded.gdxmachine.sandbox.source.scene
 
-import com.disgraded.gdxmachine.core.engine.Game
-import com.disgraded.gdxmachine.core.scene.Scene
+import com.disgraded.gdxmachine.core.Context
+import com.disgraded.gdxmachine.core.api.scene.Scene
 import com.disgraded.gdxmachine.sandbox.source.entity.TestEntity
 
 class FirstScene : Scene {
 
-    override fun initialize(game: Game) {
-        println("hey")
-        game.ecs.add(TestEntity())
+    override fun initialize(context: Context) {
+        println("test 1")
+        context.engine.add(TestEntity())
     }
 
-    override fun update() {
-//        println("update")
+    override fun update(deltaTime: Float) {
+
     }
 
     override fun destroy() {
-        println("destroy")
+        println("end test 1")
     }
 }
