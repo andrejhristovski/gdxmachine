@@ -1,6 +1,6 @@
 package com.disgraded.gdxmachine.core.resources
 
-import com.disgraded.gdxmachine.core.engine.module.ModuleApi
+import com.disgraded.gdxmachine.core.engine.ModuleApi
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 

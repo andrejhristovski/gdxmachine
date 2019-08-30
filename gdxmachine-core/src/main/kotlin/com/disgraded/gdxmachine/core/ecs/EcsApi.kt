@@ -3,7 +3,7 @@ package com.disgraded.gdxmachine.core.ecs
 import com.badlogic.ashley.core.EntityListener
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.ashley.core.Family
-import com.disgraded.gdxmachine.core.engine.module.ModuleApi
+import com.disgraded.gdxmachine.core.engine.ModuleApi
 import kotlin.reflect.KClass
 
 class EcsApi(private val ecsModule: EcsModule) : ModuleApi {

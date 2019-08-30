@@ -2,12 +2,12 @@ package com.disgraded.gdxmachine.core.scene
 
 import com.badlogic.ashley.signals.Signal
 import com.disgraded.gdxmachine.core.engine.Game
-import com.disgraded.gdxmachine.core.engine.module.EngineModule
-import com.disgraded.gdxmachine.core.engine.module.ModuleApi
+import com.disgraded.gdxmachine.core.engine.Module
+import com.disgraded.gdxmachine.core.engine.ModuleApi
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 
-class SceneModule(private val game: Game) : EngineModule {
+class SceneModule(private val game: Game) : Module {
 
     private val sceneApi = SceneApi(this)
 

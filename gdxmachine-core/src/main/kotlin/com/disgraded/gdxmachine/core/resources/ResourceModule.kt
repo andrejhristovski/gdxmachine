@@ -1,10 +1,10 @@
 package com.disgraded.gdxmachine.core.resources
 
 import com.disgraded.gdxmachine.core.engine.Game
-import com.disgraded.gdxmachine.core.engine.module.EngineModule
-import com.disgraded.gdxmachine.core.engine.module.ModuleApi
+import com.disgraded.gdxmachine.core.engine.Module
+import com.disgraded.gdxmachine.core.engine.ModuleApi
 
-class ResourceModule(private val game: Game) : EngineModule {
+class ResourceModule(private val game: Game) : Module {
 
     private val assetsApi = ResourceApi(this)
 

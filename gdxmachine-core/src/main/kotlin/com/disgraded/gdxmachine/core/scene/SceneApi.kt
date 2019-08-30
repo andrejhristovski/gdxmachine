@@ -1,6 +1,6 @@
 package com.disgraded.gdxmachine.core.scene
 
-import com.disgraded.gdxmachine.core.engine.module.ModuleApi
+import com.disgraded.gdxmachine.core.engine.ModuleApi
 import kotlin.reflect.KClass
 
 class SceneApi(private val sceneModule: SceneModule) : ModuleApi {

@@ -4,10 +4,10 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.EntityListener
 import com.badlogic.gdx.Gdx
 import com.disgraded.gdxmachine.core.engine.Game
-import com.disgraded.gdxmachine.core.engine.module.EngineModule
-import com.disgraded.gdxmachine.core.engine.module.ModuleApi
+import com.disgraded.gdxmachine.core.engine.Module
+import com.disgraded.gdxmachine.core.engine.ModuleApi
 
-class EcsModule(val game: Game) : EngineModule {
+class EcsModule(val game: Game) : Module {
 
     private val ecsApi = EcsApi(this)
 
