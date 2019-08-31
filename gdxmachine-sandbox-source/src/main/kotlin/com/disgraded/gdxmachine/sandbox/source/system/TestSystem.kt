@@ -13,7 +13,7 @@ class TestSystem : System() {
     }
 
     override fun execute(entityList: ArrayList<Entity>, deltaTime: Float) {
-        
+
     }
 
     override fun destroy() {
