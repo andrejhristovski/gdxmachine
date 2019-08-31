@@ -4,12 +4,13 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.EntityListener
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.ashley.core.Family
+import com.disgraded.gdxmachine.core.Context
+import com.disgraded.gdxmachine.core.Core
 
-class ECSystem : Engine() {
+class ECSystem(private val context: Context) : Engine() {
 
     private val groupListeners = hashMapOf<String, ArrayList<EntityListener>>()
     private val registeredListeners = arrayListOf<EntityListener>()
-    private val addedSystems = arrayListOf<EntitySystem>()
 
     fun add(entity: Entity) {
         super.addEntity(entity)
@@ -50,14 +51,16 @@ class ECSystem : Engine() {
     fun get(group: String) : ArrayList<Entity> {
         val list = arrayListOf<Entity>()
         for (entity in entities) {
-            list.add(entity as Entity)
+            if ((entity as Entity).group == group) {
+                list.add(entity as Entity)
+            }
         }
         return list
     }
 
     override fun addSystem(system: EntitySystem) {
+        (system as System).prepare(context)
         super.addSystem(system)
-        addedSystems.add(system)
     }
 
     override fun addEntityListener(listener: EntityListener) {
@@ -85,13 +88,10 @@ class ECSystem : Engine() {
     }
 
     fun clear() {
-        for (entity in entities) {
-            (entity as Entity).destroy()
-        }
+        for (entity in entities) (entity as Entity).destroy()
         removeAllEntities()
-        for (system in addedSystems) removeSystem(system)
+        for (system in systems) super.removeSystem(system)
         for (listener in registeredListeners) super.removeEntityListener(listener)
-        addedSystems.clear()
         registeredListeners.clear()
         groupListeners.clear()
     }

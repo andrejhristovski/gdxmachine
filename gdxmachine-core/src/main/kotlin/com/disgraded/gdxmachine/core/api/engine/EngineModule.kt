@@ -20,9 +20,9 @@ class EngineModule : Core.Module {
 
         fun removeAll() = engineModule.ecs.removeAllEntities()
 
-        fun addSystem(system: EntitySystem) = engineModule.ecs.addSystem(system)
+        fun addSystem(system: System) = engineModule.ecs.addSystem(system)
 
-        fun removeSystem(system: EntitySystem) = engineModule.ecs.removeSystem(system)
+        fun removeSystem(system: System) = engineModule.ecs.removeSystem(system)
 
         fun addListener(listener: EntityListener) = engineModule.ecs.addEntityListener(listener)
 
@@ -38,10 +38,10 @@ class EngineModule : Core.Module {
 
     override val api: Core.Api = EngineApi(this)
 
-    var ecs = ECSystem()
+    lateinit var ecs: ECSystem
 
     override fun load(core: Core) {
-        // TODO: add standard systems
+        ecs = ECSystem(core.context)
     }
 
     override fun update(deltaTime: Float) {

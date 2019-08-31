@@ -9,7 +9,6 @@ class SandboxGame : EntryPoint {
     override fun initialize(context: Context) {
         println("game was initialized")
         context.scene.set(FirstScene::class)
-
     }
 
     override fun destroy() {
