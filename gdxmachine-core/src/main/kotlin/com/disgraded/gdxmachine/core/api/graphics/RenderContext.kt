@@ -1,5 +1,6 @@
 package com.disgraded.gdxmachine.core.api.graphics
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.Disposable
 
 class RenderContext(shaderContainer: ShaderContainer) : Disposable {
@@ -12,15 +13,17 @@ class RenderContext(shaderContainer: ShaderContainer) : Disposable {
 
     val renderApi = RenderContextApi(this)
 
-    private val renderBatch = RenderBatch(shaderContainer)
+    private val spriteBatch = SpriteBatch(2000)
     private val drawableList = arrayListOf<Drawable>()
 
     fun render() {
-        renderBatch.begin()
+        spriteBatch.begin()
         for (drawable in drawableList) {
-            renderBatch.draw(drawable)
+            spriteBatch.draw(drawable.textureRegion, drawable.x, drawable.y, drawable.pivotX,
+                    drawable.pivotY, drawable.sizeX, drawable.sizeY, drawable.scaleX, drawable.scaleY,
+                    drawable.rotation)
         }
-        renderBatch.end()
+        spriteBatch.end()
         drawableList.clear()
     }
 
