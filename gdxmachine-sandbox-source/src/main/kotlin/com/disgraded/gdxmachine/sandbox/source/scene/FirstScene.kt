@@ -13,7 +13,7 @@ class FirstScene : Scene {
 
     lateinit var context: Context
     lateinit var renderContext: RenderContext.RenderContextApi
-    val drawable = Drawable
+    private val drawable = Drawable
 
     override fun initialize(context: Context) {
         this.context = context
@@ -22,17 +22,12 @@ class FirstScene : Scene {
         context.engine.addSystem(TestSystem())
 
         renderContext = context.graphics.getContext()
-        val texture = context.resources.get<Texture>("initial", "player")
+        val texture = context.resources.get<Texture>("initial", "bg")
         drawable.textureRegion = TextureRegion(texture)
-        drawable.sizeX = texture.width.toFloat()
-        drawable.sizeY = texture.height.toFloat()
-        drawable.x =-500f
     }
 
     override fun update(deltaTime: Float) {
         renderContext.draw(drawable)
-        println(context.graphics.getFPS())
-//        drawable.rotation += 100f * deltaTime
     }
 
     override fun destroy() {
