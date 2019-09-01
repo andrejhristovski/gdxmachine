@@ -1,5 +1,6 @@
 package com.disgraded.gdxmachine.core.api.resource
 
+import com.disgraded.gdxmachine.core.Config
 import com.disgraded.gdxmachine.core.Core
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
@@ -28,7 +29,7 @@ class ResourceModule : Core.Module {
     private val loadedPackages = hashMapOf<String, AssetPackage>()
     private var current: Pair<String, AssetPackage>? = null
 
-    override fun load(core: Core) {
+    override fun load(core: Core, config: Config) {
 
     }
 

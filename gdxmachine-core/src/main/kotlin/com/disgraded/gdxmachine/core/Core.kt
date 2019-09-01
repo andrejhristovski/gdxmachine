@@ -6,12 +6,12 @@ import com.disgraded.gdxmachine.core.api.graphics.GraphicsModule
 import com.disgraded.gdxmachine.core.api.resource.ResourceModule
 import com.disgraded.gdxmachine.core.api.scene.SceneModule
 
-class Core private constructor(val entryPoint: EntryPoint) {
+class Core private constructor(private val entryPoint: EntryPoint) {
 
     interface Api
     interface Module {
         val api : Api
-        fun load(core: Core)
+        fun load(core: Core, config: Config)
         fun update(deltaTime: Float)
         fun unload()
     }
@@ -40,10 +40,13 @@ class Core private constructor(val entryPoint: EntryPoint) {
         context.scene = sceneModule.api as SceneModule.SceneApi
         context.graphics = graphicsModule.api as GraphicsModule.GraphicsApi
 
-        resourceModule.load(this)
-        engineModule.load(this)
-        sceneModule.load(this)
-        graphicsModule.load(this)
+        var config = entryPoint.configure()
+        if (config == null) config = Config
+
+        resourceModule.load(this, config)
+        engineModule.load(this, config)
+        sceneModule.load(this, config)
+        graphicsModule.load(this, config)
 
         entryPoint.initialize(context)
     }

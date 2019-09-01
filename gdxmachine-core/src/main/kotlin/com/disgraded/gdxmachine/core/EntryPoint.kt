@@ -1,8 +1,7 @@
 package com.disgraded.gdxmachine.core
 
-import com.disgraded.gdxmachine.core.Context
-
 interface EntryPoint {
+    fun configure() : Config?
     fun initialize(context: Context)
     fun destroy()
 }

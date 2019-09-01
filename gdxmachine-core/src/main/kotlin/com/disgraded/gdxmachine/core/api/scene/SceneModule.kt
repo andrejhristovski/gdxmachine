@@ -1,5 +1,6 @@
 package com.disgraded.gdxmachine.core.api.scene
 
+import com.disgraded.gdxmachine.core.Config
 import com.disgraded.gdxmachine.core.Core
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
@@ -16,7 +17,7 @@ class SceneModule : Core.Module {
     private var nextScene: KClass<out Scene>? = null
     private var currentScene : Scene? = null
 
-    override fun load(core: Core) {
+    override fun load(core: Core, config: Config) {
         this.core = core
     }
 

@@ -2,6 +2,7 @@ package com.disgraded.gdxmachine.core.api.graphics
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
+import com.disgraded.gdxmachine.core.Config
 import com.disgraded.gdxmachine.core.Core
 
 class GraphicsModule : Core.Module {
@@ -22,7 +23,7 @@ class GraphicsModule : Core.Module {
     private val contexts = hashMapOf<String, RenderContext>()
     private val shaderContainer = ShaderContainer
 
-    override fun load(core: Core) {
+    override fun load(core: Core, config: Config) {
 
     }
 

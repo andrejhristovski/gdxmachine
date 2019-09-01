@@ -3,6 +3,7 @@ package com.disgraded.gdxmachine.core.api.engine
 import com.badlogic.ashley.core.EntityListener
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.ashley.core.Family
+import com.disgraded.gdxmachine.core.Config
 import com.disgraded.gdxmachine.core.Core
 
 class EngineModule : Core.Module {
@@ -40,7 +41,7 @@ class EngineModule : Core.Module {
 
     lateinit var ecs: ECSystem
 
-    override fun load(core: Core) {
+    override fun load(core: Core, config: Config) {
         ecs = ECSystem(core.context)
     }
 

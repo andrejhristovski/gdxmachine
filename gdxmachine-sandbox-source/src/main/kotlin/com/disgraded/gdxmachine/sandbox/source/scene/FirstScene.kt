@@ -26,12 +26,13 @@ class FirstScene : Scene {
         drawable.textureRegion = TextureRegion(texture)
         drawable.sizeX = texture.width.toFloat()
         drawable.sizeY = texture.height.toFloat()
+        drawable.x =-500f
     }
 
     override fun update(deltaTime: Float) {
         renderContext.draw(drawable)
         println(context.graphics.getFPS())
-        drawable.rotation += 100f * deltaTime
+//        drawable.rotation += 100f * deltaTime
     }
 
     override fun destroy() {
