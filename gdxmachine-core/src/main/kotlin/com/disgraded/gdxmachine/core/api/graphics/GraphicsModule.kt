@@ -57,9 +57,10 @@ class GraphicsModule : Core.Module {
 
     private fun removeContext(name: String) {
         if (!contexts.containsKey(name)) {
-            throw RuntimeException("")
+            throw RuntimeException("RenderContext [\"$name\"] doesn't exist!")
         }
         contexts[name]!!.dispose()
+        contexts.remove(name)
     }
 
     private fun clear() {

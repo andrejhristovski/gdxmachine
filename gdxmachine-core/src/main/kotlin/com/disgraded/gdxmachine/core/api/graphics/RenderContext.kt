@@ -92,6 +92,7 @@ class RenderContext(private val shaderContainer: ShaderContainer, private val vi
 
     override fun dispose() {
         spriteBatch.dispose()
+        drawableList.clear()
     }
 
     private fun applyViewport() {
