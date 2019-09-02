@@ -1,6 +1,7 @@
 package com.disgraded.gdxmachine.core.api.graphics
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.Disposable
@@ -11,7 +12,33 @@ import com.badlogic.gdx.utils.viewport.Viewport
 class RenderContext(private val shaderContainer: ShaderContainer, private val virtualWidth: Int,
                     private val virtualHeight: Int) : Disposable {
 
+    class CameraApi(private val camera: OrthographicCamera) {
+        var x
+            get() = camera.position.x
+            set(value) {
+                camera.position.x = value
+            }
+
+        var y
+            get() = camera.position.y
+            set(value) {
+                camera.position.y = value
+            }
+
+        var z
+            get() = camera.zoom
+            set(value) {
+                camera.zoom = value
+            }
+
+        fun translate(x: Float, y: Float) = camera.translate(x, y)
+
+        fun rotate(angle: Float) = camera.rotate(angle)
+    }
+
     class RenderContextApi(private val renderContext: RenderContext) {
+
+        val camera = renderContext.cameraApi
 
         var visible = true
 
@@ -19,9 +46,8 @@ class RenderContext(private val shaderContainer: ShaderContainer, private val vi
 
         fun getRenderCalls() : Int = renderContext.renderCalls
 
-    }
 
-    val renderApi = RenderContextApi(this)
+    }
 
     private val spriteBatch = SpriteBatch(2500)
     private val drawableList = arrayListOf<Drawable>()
@@ -32,9 +58,13 @@ class RenderContext(private val shaderContainer: ShaderContainer, private val vi
 
 
     private val camera = OrthographicCamera()
+    private val cameraApi = CameraApi(camera)
     private val viewport = ScalingViewport(Scaling.fit, virtualWidth.toFloat(), virtualHeight.toFloat(), camera)
 
+    val renderApi = RenderContextApi(this)
+
     init {
+        camera.rotate(10f)
         applyViewport()
     }
 
