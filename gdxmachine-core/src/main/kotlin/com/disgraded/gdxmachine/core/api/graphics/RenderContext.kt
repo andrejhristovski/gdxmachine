@@ -45,10 +45,15 @@ class RenderContext(private val shaderContainer: ShaderContainer, private val vi
         fun draw(drawable: Drawable) = renderContext.drawableList.add(drawable)
 
         fun getRenderCalls() : Int = renderContext.renderCalls
-
-
+        
+        var order
+            get() = renderContext.order
+            set(value) {
+                renderContext.order = value
+            }
     }
 
+    var order: Int = 0
     private val spriteBatch = SpriteBatch(2500)
     private val drawableList = arrayListOf<Drawable>()
     private var renderCalls = 0

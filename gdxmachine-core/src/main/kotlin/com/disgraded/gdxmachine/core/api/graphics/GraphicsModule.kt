@@ -32,8 +32,8 @@ class GraphicsModule : Core.Module {
     override fun update(deltaTime: Float) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         Gdx.gl.glClearColor(0f, 0f ,0f, 1f)
-        for (context in contexts) {
-            context.value.render()
+        for (context in contexts.toList().sortedByDescending { it.second.order }) {
+            context.second.render()
         }
     }
 
