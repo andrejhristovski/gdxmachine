@@ -61,7 +61,7 @@ class Core private constructor(private val entryPoint: EntryPoint) {
         graphicsModule.unload()
     }
 
-    fun update(deltaTime: Float, fps: Int) {
+    fun update(deltaTime: Float) {
         resourceModule.update(deltaTime)
         engineModule.update(deltaTime)
         sceneModule.update(deltaTime)
