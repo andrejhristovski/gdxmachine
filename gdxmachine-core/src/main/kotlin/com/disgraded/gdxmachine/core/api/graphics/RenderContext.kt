@@ -64,7 +64,6 @@ class RenderContext(private val shaderContainer: ShaderContainer, private val vi
     val renderApi = RenderContextApi(this)
 
     init {
-        camera.rotate(10f)
         applyViewport()
     }
 
