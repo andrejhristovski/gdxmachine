@@ -23,8 +23,10 @@ class GraphicsModule : Core.Module {
     private val contexts = hashMapOf<String, RenderContext>()
     private val shaderContainer = ShaderContainer
 
-    override fun load(core: Core, config: Config) {
+    lateinit var config: Config
 
+    override fun load(core: Core, config: Config) {
+        this.config = config
     }
 
     override fun update(deltaTime: Float) {
@@ -48,7 +50,7 @@ class GraphicsModule : Core.Module {
 
     private fun getContext(name: String): RenderContext.RenderContextApi {
         if (!contexts.containsKey(name)) {
-            contexts[name] = RenderContext(shaderContainer)
+            contexts[name] = RenderContext(shaderContainer, config.screenX, config.screenY)
         }
         return contexts[name]!!.renderApi
     }
