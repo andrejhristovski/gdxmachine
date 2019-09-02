@@ -23,7 +23,9 @@ class RenderBatch2D(private val shaderContainer: ShaderContainer) : SpriteBatch(
         val posX = sprite.x - originX
         val posY = sprite.y - originY
 
-        shader = shaderContainer.get("default")
+        shader = shaderContainer.get(sprite.type, sprite.effect)
+        color = Color.toGdxColor(sprite.color)
+        shader.setUniformf("u_intensity", sprite.intensity)
         this.draw(texture, posX, posY, originX, originY, sizeX, sizeY, sprite.scaleX, sprite.scaleY, sprite.rotation)
     }
 
