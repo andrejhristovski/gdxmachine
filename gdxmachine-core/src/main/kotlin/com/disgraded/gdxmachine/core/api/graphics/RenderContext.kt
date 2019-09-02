@@ -15,17 +15,15 @@ class RenderContext(private val shaderContainer: ShaderContainer, private val vi
 
         var visible = true
 
-        var fit = true
-
         fun draw(drawable: Drawable) = renderContext.drawableList.add(drawable)
 
-        fun getRenderCalls() = renderContext.renderCalls
+        fun getRenderCalls() : Int = renderContext.renderCalls
 
     }
 
     val renderApi = RenderContextApi(this)
 
-    private val spriteBatch = SpriteBatch(1)
+    private val spriteBatch = SpriteBatch(2500)
     private val drawableList = arrayListOf<Drawable>()
     private var renderCalls = 0
 
@@ -49,6 +47,7 @@ class RenderContext(private val shaderContainer: ShaderContainer, private val vi
         renderDrawableList()
         spriteBatch.end()
         renderCalls = spriteBatch.renderCalls
+        spriteBatch.totalRenderCalls
     }
 
     fun resize(width: Int, height: Int) {
@@ -81,6 +80,4 @@ class RenderContext(private val shaderContainer: ShaderContainer, private val vi
         }
         drawableList.clear()
     }
-
-
 }
