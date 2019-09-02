@@ -13,7 +13,7 @@ class GraphicsModule : Core.Module {
 
         fun getFPS() : Int = Gdx.graphics.framesPerSecond
 
-        fun getContext(name: String = "default") : RenderContext.RenderContextApi = graphicsModule.getContext(name)
+        fun getContext(name: String = "default") : RenderContext.Api = graphicsModule.getContext(name)
 
         fun clear() = graphicsModule.clear()
     }
@@ -21,12 +21,13 @@ class GraphicsModule : Core.Module {
     override val api: Core.Api = GraphicsApi(this)
 
     private val contexts = hashMapOf<String, RenderContext>()
-    private val shaderContainer = ShaderContainer
+    private lateinit var shaderContainer : ShaderContainer
 
     lateinit var config: Config
 
     override fun load(core: Core, config: Config) {
         this.config = config
+        shaderContainer = ShaderContainer()
     }
 
     override fun update(deltaTime: Float) {
@@ -48,7 +49,7 @@ class GraphicsModule : Core.Module {
         }
     }
 
-    private fun getContext(name: String): RenderContext.RenderContextApi {
+    private fun getContext(name: String): RenderContext.Api {
         if (!contexts.containsKey(name)) {
             contexts[name] = RenderContext(shaderContainer, config.screenX, config.screenY)
         }

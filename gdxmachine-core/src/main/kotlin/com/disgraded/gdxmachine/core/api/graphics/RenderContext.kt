@@ -36,7 +36,7 @@ class RenderContext(private val shaderContainer: ShaderContainer, private val vi
         fun rotate(angle: Float) = camera.rotate(angle)
     }
 
-    class RenderContextApi(private val renderContext: RenderContext) {
+    class Api(private val renderContext: RenderContext) {
 
         val camera = renderContext.cameraApi
 
@@ -54,7 +54,7 @@ class RenderContext(private val shaderContainer: ShaderContainer, private val vi
     }
 
     var order: Int = 0
-    private val spriteBatch = SpriteBatch(2500)
+    private val renderBatch2D = RenderBatch2D(shaderContainer)
     private val drawableList = arrayListOf<Drawable>()
     private var renderCalls = 0
 
@@ -66,7 +66,7 @@ class RenderContext(private val shaderContainer: ShaderContainer, private val vi
     private val cameraApi = CameraApi(camera)
     private val viewport = ScalingViewport(Scaling.fit, virtualWidth.toFloat(), virtualHeight.toFloat(), camera)
 
-    val renderApi = RenderContextApi(this)
+    val renderApi = Api(this)
 
     init {
         applyViewport()
@@ -76,12 +76,14 @@ class RenderContext(private val shaderContainer: ShaderContainer, private val vi
         if (!renderApi.visible) return
 
         viewport.camera.update()
-        spriteBatch.projectionMatrix = viewport.camera.combined
-        spriteBatch.begin()
-        renderDrawableList()
-        spriteBatch.end()
-        renderCalls = spriteBatch.renderCalls
-        spriteBatch.totalRenderCalls
+        renderBatch2D.projectionMatrix = viewport.camera.combined
+        renderBatch2D.begin()
+        for(drawable in drawableList) {
+            renderBatch2D.draw(drawable)
+        }
+        renderBatch2D.end()
+        drawableList.clear()
+        renderCalls = renderBatch2D.renderCalls
     }
 
     fun resize(width: Int, height: Int) {
@@ -91,28 +93,12 @@ class RenderContext(private val shaderContainer: ShaderContainer, private val vi
     }
 
     override fun dispose() {
-        spriteBatch.dispose()
+        renderBatch2D.dispose()
         drawableList.clear()
     }
 
     private fun applyViewport() {
         viewport.update(screenWidth, screenHeight)
         viewport.apply()
-    }
-
-    private fun renderDrawableList() {
-        for (drawable in drawableList) {
-            if (!drawable.visible) continue
-            val sizeX = drawable.textureRegion.regionWidth.toFloat()
-            val sizeY = drawable.textureRegion.regionHeight.toFloat()
-            val originX = sizeX * drawable.scaleX * drawable.pivotX
-            val originY = sizeY * drawable.scaleY * drawable.pivotY
-            val posX = drawable.x - originX
-            val posY = drawable.y - originY
-
-            spriteBatch.draw(drawable.textureRegion, posX, posY, originX, originY, sizeX, sizeY, drawable.scaleX,
-                    drawable.scaleY, drawable.rotation)
-        }
-        drawableList.clear()
     }
 }
