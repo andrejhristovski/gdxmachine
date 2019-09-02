@@ -5,20 +5,19 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram
 
 class ShaderContainer {
 
-    private val shaders = hashMapOf<String, ShaderProgram>()
+    private val shaderMap = hashMapOf<String, ShaderProgram>()
 
     init {
         ShaderProgram.pedantic = false
-        shaders[genKey(Drawable.Type.SPRITE, Drawable.Effect.TINT)] = compile("sprite", "sprite.tint")
-        shaders[genKey(Drawable.Type.SPRITE, Drawable.Effect.FILL)] = compile("sprite", "sprite.fill")
-        shaders[genKey(Drawable.Type.SPRITE, Drawable.Effect.INVERT)] = compile("sprite", "sprite.invert")
-        shaders[genKey(Drawable.Type.SPRITE, Drawable.Effect.GREYSCALE)] = compile("sprite", "sprite.greyscale")
-        shaders[genKey(Drawable.Type.SPRITE, Drawable.Effect.GREYSCALE_COLORED)] = compile("sprite", "sprite.greyscale_colored")
-        shaders[genKey(Drawable.Type.SPRITE, Drawable.Effect.SEPIA)] = compile("sprite", "sprite.sepia")
     }
 
     fun get(type: Drawable.Type, effect: Drawable.Effect): ShaderProgram {
-        return shaders[genKey(type, effect)]!!
+        val key = genKey(type, effect)
+        if (shaderMap.containsKey(key)) {
+            return shaderMap[key]!!
+        }
+        shaderMap[key] = compile(type.key, "${type.key}.${effect.key}")
+        return shaderMap[key]!!
     }
 
     private fun genKey(type: Drawable.Type, effect: Drawable.Effect): String {

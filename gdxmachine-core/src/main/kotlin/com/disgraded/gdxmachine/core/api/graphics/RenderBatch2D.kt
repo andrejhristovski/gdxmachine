@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 class RenderBatch2D(private val shaderContainer: ShaderContainer) : SpriteBatch(1500) {
 
     fun draw(drawable: Drawable) {
+        if(!drawable.visible) return
         when(drawable.type) {
             Drawable.Type.SPRITE -> drawSprite(drawable as Sprite)
             Drawable.Type.SHAPE -> drawShape(drawable as Shape)
@@ -12,7 +13,6 @@ class RenderBatch2D(private val shaderContainer: ShaderContainer) : SpriteBatch(
     }
 
     private fun drawSprite(sprite: Sprite) {
-        if(!sprite.visible) return
         if(sprite.getTexture() == null) return
 
         val texture = sprite.getTexture()!!
@@ -26,6 +26,7 @@ class RenderBatch2D(private val shaderContainer: ShaderContainer) : SpriteBatch(
         shader = shaderContainer.get(sprite.type, sprite.effect)
         color = Color.toGdxColor(sprite.color)
         shader.setUniformf("u_intensity", sprite.intensity)
+
         this.draw(texture, posX, posY, originX, originY, sizeX, sizeY, sprite.scaleX, sprite.scaleY, sprite.rotation)
     }
 
