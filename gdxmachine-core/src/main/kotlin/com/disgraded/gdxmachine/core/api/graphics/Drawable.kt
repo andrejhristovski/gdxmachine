@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 
 object Drawable {
     lateinit var textureRegion: TextureRegion
+    var visible: Boolean = true
     var x: Float = 0f
     var y: Float = 0f
     var scaleX: Float = 1f
