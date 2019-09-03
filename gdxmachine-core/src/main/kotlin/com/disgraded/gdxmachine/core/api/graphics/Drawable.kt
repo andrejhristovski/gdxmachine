@@ -1,10 +1,16 @@
 package com.disgraded.gdxmachine.core.api.graphics
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion
+abstract class Drawable(val type: Type) {
 
-object Drawable {
-    lateinit var textureRegion: TextureRegion
-    var visible: Boolean = true
+    enum class Type(val key: String) {
+        SPRITE("sprite"), SHAPE("shape")
+    }
+
+    enum class Effect(val key: String) {
+        TINT("tint"), FILL("fill"), INVERT("invert"), GREYSCALE("greyscale"),
+        GREYSCALE_COLORED("greyscale_colored"), SEPIA("sepia")
+    }
+
     var x: Float = 0f
     var y: Float = 0f
     var scaleX: Float = 1f
@@ -12,4 +18,9 @@ object Drawable {
     var pivotX: Float = .5f
     var pivotY: Float = .5f
     var rotation: Float = 0f
+    var visible: Boolean = true
+    var alpha: Float = 1f
+    var effect = Effect.TINT
+    var color: Color = Color("#ffffff")
+    var intensity: Float = 1f
 }
