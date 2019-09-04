@@ -20,6 +20,7 @@ class GdxMachineLauncher {
             enableGLDebugOutput(false, System.out)
             setDecorated(false)
             setResizable(false)
+            useVsync(false)
             setWindowedMode(1280, 720)
             setIdleFPS(60)
         }

@@ -2,40 +2,49 @@ package com.disgraded.gdxmachine.sandbox.source.scene
 
 import com.badlogic.gdx.graphics.Texture
 import com.disgraded.gdxmachine.core.Context
-import com.disgraded.gdxmachine.core.api.graphics.Color
-import com.disgraded.gdxmachine.core.api.graphics.Drawable
-import com.disgraded.gdxmachine.core.api.graphics.RenderContext
-import com.disgraded.gdxmachine.core.api.graphics.Sprite
+import com.disgraded.gdxmachine.core.api.graphics.*
 import com.disgraded.gdxmachine.core.api.scene.Scene
 
 class FirstScene : Scene {
 
     private lateinit var context: Context
     private lateinit var renderContext: RenderContext.Api
-    private lateinit var sprite: Sprite
-    private lateinit var sprite2: Sprite
+    private val spriteList = arrayListOf<Drawable>()
 
     override fun initialize(context: Context) {
         println("test 1")
         this.context = context
 
         renderContext = context.graphics.getContext()
-        sprite = Sprite()
-        val texture = context.resources.get<Texture>("initial", "player")
-        sprite.setTexture(texture)
-        sprite.effect = Drawable.Effect.GREYSCALE_COLORED
-        sprite.color = Color("#7825b3", 1f)
-        sprite.intensity = 1f
+        for (i in 1..100) {
+            val sprite = MaskedSprite()
+            val texture1 = context.resources.get<Texture>("initial", "bg")
+            val texture2 = context.resources.get<Texture>("initial", "player")
+            sprite.setTexture(texture1)
+            if (i % 2 == 0) sprite.setMask(texture2)
+            else sprite.setMask(texture1)
+            sprite.effect = Drawable.Effect.SEPIA
+            sprite.color = Color("#7825b3", 1f)
+            sprite.intensity = .5f
+            spriteList.add(sprite)
+        }
 
-        sprite2 = Sprite()
-        val texture2 = context.resources.get<Texture>("initial", "bg")
-        sprite2.setTexture(texture2)
-        sprite2.effect = Drawable.Effect.TINT
+//        for (i in 1..100) {
+//            val sprite = Sprite()
+//            val texture = context.resources.get<Texture>("initial", "bg")
+//            sprite.setTexture(texture)
+//            sprite.effect = Drawable.Effect.SEPIA
+//            sprite.color = Color("#7825b3", 1f)
+//            sprite.intensity = .5f
+//            spriteList.add(sprite)
+//        }
     }
 
     override fun update(deltaTime: Float) {
-        renderContext.draw(sprite2)
-        renderContext.draw(sprite)
+        for (sprite in spriteList) {
+            renderContext.draw(sprite)
+        }
+        println(context.graphics.getFPS())
     }
 
     override fun destroy() {

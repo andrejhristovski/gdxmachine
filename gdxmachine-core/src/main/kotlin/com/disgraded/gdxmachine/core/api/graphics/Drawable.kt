@@ -3,7 +3,7 @@ package com.disgraded.gdxmachine.core.api.graphics
 abstract class Drawable(val type: Type) {
 
     enum class Type(val key: String) {
-        SPRITE("sprite"), SHAPE("shape")
+        SPRITE("sprite"), MASKED_SPRITE("masked_sprite")
     }
 
     enum class Effect(val key: String) {
