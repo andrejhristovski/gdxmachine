@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.disgraded.gdxmachine.core.Config
 import com.disgraded.gdxmachine.core.Core
+import com.badlogic.gdx.Gdx.graphics
+
+
 
 class GraphicsModule : Core.Module {
 
@@ -21,20 +24,23 @@ class GraphicsModule : Core.Module {
     override val api: Core.Api = GraphicsApi(this)
 
     private val contexts = hashMapOf<String, RenderContext>()
-    private lateinit var shaderContainer : ShaderContainer
 
     lateinit var config: Config
 
     override fun load(core: Core, config: Config) {
         this.config = config
-        shaderContainer = ShaderContainer()
+
+        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST)
+        Gdx.gl.glDepthFunc(GL20.GL_LESS)
+        Gdx.gl.glDepthRangef(0f, 1000f)
     }
 
     override fun update(deltaTime: Float) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
         Gdx.gl.glClearColor(0f, 0f ,0f, 1f)
-        for (context in contexts.toList().sortedByDescending { it.second.order }) {
-            context.second.render()
+
+        for (context in contexts) {
+            context.value.render()
         }
     }
 
@@ -51,9 +57,9 @@ class GraphicsModule : Core.Module {
 
     private fun getContext(name: String): RenderContext.Api {
         if (!contexts.containsKey(name)) {
-            contexts[name] = RenderContext(shaderContainer, config.screenX, config.screenY)
+            contexts[name] = RenderContext(config.screenX, config.screenY)
         }
-        return contexts[name]!!.renderApi
+        return contexts[name]!!.api
     }
 
     private fun removeContext(name: String) {

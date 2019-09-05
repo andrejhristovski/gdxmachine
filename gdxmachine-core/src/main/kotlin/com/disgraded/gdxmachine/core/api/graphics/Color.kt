@@ -1,17 +1,32 @@
 package com.disgraded.gdxmachine.core.api.graphics
 
+import com.badlogic.gdx.utils.NumberUtils
 import com.badlogic.gdx.graphics.Color as GdxColor
 
 class Color {
 
     companion object {
-        fun toGdxColor(color: Color): GdxColor {
-            return GdxColor(color.r, color.g, color.b, color.alpha)
-        }
-
-        fun fromGdxColor(gdxColor: GdxColor): Color {
-            return Color(gdxColor.r, gdxColor.g, gdxColor.b, gdxColor.a)
-        }
+        val WHITE: Color = Color("#ffffff")
+        val RED: Color = Color("#f44336")
+        val PINK: Color = Color("#e91e63")
+        val PURPLE: Color = Color("#9c27b0")
+        val DEEP_PURPLE: Color = Color("#673ab7")
+        val INDIGO: Color = Color("#3f51b5")
+        val BLUE: Color = Color("#2196f3")
+        val LIGHT_BLUE: Color = Color("#03a9f4")
+        val CYAN: Color = Color("#00bcd4")
+        val TEAL: Color = Color("#009688")
+        val GREEN: Color = Color("#4caf50")
+        val LIGHT_GREEN: Color = Color("#8bc34a")
+        val LIME: Color = Color("#cddc39")
+        val YELLOW: Color = Color("#ffeb3b")
+        val AMBER: Color = Color("#ffc107")
+        val ORANGE: Color = Color("#ff9800")
+        val DEEP_ORANGE: Color = Color("#ff5722")
+        val BROWN: Color = Color("#795548")
+        val GREY: Color = Color("#9e9e9e")
+        val BLUE_GREY: Color = Color("#607d8b")
+        val BLACK: Color = Color("#000000")
     }
 
     private var r : Float = 0f
@@ -46,5 +61,14 @@ class Color {
         this.g = g
         this.b = b
         this.alpha = a
+    }
+
+    fun toFloatBits(): Float {
+        val color = (255 * alpha).toInt() shl 24 or ((255 * b).toInt() shl 16) or ((255 * g).toInt() shl 8) or (255 * r).toInt()
+        return NumberUtils.intToFloatColor(color)
+    }
+
+    fun copy(): Color {
+        return Color(r, g, b, alpha)
     }
 }
