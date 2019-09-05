@@ -17,7 +17,10 @@ class FirstScene : Scene {
         renderContext = context.graphics.getContext()
         sprite = Sprite()
         sprite.textureRegion = TextureRegion(context.resources.get<Texture>("initial", "player"))
+        sprite.colorLeftTop = Color.RED
         sprite.colorLeftBottom = Color.AMBER
+        sprite.colorRightTop = Color.CYAN
+        sprite.colorRightBottom = Color.LIME
     }
 
     override fun update(deltaTime: Float) {

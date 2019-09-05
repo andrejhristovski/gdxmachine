@@ -1,5 +1,6 @@
 package com.disgraded.gdxmachine.core.api.graphics.renderer
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.*
 import com.badlogic.gdx.graphics.VertexAttributes.Usage
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
@@ -95,31 +96,33 @@ class SpriteRenderer : Renderer<Sprite> {
         this.projectionMatrix = projectionMatrix
     }
 
+    override fun dispose() = mesh.dispose()
+
     private fun appendVertices(sprite: Sprite) {
         val idx = bufferedCalls * BUFFER_SIZE
         vertices[idx] = sprite.x
         vertices[idx + 1] = sprite.y
         vertices[idx + 2] = sprite.colorLeftBottom.toFloatBits()
         vertices[idx + 3] = sprite.textureRegion!!.u
-        vertices[idx + 4] = sprite.textureRegion!!.v
+        vertices[idx + 4] = sprite.textureRegion!!.v2
 
         vertices[idx + 5] = sprite.x
         vertices[idx + 6] = sprite.y + sprite.textureRegion!!.regionHeight
         vertices[idx + 7] = sprite.colorLeftTop.toFloatBits()
         vertices[idx + 8] = sprite.textureRegion!!.u
-        vertices[idx + 9] = sprite.textureRegion!!.v2
+        vertices[idx + 9] = sprite.textureRegion!!.v
 
         vertices[idx + 10] = sprite.x + sprite.textureRegion!!.regionWidth
         vertices[idx + 11] = sprite.y + sprite.textureRegion!!.regionHeight
         vertices[idx + 12] = sprite.colorRightTop.toFloatBits()
         vertices[idx + 13] = sprite.textureRegion!!.u2
-        vertices[idx + 14] = sprite.textureRegion!!.v2
+        vertices[idx + 14] = sprite.textureRegion!!.v
 
         vertices[idx + 15] = sprite.x + sprite.textureRegion!!.regionWidth
         vertices[idx + 16] = sprite.y
         vertices[idx + 17] = sprite.colorRightBottom.toFloatBits()
         vertices[idx + 18] = sprite.textureRegion!!.u2
-        vertices[idx + 19] = sprite.textureRegion!!.v
+        vertices[idx + 19] = sprite.textureRegion!!.v2
     }
 
     private fun flush() {
@@ -129,6 +132,8 @@ class SpriteRenderer : Renderer<Sprite> {
         val indicesCount = bufferedCalls * INDICES_PER_BUFFER
         val idx = bufferedCalls * BUFFER_SIZE
 
+        Gdx.gl.glEnable(GL20.GL_BLEND)
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
         shaderProgram.setUniformMatrix("u_projectionTrans", projectionMatrix);
         shaderProgram.setUniformi("u_texture", 0);
         cachedTexture!!.bind()

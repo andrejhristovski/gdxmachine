@@ -34,6 +34,8 @@ class RenderContext(private val virtualWidth: Int, private val virtualHeight: In
 
     init {
         applyViewport()
+        camera.position.x += virtualWidth / 2
+        camera.position.y += virtualHeight / 2
     }
 
     fun render() {
