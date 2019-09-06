@@ -6,7 +6,7 @@ plugins {
 
 android {
 
-    compileSdkVersion(28)
+    compileSdkVersion(29)
 
     defaultConfig {
         applicationId = "com.disgraded.gdxmachine.sandbox.android"
