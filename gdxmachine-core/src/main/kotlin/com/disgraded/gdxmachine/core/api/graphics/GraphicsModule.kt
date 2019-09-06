@@ -32,11 +32,13 @@ class GraphicsModule : Core.Module {
 
         Gdx.gl.glEnable(GL20.GL_DEPTH_TEST)
         Gdx.gl.glDepthFunc(GL20.GL_ALWAYS)
-        Gdx.gl.glDepthRangef(0f, 1000f)
     }
 
     override fun update(deltaTime: Float) {
+        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST)
+        Gdx.gl.glDepthFunc(GL20.GL_ALWAYS)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
+        Gdx.gl.glClearDepthf(1f)
         Gdx.gl.glClearColor(0f, 0f ,0f, 1f)
         contexts.forEach { it.value.render() }
     }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable2D
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 
 
@@ -16,7 +17,7 @@ class SpriteRenderer : Renderer<Sprite> {
 
     companion object {
         private const val MAX_BUFFERED_CALLS = 1500
-        private const val BUFFER_SIZE = 20
+        private const val BUFFER_SIZE = 24
         private const val VERTICES_PER_BUFFER = 4
         private const val INDICES_PER_BUFFER = 6
     }
@@ -39,7 +40,7 @@ class SpriteRenderer : Renderer<Sprite> {
         val maxVertices = VERTICES_PER_BUFFER * MAX_BUFFERED_CALLS
         val maxIndices = INDICES_PER_BUFFER * MAX_BUFFERED_CALLS
         val vertexAttributes = VertexAttributes(
-                VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
+                VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
                 VertexAttribute(Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
                 VertexAttribute(Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE)
         )
@@ -65,20 +66,17 @@ class SpriteRenderer : Renderer<Sprite> {
     override fun begin() {
         if(active) throw RuntimeException("The renderer is already active")
         gpuCalls = 0
-        Gdx.gl.glDepthMask(false)
         shaderProgram.begin()
         active = true
     }
 
     override fun draw(drawable: Sprite) {
         if(drawable.textureRegion == null) throw RuntimeException("Sprite can not be rendered without texture")
-
-        // flash control before drawing next drawable
-        if (cachedTexture !== drawable.textureRegion!!.texture) {
+        validateCachedTexture(drawable.textureRegion!!.texture)
+        validateShader(drawable)
+        if (bufferedCalls == MAX_BUFFERED_CALLS) {
             flush()
-            cachedTexture = drawable.textureRegion!!.texture
-        } else if(bufferedCalls == MAX_BUFFERED_CALLS) flush()
-
+        }
         appendVertices(drawable)
         bufferedCalls++
     }
@@ -90,7 +88,6 @@ class SpriteRenderer : Renderer<Sprite> {
         active = false
         shaderProgram.end()
         gpuCalls = 0
-        Gdx.gl.glDepthMask(true)
     }
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4) {
@@ -107,8 +104,8 @@ class SpriteRenderer : Renderer<Sprite> {
         val sizeX = sprite.textureRegion!!.regionWidth * sprite.scaleX
         val sizeY = sprite.textureRegion!!.regionHeight * sprite.scaleY
 
-        var x1 = sprite.x - (sizeX * sprite.pivotX)
-        var y1 = sprite.y - (sizeY * sprite.pivotY)
+        var x1 = sprite.x - (sizeX * sprite.anchorX)
+        var y1 = sprite.y - (sizeY * sprite.anchorY)
         var x2 = x1
         var y2 = y1 + sizeY
         var x3 = x1 + sizeX
@@ -138,27 +135,31 @@ class SpriteRenderer : Renderer<Sprite> {
 
         vertices[idx] = x1
         vertices[idx + 1] = y1
-        vertices[idx + 2] = sprite.colorLeftBottom.toFloatBits()
-        vertices[idx + 3] = sprite.textureRegion!!.u
-        vertices[idx + 4] = sprite.textureRegion!!.v2
+        vertices[idx + 2] = sprite.z
+        vertices[idx + 3] = sprite.getColor(Drawable2D.Corner.BOTTOM_LEFT).toFloatBits()
+        vertices[idx + 4] = sprite.textureRegion!!.u
+        vertices[idx + 5] = sprite.textureRegion!!.v2
 
-        vertices[idx + 5] = x2
-        vertices[idx + 6] = y2
-        vertices[idx + 7] = sprite.colorLeftTop.toFloatBits()
-        vertices[idx + 8] = sprite.textureRegion!!.u
-        vertices[idx + 9] = sprite.textureRegion!!.v
+        vertices[idx + 6] = x2
+        vertices[idx + 7] = y2
+        vertices[idx + 8] = sprite.z
+        vertices[idx + 9] = sprite.getColor(Drawable2D.Corner.TOP_LEFT).toFloatBits()
+        vertices[idx + 10] = sprite.textureRegion!!.u
+        vertices[idx + 11] = sprite.textureRegion!!.v
 
-        vertices[idx + 10] = x3
-        vertices[idx + 11] = y3
-        vertices[idx + 12] = sprite.colorRightTop.toFloatBits()
-        vertices[idx + 13] = sprite.textureRegion!!.u2
-        vertices[idx + 14] = sprite.textureRegion!!.v
+        vertices[idx + 12] = x3
+        vertices[idx + 13] = y3
+        vertices[idx + 14] = sprite.z
+        vertices[idx + 15] = sprite.getColor(Drawable2D.Corner.TOP_RIGHT).toFloatBits()
+        vertices[idx + 16] = sprite.textureRegion!!.u2
+        vertices[idx + 17] = sprite.textureRegion!!.v
 
-        vertices[idx + 15] = x4
-        vertices[idx + 16] = y4
-        vertices[idx + 17] = sprite.colorRightBottom.toFloatBits()
-        vertices[idx + 18] = sprite.textureRegion!!.u2
-        vertices[idx + 19] = sprite.textureRegion!!.v2
+        vertices[idx + 18] = x4
+        vertices[idx + 19] = y4
+        vertices[idx + 20] = sprite.z
+        vertices[idx + 21] = sprite.getColor(Drawable2D.Corner.BOTTOM_RIGHT).toFloatBits()
+        vertices[idx + 22] = sprite.textureRegion!!.u2
+        vertices[idx + 23] = sprite.textureRegion!!.v2
     }
 
     private fun flush() {
@@ -178,5 +179,16 @@ class SpriteRenderer : Renderer<Sprite> {
                 GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
         mesh.render(shaderProgram, GL20.GL_TRIANGLES, 0, indicesCount)
         bufferedCalls = 0
+    }
+
+    private fun validateCachedTexture(texture: Texture) {
+        if (cachedTexture !== texture) {
+            if (bufferedCalls > 0) flush()
+            cachedTexture = texture
+        }
+    }
+
+    private fun validateShader(sprite: Sprite) {
+
     }
 }

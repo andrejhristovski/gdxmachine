@@ -2,7 +2,6 @@ package com.disgraded.gdxmachine.core.api.graphics
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 
 class ShaderFactory private constructor() {
 

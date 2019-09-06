@@ -2,13 +2,11 @@ package com.disgraded.gdxmachine.core.api.graphics
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.ScalingViewport
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable2D
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
-import com.disgraded.gdxmachine.core.api.graphics.renderer.Renderer
 import com.disgraded.gdxmachine.core.api.graphics.renderer.SpriteRenderer
 
 class RenderContext(private val virtualWidth: Int, private val virtualHeight: Int) : Disposable {
@@ -16,10 +14,10 @@ class RenderContext(private val virtualWidth: Int, private val virtualHeight: In
     class Api(private val renderContext: RenderContext) {
         var visible = true
 
-        fun draw(drawable: Drawable) = renderContext.drawableList.add(drawable)
+        fun draw(drawable2D: Drawable2D) = renderContext.drawableList.add(drawable2D)
     }
 
-    private val drawableList = arrayListOf<Drawable>()
+    private val drawableList = arrayListOf<Drawable2D>()
 
     private var screenWidth = Gdx.graphics.width
     private var screenHeight = Gdx.graphics.height
@@ -42,6 +40,7 @@ class RenderContext(private val virtualWidth: Int, private val virtualHeight: In
         spriteRenderer.setProjectionMatrix(viewport.camera.combined)
         spriteRenderer.begin()
         for(drawable in drawableList) {
+            if (!drawable.visible) continue
             spriteRenderer.draw(drawable as Sprite)
         }
         spriteRenderer.end()

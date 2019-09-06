@@ -1,4 +1,4 @@
-attribute vec4 a_position;
+attribute vec3 a_position;
 attribute vec4 a_color;
 attribute vec2 a_texCoord;
 
@@ -11,5 +11,5 @@ void main()
 {
     v_color = a_color;
     v_texCoords = a_texCoord;
-    gl_Position =  u_projectionTrans * a_position;
+    gl_Position =  u_projectionTrans * vec4(a_position, 1);
 }

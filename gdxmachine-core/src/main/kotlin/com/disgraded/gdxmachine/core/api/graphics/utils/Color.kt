@@ -1,7 +1,6 @@
-package com.disgraded.gdxmachine.core.api.graphics
+package com.disgraded.gdxmachine.core.api.graphics.utils
 
 import com.badlogic.gdx.utils.NumberUtils
-import com.badlogic.gdx.graphics.Color as GdxColor
 
 class Color {
 
