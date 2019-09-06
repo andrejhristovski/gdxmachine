@@ -10,7 +10,7 @@ interface Renderer<T : Drawable2D> : Disposable {
 
     fun draw(drawable: T)
 
-    fun end()
+    fun end(): Int
 
     fun setProjectionMatrix(projectionMatrix: Matrix4)
 }

@@ -34,9 +34,8 @@ class RenderContext(private val virtualWidth: Int, private val virtualHeight: In
     }
 
     fun render() {
+        drawableList.sortBy { it.z }
         viewport.camera.update()
-
-
         spriteRenderer.setProjectionMatrix(viewport.camera.combined)
         spriteRenderer.begin()
         for(drawable in drawableList) {

@@ -17,7 +17,7 @@ class SpriteRenderer : Renderer<Sprite> {
 
     companion object {
         private const val MAX_BUFFERED_CALLS = 1500
-        private const val BUFFER_SIZE = 24
+        private const val BUFFER_SIZE = 20
         private const val VERTICES_PER_BUFFER = 4
         private const val INDICES_PER_BUFFER = 6
     }
@@ -40,7 +40,7 @@ class SpriteRenderer : Renderer<Sprite> {
         val maxVertices = VERTICES_PER_BUFFER * MAX_BUFFERED_CALLS
         val maxIndices = INDICES_PER_BUFFER * MAX_BUFFERED_CALLS
         val vertexAttributes = VertexAttributes(
-                VertexAttribute(Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+                VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
                 VertexAttribute(Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
                 VertexAttribute(Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE)
         )
@@ -71,8 +71,7 @@ class SpriteRenderer : Renderer<Sprite> {
     }
 
     override fun draw(drawable: Sprite) {
-        if(drawable.textureRegion == null) throw RuntimeException("Sprite can not be rendered without texture")
-        validateCachedTexture(drawable.textureRegion!!.texture)
+        validateCachedTexture(drawable.getTextureRegion().texture)
         validateShader(drawable)
         if (bufferedCalls == MAX_BUFFERED_CALLS) {
             flush()
@@ -81,13 +80,15 @@ class SpriteRenderer : Renderer<Sprite> {
         bufferedCalls++
     }
 
-    override fun end() {
+    override fun end(): Int {
         if(!active) throw RuntimeException("The renderer isn't active")
         if (bufferedCalls > 0) flush()
         cachedTexture = null
         active = false
         shaderProgram.end()
+        val calculatedGpuCalls = gpuCalls
         gpuCalls = 0
+        return calculatedGpuCalls
     }
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4) {
@@ -101,8 +102,8 @@ class SpriteRenderer : Renderer<Sprite> {
 
     private fun appendVertices(sprite: Sprite) {
         val idx = bufferedCalls * BUFFER_SIZE
-        val sizeX = sprite.textureRegion!!.regionWidth * sprite.scaleX
-        val sizeY = sprite.textureRegion!!.regionHeight * sprite.scaleY
+        val sizeX = sprite.getTextureRegion().regionWidth * sprite.scaleX
+        val sizeY = sprite.getTextureRegion().regionHeight * sprite.scaleY
 
         var x1 = sprite.x - (sizeX * sprite.anchorX)
         var y1 = sprite.y - (sizeY * sprite.anchorY)
@@ -135,31 +136,27 @@ class SpriteRenderer : Renderer<Sprite> {
 
         vertices[idx] = x1
         vertices[idx + 1] = y1
-        vertices[idx + 2] = sprite.z
-        vertices[idx + 3] = sprite.getColor(Drawable2D.Corner.BOTTOM_LEFT).toFloatBits()
-        vertices[idx + 4] = sprite.textureRegion!!.u
-        vertices[idx + 5] = sprite.textureRegion!!.v2
+        vertices[idx + 2] = sprite.getColor(Drawable2D.Corner.BOTTOM_LEFT).toFloatBits()
+        vertices[idx + 3] = sprite.getTextureRegion().u
+        vertices[idx + 4] = sprite.getTextureRegion().v2
 
-        vertices[idx + 6] = x2
-        vertices[idx + 7] = y2
-        vertices[idx + 8] = sprite.z
-        vertices[idx + 9] = sprite.getColor(Drawable2D.Corner.TOP_LEFT).toFloatBits()
-        vertices[idx + 10] = sprite.textureRegion!!.u
-        vertices[idx + 11] = sprite.textureRegion!!.v
+        vertices[idx + 5] = x2
+        vertices[idx + 6] = y2
+        vertices[idx + 7] = sprite.getColor(Drawable2D.Corner.TOP_LEFT).toFloatBits()
+        vertices[idx + 8] = sprite.getTextureRegion().u
+        vertices[idx + 9] = sprite.getTextureRegion().v
 
-        vertices[idx + 12] = x3
-        vertices[idx + 13] = y3
-        vertices[idx + 14] = sprite.z
-        vertices[idx + 15] = sprite.getColor(Drawable2D.Corner.TOP_RIGHT).toFloatBits()
-        vertices[idx + 16] = sprite.textureRegion!!.u2
-        vertices[idx + 17] = sprite.textureRegion!!.v
+        vertices[idx + 10] = x3
+        vertices[idx + 11] = y3
+        vertices[idx + 12] = sprite.getColor(Drawable2D.Corner.TOP_RIGHT).toFloatBits()
+        vertices[idx + 13] = sprite.getTextureRegion().u2
+        vertices[idx + 14] = sprite.getTextureRegion().v
 
-        vertices[idx + 18] = x4
-        vertices[idx + 19] = y4
-        vertices[idx + 20] = sprite.z
-        vertices[idx + 21] = sprite.getColor(Drawable2D.Corner.BOTTOM_RIGHT).toFloatBits()
-        vertices[idx + 22] = sprite.textureRegion!!.u2
-        vertices[idx + 23] = sprite.textureRegion!!.v2
+        vertices[idx + 15] = x4
+        vertices[idx + 16] = y4
+        vertices[idx + 17] = sprite.getColor(Drawable2D.Corner.BOTTOM_RIGHT).toFloatBits()
+        vertices[idx + 18] = sprite.getTextureRegion().u2
+        vertices[idx + 19] = sprite.getTextureRegion().v2
     }
 
     private fun flush() {

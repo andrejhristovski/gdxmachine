@@ -1,11 +1,12 @@
 package com.disgraded.gdxmachine.core.api.graphics.drawable
 
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 
-class Sprite : Drawable2D(Type.SPRITE) {
+class Sprite : Drawable2D {
 
-    var textureRegion: TextureRegion? = null
+    private var textureRegion: TextureRegion
     private val colorMap = hashMapOf<Corner, Color>()
 
     init {
@@ -13,6 +14,26 @@ class Sprite : Drawable2D(Type.SPRITE) {
         colorMap[Corner.TOP_RIGHT] = Color("#ffffff")
         colorMap[Corner.BOTTOM_LEFT] = Color("#ffffff")
         colorMap[Corner.BOTTOM_RIGHT] = Color("#ffffff")
+    }
+
+    constructor(texture: Texture) : super(Type.SPRITE) {
+        textureRegion = TextureRegion(texture)
+    }
+
+    constructor(textureRegion: TextureRegion) : super(Type.SPRITE) {
+        this.textureRegion = textureRegion
+    }
+
+    fun setTexture(texture: Texture) {
+        textureRegion = TextureRegion(texture)
+    }
+
+    fun setTextureRegion(textureRegion: TextureRegion) {
+        this.textureRegion = textureRegion
+    }
+
+    fun getTextureRegion(): TextureRegion {
+        return textureRegion
     }
 
     fun setColor(color: Color) {

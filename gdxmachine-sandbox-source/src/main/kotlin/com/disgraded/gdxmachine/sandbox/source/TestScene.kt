@@ -1,7 +1,6 @@
 package com.disgraded.gdxmachine.sandbox.source
 
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.disgraded.gdxmachine.core.Context
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 import com.disgraded.gdxmachine.core.api.graphics.RenderContext
@@ -19,17 +18,15 @@ class TestScene : Scene {
     override fun initialize(context: Context) {
         this.context = context
         render = context.graphics.getContext()
-        sprite = Sprite()
         val texture = context.resources.get<Texture>("initial", "rock")
-        sprite.textureRegion = TextureRegion(texture)
+        sprite = Sprite(texture)
         sprite.setColor(Drawable2D.Corner.TOP_LEFT, Color.RED)
         sprite.scaleX = .5f
         sprite.scaleY = .5f
         sprite.z = 0f
 
-        sprite2 = Sprite()
-        sprite2.textureRegion = TextureRegion(texture)
-        sprite2.z = -1f
+        sprite2 = Sprite(texture)
+        sprite2.z = 0f
     }
 
     override fun update(deltaTime: Float) {
