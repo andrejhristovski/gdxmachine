@@ -6,15 +6,16 @@ import com.badlogic.gdx.graphics.VertexAttributes.Usage
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Matrix4
-import com.badlogic.gdx.utils.NumberUtils
 import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
+
+
 
 
 class SpriteRenderer : Renderer<Sprite> {
 
     companion object {
-        private const val MAX_BUFFERED_CALLS = 50
+        private const val MAX_BUFFERED_CALLS = 1500
         private const val BUFFER_SIZE = 20
         private const val VERTICES_PER_BUFFER = 4
         private const val INDICES_PER_BUFFER = 6
@@ -24,6 +25,7 @@ class SpriteRenderer : Renderer<Sprite> {
 
     private val mesh: Mesh
     private val vertices: FloatArray
+    private val indices: ShortArray
     private val shaderProgram: ShaderProgram
     private lateinit var projectionMatrix: Matrix4
 
@@ -45,7 +47,7 @@ class SpriteRenderer : Renderer<Sprite> {
         mesh = Mesh(false, maxVertices, maxIndices, vertexAttributes)
 
         vertices = FloatArray(MAX_BUFFERED_CALLS * BUFFER_SIZE)
-        val indices = ShortArray(MAX_BUFFERED_CALLS * INDICES_PER_BUFFER)
+        indices = ShortArray(MAX_BUFFERED_CALLS * INDICES_PER_BUFFER)
 
         // generate indices
         for (i in indices.indices) {
@@ -56,7 +58,6 @@ class SpriteRenderer : Renderer<Sprite> {
             if (module == 2 || module == 3) indices[i] = (idx + 2).toShort()
             if (module == 4) indices[i] = (idx + 3).toShort()
         }
-        mesh.setIndices(indices)
 
         shaderProgram = shaderFactory.get("sprite", "sprite")
     }
@@ -64,6 +65,7 @@ class SpriteRenderer : Renderer<Sprite> {
     override fun begin() {
         if(active) throw RuntimeException("The renderer is already active")
         gpuCalls = 0
+        Gdx.gl.glDepthMask(false)
         shaderProgram.begin()
         active = true
     }
@@ -87,6 +89,8 @@ class SpriteRenderer : Renderer<Sprite> {
         cachedTexture = null
         active = false
         shaderProgram.end()
+        gpuCalls = 0
+        Gdx.gl.glDepthMask(true)
     }
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4) {
@@ -100,26 +104,58 @@ class SpriteRenderer : Renderer<Sprite> {
 
     private fun appendVertices(sprite: Sprite) {
         val idx = bufferedCalls * BUFFER_SIZE
-        vertices[idx] = sprite.x
-        vertices[idx + 1] = sprite.y
+        val sizeX = sprite.textureRegion!!.regionWidth * sprite.scaleX
+        val sizeY = sprite.textureRegion!!.regionHeight * sprite.scaleY
+
+        var x1 = sprite.x - (sizeX * sprite.pivotX)
+        var y1 = sprite.y - (sizeY * sprite.pivotY)
+        var x2 = x1
+        var y2 = y1 + sizeY
+        var x3 = x1 + sizeX
+        var y3 = y1 + sizeY
+        var x4 = x1 + sizeX
+        var y4 = y1
+
+        sprite.rotation %= 360f
+        if (sprite.rotation != 0f) {
+            val cos = MathUtils.cosDeg(sprite.rotation)
+            val sin = MathUtils.sinDeg(sprite.rotation)
+            val rx1 = cos * x1 - sin * y1
+            val ry1 = sin * x1 + cos * y1
+            val rx2 = cos * x2 - sin * y2
+            val ry2 = sin * x2 + cos * y2
+            val rx3 = cos * x3 - sin * y3
+            val ry3 = sin * x3 + cos * y3
+            x1 = rx1
+            y1 = ry1
+            x2 = rx2
+            y2 = ry2
+            x3 = rx3
+            y3 = ry3
+            x4 = x1 + (x3 - x2)
+            y4 = y3 - (y2 - y1)
+        }
+
+        vertices[idx] = x1
+        vertices[idx + 1] = y1
         vertices[idx + 2] = sprite.colorLeftBottom.toFloatBits()
         vertices[idx + 3] = sprite.textureRegion!!.u
         vertices[idx + 4] = sprite.textureRegion!!.v2
 
-        vertices[idx + 5] = sprite.x
-        vertices[idx + 6] = sprite.y + sprite.textureRegion!!.regionHeight
+        vertices[idx + 5] = x2
+        vertices[idx + 6] = y2
         vertices[idx + 7] = sprite.colorLeftTop.toFloatBits()
         vertices[idx + 8] = sprite.textureRegion!!.u
         vertices[idx + 9] = sprite.textureRegion!!.v
 
-        vertices[idx + 10] = sprite.x + sprite.textureRegion!!.regionWidth
-        vertices[idx + 11] = sprite.y + sprite.textureRegion!!.regionHeight
+        vertices[idx + 10] = x3
+        vertices[idx + 11] = y3
         vertices[idx + 12] = sprite.colorRightTop.toFloatBits()
         vertices[idx + 13] = sprite.textureRegion!!.u2
         vertices[idx + 14] = sprite.textureRegion!!.v
 
-        vertices[idx + 15] = sprite.x + sprite.textureRegion!!.regionWidth
-        vertices[idx + 16] = sprite.y
+        vertices[idx + 15] = x4
+        vertices[idx + 16] = y4
         vertices[idx + 17] = sprite.colorRightBottom.toFloatBits()
         vertices[idx + 18] = sprite.textureRegion!!.u2
         vertices[idx + 19] = sprite.textureRegion!!.v2
@@ -130,16 +166,16 @@ class SpriteRenderer : Renderer<Sprite> {
 
         gpuCalls++
         val indicesCount = bufferedCalls * INDICES_PER_BUFFER
-        val idx = bufferedCalls * BUFFER_SIZE
+        val verticesCount = bufferedCalls * BUFFER_SIZE
 
-        Gdx.gl.glEnable(GL20.GL_BLEND)
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+        cachedTexture!!.bind()
         shaderProgram.setUniformMatrix("u_projectionTrans", projectionMatrix);
         shaderProgram.setUniformi("u_texture", 0);
-        cachedTexture!!.bind()
-        mesh.setVertices(vertices, 0, idx)
-        mesh.indicesBuffer.position(0)
-        mesh.indicesBuffer.limit(indicesCount)
+        mesh.setVertices(vertices, 0, verticesCount)
+        mesh.setIndices(indices, 0, indicesCount)
+        Gdx.gl.glEnable(GL20.GL_BLEND)
+        Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,
+                GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
         mesh.render(shaderProgram, GL20.GL_TRIANGLES, 0, indicesCount)
         bufferedCalls = 0
     }

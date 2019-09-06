@@ -21,4 +21,6 @@ class Sprite : Drawable(Type.SPRITE) {
         colorLeftBottom = color
     }
 
+    // TODO: set methods for easily defining properties
+
 }

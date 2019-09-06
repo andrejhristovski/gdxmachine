@@ -2,6 +2,7 @@ package com.disgraded.gdxmachine.core.api.graphics
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.ScalingViewport
@@ -15,6 +16,8 @@ class RenderContext(private val virtualWidth: Int, private val virtualHeight: In
     class Api(private val renderContext: RenderContext) {
 
         var visible = true
+
+        fun getCamera(): OrthographicCamera = renderContext.camera
 
         fun draw(drawable: Drawable) = renderContext.drawableList.add(drawable)
 
@@ -34,25 +37,19 @@ class RenderContext(private val virtualWidth: Int, private val virtualHeight: In
 
     init {
         applyViewport()
-        camera.position.x += virtualWidth / 2
-        camera.position.y += virtualHeight / 2
     }
 
     fun render() {
         viewport.camera.update()
+
+
         spriteRenderer.setProjectionMatrix(viewport.camera.combined)
         spriteRenderer.begin()
         for(drawable in drawableList) {
             spriteRenderer.draw(drawable as Sprite)
         }
         spriteRenderer.end()
-
-    }
-
-    private fun getRenderer(type: Drawable.Type): Renderer<out Drawable> {
-        return when(type) {
-            Drawable.Type.SPRITE -> spriteRenderer
-        }
+        drawableList.clear()
     }
 
     fun resize(width: Int, height: Int) {
