@@ -26,11 +26,16 @@ class Color {
         val GREY: Color = Color("#9e9e9e")
         val BLUE_GREY: Color = Color("#607d8b")
         val BLACK: Color = Color("#000000")
+
+        fun random(): Color {
+            return Color(Math.random().toFloat(), Math.random().toFloat(), Math.random().toFloat(),
+                    Math.random().toFloat())
+        }
     }
 
-    private var r : Float = 0f
-    private var g : Float = 0f
-    private var b : Float = 0f
+    var r : Float = 0f
+    var g : Float = 0f
+    var b : Float = 0f
     var alpha : Float = 1f
 
 

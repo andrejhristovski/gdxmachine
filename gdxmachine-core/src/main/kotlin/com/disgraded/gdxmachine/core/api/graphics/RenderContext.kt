@@ -12,6 +12,9 @@ import com.disgraded.gdxmachine.core.api.graphics.renderer.SpriteRenderer
 class RenderContext(private val virtualWidth: Int, private val virtualHeight: Int) : Disposable {
 
     class Api(private val renderContext: RenderContext) {
+
+        fun getCamera(): OrthographicCamera = renderContext.camera
+
         var visible = true
 
         fun draw(drawable2D: Drawable2D) = renderContext.drawableList.add(drawable2D)
