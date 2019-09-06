@@ -4,6 +4,6 @@ import com.disgraded.gdxmachine.core.api.resource.AssetPackage
 
 class InitialAssets : AssetPackage("initial") {
     init {
-        loadTexture("rock", "rock.png")
+        loadTexture("rock", "bg.jpg")
     }
 }

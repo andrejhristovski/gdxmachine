@@ -8,8 +8,8 @@ class SandboxGame : EntryPoint {
 
     override fun configure(): Config? {
         return Config.apply {
-            screenX = 1920
-            screenY = 1080
+            screenX = 1280
+            screenY = 720
         }
     }
 

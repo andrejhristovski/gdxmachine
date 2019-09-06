@@ -3,6 +3,7 @@ package com.disgraded.gdxmachine.sandbox.source
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.disgraded.gdxmachine.core.Context
+import com.disgraded.gdxmachine.core.api.graphics.Color
 import com.disgraded.gdxmachine.core.api.graphics.RenderContext
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 import com.disgraded.gdxmachine.core.api.scene.Scene
@@ -19,11 +20,14 @@ class TestScene : Scene {
         sprite = Sprite()
         val texture = context.resources.get<Texture>("initial", "rock")
         sprite.textureRegion = TextureRegion(texture)
+        sprite.colorLeftTop = Color.CYAN
+        sprite.colorRightTop = Color.RED
+        sprite.colorLeftBottom = Color.AMBER
+        sprite.colorRightBottom = Color.BLUE_GREY
     }
 
     override fun update(deltaTime: Float) {
         render.draw(sprite)
-        println("FPS ${context.graphics.getFPS()}")
     }
 
     override fun destroy() {

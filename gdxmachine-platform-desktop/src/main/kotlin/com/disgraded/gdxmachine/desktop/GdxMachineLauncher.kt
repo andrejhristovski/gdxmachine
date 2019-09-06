@@ -18,8 +18,8 @@ class GdxMachineLauncher {
     private fun generateConfig() : Lwjgl3ApplicationConfiguration {
         return Lwjgl3ApplicationConfiguration().apply {
             enableGLDebugOutput(false, System.out)
-            setDecorated(false)
-            setResizable(false)
+            setDecorated(true)
+            setResizable(true)
             useVsync(false)
             setWindowedMode(1280, 720)
             setIdleFPS(60)

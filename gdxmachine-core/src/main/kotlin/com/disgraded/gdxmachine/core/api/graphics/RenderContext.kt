@@ -14,13 +14,9 @@ import com.disgraded.gdxmachine.core.api.graphics.renderer.SpriteRenderer
 class RenderContext(private val virtualWidth: Int, private val virtualHeight: Int) : Disposable {
 
     class Api(private val renderContext: RenderContext) {
-
         var visible = true
 
-        fun getCamera(): OrthographicCamera = renderContext.camera
-
         fun draw(drawable: Drawable) = renderContext.drawableList.add(drawable)
-
     }
 
     private val drawableList = arrayListOf<Drawable>()
@@ -59,6 +55,7 @@ class RenderContext(private val virtualWidth: Int, private val virtualHeight: In
     }
 
     override fun dispose() {
+        spriteRenderer.dispose()
         drawableList.clear()
     }
 
