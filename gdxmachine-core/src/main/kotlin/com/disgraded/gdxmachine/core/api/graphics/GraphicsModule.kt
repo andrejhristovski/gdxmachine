@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.disgraded.gdxmachine.core.Config
 import com.disgraded.gdxmachine.core.Core
-import com.badlogic.gdx.Gdx.graphics
-
 
 
 class GraphicsModule : Core.Module {
@@ -16,14 +14,18 @@ class GraphicsModule : Core.Module {
 
         fun getFPS() : Int = Gdx.graphics.framesPerSecond
 
-        fun getContext(name: String = "default") : RenderContext.Api = graphicsModule.getContext(name)
+        fun getContext(name: String = "default") : Viewport.Api = graphicsModule.getContext(name)
 
         fun clear() = graphicsModule.clear()
+
+        fun resize(width: Float, height: Float, scale: Config.Graphics.Scale = Config.Graphics.Scale.FIT) {
+            graphicsModule.viewports.forEach { it.value.updateViewport(width, height, scale) }
+        }
     }
 
     override val api: Core.Api = GraphicsApi(this)
 
-    private val contexts = hashMapOf<String, RenderContext>()
+    private val viewports = hashMapOf<String, Viewport>()
 
     lateinit var config: Config
 
@@ -38,39 +40,40 @@ class GraphicsModule : Core.Module {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         Gdx.gl.glClearDepthf(1f)
         Gdx.gl.glClearColor(0f, 0f ,0f, 1f)
-        contexts.forEach { it.value.render() }
+        viewports.toList().sortedBy { it.second.api.order }.forEach{ it.second.render() }
     }
 
     override fun unload() {
-        contexts.forEach { it.value.dispose() }
+        viewports.forEach { it.value.dispose() }
     }
 
     fun resize(width: Int, height: Int) {
 
-        for (context in contexts) {
+        for (context in viewports) {
             context.value.resize(width, height)
         }
     }
 
-    private fun getContext(name: String): RenderContext.Api {
-        if (!contexts.containsKey(name)) {
-            contexts[name] = RenderContext(config.screenX , config.screenY)
+    private fun getContext(name: String): Viewport.Api {
+        if (!viewports.containsKey(name)) {
+            viewports[name] = Viewport()
+            viewports[name]!!.updateViewport(config.graphics.width, config.graphics.height, config.graphics.scale)
         }
-        return contexts[name]!!.api
+        return viewports[name]!!.api
     }
 
     private fun removeContext(name: String) {
-        if (!contexts.containsKey(name)) {
+        if (!viewports.containsKey(name)) {
             throw RuntimeException("RenderContext [\"$name\"] doesn't exist!")
         }
-        contexts[name]!!.dispose()
-        contexts.remove(name)
+        viewports[name]!!.dispose()
+        viewports.remove(name)
     }
 
     private fun clear() {
-        for (context in contexts) {
+        for (context in viewports) {
             context.value.dispose()
         }
-        contexts.clear()
+        viewports.clear()
     }
 }

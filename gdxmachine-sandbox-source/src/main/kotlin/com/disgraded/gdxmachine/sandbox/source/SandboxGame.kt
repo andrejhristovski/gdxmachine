@@ -7,10 +7,7 @@ import com.disgraded.gdxmachine.core.Context
 class SandboxGame : EntryPoint {
 
     override fun configure(): Config? {
-        return Config.apply {
-            screenX = 1280
-            screenY = 720
-        }
+        return null
     }
 
     override fun initialize(context: Context) {
