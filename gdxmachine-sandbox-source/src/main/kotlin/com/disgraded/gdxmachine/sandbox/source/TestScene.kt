@@ -21,10 +21,8 @@ class TestScene : Scene {
         this.context = context
         render = context.graphics.getContext()
         render2 =context.graphics.getContext("second")
-//        render.project(0f, 0f, .5f, 1f, 2f, 2f)
-//        render2.project(.5f, 0f, .5f, 1f)
-
-        render2.visible = false
+        render.project(0f, 0f, .5f, 1f, 2f)
+        render2.project(.5f, 0f, .5f, 1f, 2f)
 
         val texture = context.resources.get<Texture>("initial", "rock")
 
@@ -32,45 +30,21 @@ class TestScene : Scene {
         background.setColor(Color.YELLOW)
         background.getColor().alpha = .5f
 
-
         var startX = -1280 / 2f
-//        for (i in 0..100) {
-//            val sprite = Sprite(TextureRegion(texture, 100, 200))
-//            sprite.setColor(Drawable2D.Corner.TOP_LEFT, Color.random())
-//            sprite.setColor(Drawable2D.Corner.BOTTOM_RIGHT, Color.random())
-//            sprite.setColor(Drawable2D.Corner.TOP_RIGHT, Color.random())
-//            sprite.x = startX
-//            sprite.y = -200f
-//            spriteList.add(sprite)
-//            startX += 100
-//        }
-//
-//        startX = -1280 / 2f
-//        for (i in 0..50) {
-//            val sprite = Sprite(TextureRegion(texture, 50, 200))
-//            sprite.setColor(Drawable2D.Corner.TOP_LEFT, Color.random())
-//            sprite.setColor(Drawable2D.Corner.BOTTOM_RIGHT, Color.random())
-//            sprite.setColor(Drawable2D.Corner.TOP_RIGHT, Color.random())
-//            sprite.x = startX
-//            spriteList.add(sprite)
-//            startX += 50
-//        }
-//
-        startX = -1280 / 2f
         for (i in 0..500) {
-            val sprite = Sprite(TextureRegion(texture, 60, 200))
+            val sprite = Sprite(TextureRegion(texture, 100, 200))
             sprite.setColor(Drawable2D.Corner.TOP_LEFT, Color.random())
             sprite.setColor(Drawable2D.Corner.BOTTOM_RIGHT, Color.random())
             sprite.setColor(Drawable2D.Corner.TOP_RIGHT, Color.random())
             sprite.x = startX
             sprite.y = 200f
             spriteList.add(sprite)
-            startX += 60
+            startX += 100
         }
     }
 
     override fun update(deltaTime: Float) {
-        render.getCamera().position.x += 50 * deltaTime
+//        render.getCamera().position.x += 50 * deltaTime
 //        background.x = render.getCamera().position.x
         render.draw(background)
         render2.draw(background)

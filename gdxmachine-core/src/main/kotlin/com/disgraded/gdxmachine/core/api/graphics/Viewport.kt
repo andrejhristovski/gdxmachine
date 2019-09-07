@@ -76,7 +76,6 @@ class Viewport : Disposable {
     }
 
     fun resize(width: Int, height: Int) {
-        println("SCREEN UPDATE: $width x $height")
         screenWidth = width
         screenHeight = height
     }
@@ -124,7 +123,15 @@ class Viewport : Disposable {
             }
 
             Config.Graphics.Scale.FILL -> {
-                TODO("needs to be implemented")
+                val targetRatio: Float = screenHeight.toFloat() / screenWidth
+                val sourceRatio: Float = viewportHeight / viewportWidth
+                val scale = if (targetRatio > sourceRatio) screenWidth / viewportWidth else screenHeight / viewportHeight
+                viewportX = (screenWidth * viewportRatioX).toInt()
+                viewportY = (screenHeight * viewportRatioY).toInt()
+                viewportSizeX = (screenWidth * viewportScaleX).toInt()
+                viewportSizeY = (screenHeight * viewportScaleY).toInt()
+                previewWidth = screenWidth.toFloat() * (1f / scale) * (1f / worldScaleX) * (1f / viewportScaleX)
+                previewHeight = screenHeight.toFloat() * (1f / scale) * (1f / worldScaleY) * (1f / viewportScaleY)
             }
         }
 
