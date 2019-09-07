@@ -6,8 +6,8 @@ import com.disgraded.gdxmachine.core.api.resource.ResourceModule
 import com.disgraded.gdxmachine.core.api.scene.SceneModule
 
 object Context {
-    lateinit var resources: ResourceModule.ResourceApi
-    lateinit var engine: EngineModule.EngineApi
-    lateinit var scene: SceneModule.SceneApi
-    lateinit var graphics: GraphicsModule.GraphicsApi
+    lateinit var resources: ResourceModule.Api
+    lateinit var engine: EngineModule.Api
+    lateinit var scene: SceneModule.Api
+    lateinit var graphics: GraphicsModule.Api
 }

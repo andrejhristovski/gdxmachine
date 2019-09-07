@@ -8,7 +8,7 @@ import com.disgraded.gdxmachine.core.Core
 
 class GraphicsModule : Core.Module {
 
-    class GraphicsApi(private val graphicsModule: GraphicsModule) : Core.Api {
+    class Api(private val graphicsModule: GraphicsModule) : Core.Api {
 
         fun getDeltaTime() : Float = Gdx.graphics.deltaTime
 
@@ -27,7 +27,7 @@ class GraphicsModule : Core.Module {
         }
     }
 
-    override val api: Core.Api = GraphicsApi(this)
+    override val api: Core.Api = Api(this)
 
     private val viewports = hashMapOf<String, Viewport>()
 

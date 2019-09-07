@@ -21,6 +21,14 @@ class TestScene : Scene() {
         context.graphics.getViewport().draw(sprite)
     }
 
+    override fun pause() {
+
+    }
+
+    override fun resume() {
+
+    }
+
     override fun destroy() {
 
     }

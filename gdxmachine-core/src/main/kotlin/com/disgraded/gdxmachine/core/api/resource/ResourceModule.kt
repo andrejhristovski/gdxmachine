@@ -7,7 +7,7 @@ import kotlin.reflect.full.createInstance
 
 class ResourceModule : Core.Module {
 
-    class ResourceApi(private val resourceModule: ResourceModule) : Core.Api {
+    class Api(private val resourceModule: ResourceModule) : Core.Api {
 
         fun load(assetPackageClass: KClass<out AssetPackage>, sync: Boolean = false) {
             val assetPackage = assetPackageClass.createInstance()
@@ -22,7 +22,7 @@ class ResourceModule : Core.Module {
         fun clear() = resourceModule.clear()
     }
 
-    override val api: Core.Api = ResourceApi(this)
+    override val api: Core.Api = Api(this)
 
     private val pendingPackages = arrayListOf<Pair<String, AssetPackage>>()
     private val pendingPackageKeys = arrayListOf<String>()

@@ -7,11 +7,11 @@ import kotlin.reflect.full.createInstance
 
 class SceneModule : Core.Module {
 
-    class SceneApi(private val sceneModule: SceneModule) : Core.Api {
+    class Api(private val sceneModule: SceneModule) : Core.Api {
         fun set(sceneClass: KClass<out Scene>) = sceneModule.setScene(sceneClass)
     }
 
-    override val api: Core.Api = SceneApi(this)
+    override val api: Core.Api = Api(this)
 
     private lateinit var core: Core
     private var nextScene: KClass<out Scene>? = null

@@ -8,7 +8,7 @@ import com.disgraded.gdxmachine.core.Core
 
 class EngineModule : Core.Module {
 
-    class EngineApi(private val engineModule: EngineModule) : Core.Api {
+    class Api(private val engineModule: EngineModule) : Core.Api {
         fun add(entity: Entity) = engineModule.ecs.add(entity)
 
         fun get(): ArrayList<Entity> = engineModule.ecs.get()
@@ -37,7 +37,7 @@ class EngineModule : Core.Module {
                 engineModule.ecs.removeEntityListener(listener)
     }
 
-    override val api: Core.Api = EngineApi(this)
+    override val api: Core.Api = Api(this)
 
     lateinit var ecs: ECSystem
 

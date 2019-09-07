@@ -35,10 +35,10 @@ class Core private constructor(private val entryPoint: EntryPoint) {
     private val graphicsModule = GraphicsModule()
 
     fun load() {
-        context.resources = resourceModule.api as ResourceModule.ResourceApi
-        context.engine = engineModule.api as EngineModule.EngineApi
-        context.scene = sceneModule.api as SceneModule.SceneApi
-        context.graphics = graphicsModule.api as GraphicsModule.GraphicsApi
+        context.resources = resourceModule.api as ResourceModule.Api
+        context.engine = engineModule.api as EngineModule.Api
+        context.scene = sceneModule.api as SceneModule.Api
+        context.graphics = graphicsModule.api as GraphicsModule.Api
 
         var config = entryPoint.configure()
         if (config == null) config = Config
