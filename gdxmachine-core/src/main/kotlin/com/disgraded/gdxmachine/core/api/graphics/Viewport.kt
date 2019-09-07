@@ -14,7 +14,7 @@ class Viewport : Disposable {
 
     class Api(private val viewport: Viewport) {
 
-        fun getCamera(): OrthographicCamera = viewport.camera
+        val camera: OrthographicCamera = viewport.camera
 
         var visible = true
 
@@ -30,6 +30,7 @@ class Viewport : Disposable {
             viewport.viewportScaleY = scaleY
             viewport.worldScaleX = worldScaleX
             viewport.worldScaleY = worldScaleY
+            viewport.shouldUpdateViewport = true
         }
     }
 
@@ -49,16 +50,14 @@ class Viewport : Disposable {
     private var worldScaleX = 1f
     private var worldScaleY = 1f
 
+    private var shouldUpdateViewport = false
+
     private val camera = OrthographicCamera()
     private val viewport = ScalingViewport(Scaling.none, 0f, 0f, camera)
 
-    val api = Api(this)
-
     private val spriteRenderer = SpriteRenderer()
 
-    init {
-        applyViewport()
-    }
+    val api = Api(this)
 
     fun render() {
         if(!api.visible) return
@@ -78,12 +77,14 @@ class Viewport : Disposable {
     fun resize(width: Int, height: Int) {
         screenWidth = width
         screenHeight = height
+        shouldUpdateViewport = true
     }
 
     fun updateViewport(width: Float, height: Float, scale: Config.Graphics.Scale) {
         viewportWidth = width
         viewportHeight = height
         viewportScale = scale
+        shouldUpdateViewport = true
     }
 
     override fun dispose() {
@@ -92,6 +93,7 @@ class Viewport : Disposable {
     }
 
     private fun applyViewport() {
+        if(!shouldUpdateViewport) return
         if (viewportWidth == 0f || viewportHeight == 0f) {
             viewportWidth = 1280f
             viewportHeight = 720f

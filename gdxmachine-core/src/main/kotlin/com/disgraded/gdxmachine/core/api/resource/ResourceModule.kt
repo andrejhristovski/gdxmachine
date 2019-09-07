@@ -20,6 +20,21 @@ class ResourceModule : Core.Module {
         fun unload(packageKey: String) = resourceModule.unloadPackage(packageKey)
 
         fun clear() = resourceModule.clear()
+
+        fun getPendingPackages(): Int {
+            return resourceModule.pendingPackages.size
+        }
+
+        fun getCurrentProgress(): Float {
+            if (resourceModule.current !== null) {
+                return resourceModule.current!!.second.getProgress()
+            }
+            return 0f
+        }
+
+        fun isLoadingFinished(): Boolean {
+            return resourceModule.pendingPackages.size == 0 && resourceModule.current == null
+        }
     }
 
     override val api: Core.Api = Api(this)
