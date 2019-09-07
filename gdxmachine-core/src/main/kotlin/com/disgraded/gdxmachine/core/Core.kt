@@ -69,14 +69,19 @@ class Core private constructor(private val entryPoint: EntryPoint) {
     }
 
     fun pause() {
-
+        sceneModule.pause()
     }
 
     fun resume() {
-
+        sceneModule.resume()
     }
 
     fun resize(width: Int, height: Int) {
         graphicsModule.resize(width, height)
+    }
+
+    fun reset() {
+        engineModule.reset()
+        graphicsModule.clear()
     }
 }

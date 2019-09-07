@@ -14,7 +14,11 @@ class GraphicsModule : Core.Module {
 
         fun getFPS() : Int = Gdx.graphics.framesPerSecond
 
-        fun getContext(name: String = "default") : Viewport.Api = graphicsModule.getContext(name)
+        fun createViewport(name: String = "default") : Viewport.Api = graphicsModule.createViewport(name)
+
+        fun getViewport(name: String = "default") : Viewport.Api = graphicsModule.getViewport(name)
+
+        fun deleteViewport(name: String = "default") = graphicsModule.deleteViewport(name)
 
         fun clear() = graphicsModule.clear()
 
@@ -44,7 +48,10 @@ class GraphicsModule : Core.Module {
     }
 
     override fun unload() {
-        viewports.forEach { it.value.dispose() }
+        viewports.forEach {
+            it.value.dispose()
+        }
+        viewports.clear()
     }
 
     fun resize(width: Int, height: Int) {
@@ -54,23 +61,27 @@ class GraphicsModule : Core.Module {
         }
     }
 
-    private fun getContext(name: String): Viewport.Api {
-        if (!viewports.containsKey(name)) {
-            viewports[name] = Viewport()
-            viewports[name]!!.updateViewport(config.graphics.width, config.graphics.height, config.graphics.scale)
-        }
+    private fun createViewport(name: String): Viewport.Api {
+        if (viewports.containsKey(name)) throw RuntimeException("Viewport with the name \"$name\" it's already created!")
+        viewports[name] = Viewport()
+        viewports[name]!!.updateViewport(config.graphics.width, config.graphics.height, config.graphics.scale)
         return viewports[name]!!.api
     }
 
-    private fun removeContext(name: String) {
-        if (!viewports.containsKey(name)) {
-            throw RuntimeException("RenderContext [\"$name\"] doesn't exist!")
+    private fun getViewport(name: String): Viewport.Api {
+        if (viewports.containsKey(name)) {
+            return viewports[name]!!.api
         }
+        throw RuntimeException("Viewport with the name \"$name\" doesn't exist!")
+    }
+
+    private fun deleteViewport(name: String) {
+        if (!viewports.containsKey(name)) throw RuntimeException("Viewport with the name \"$name\" doesn't exist!")
         viewports[name]!!.dispose()
         viewports.remove(name)
     }
 
-    private fun clear() {
+    fun clear() {
         for (context in viewports) {
             context.value.dispose()
         }

@@ -25,10 +25,12 @@ class SceneModule : Core.Module {
         if (nextScene !== null) {
             if (currentScene !== null) {
                 currentScene!!.destroy()
+                core.reset()
             }
             currentScene = nextScene!!.createInstance()
             nextScene = null
-            currentScene!!.initialize(core.context)
+            currentScene!!.context = core.context
+            currentScene!!.initialize()
         }
         if (currentScene !== null) {
             currentScene!!.update(deltaTime)
@@ -48,5 +50,13 @@ class SceneModule : Core.Module {
 
     fun destroy() {
         if (currentScene !== null) currentScene!!.destroy()
+    }
+
+    fun pause() {
+        if (currentScene !== null) currentScene!!.pause()
+    }
+
+    fun resume() {
+        if (currentScene !== null) currentScene!!.resume()
     }
 }

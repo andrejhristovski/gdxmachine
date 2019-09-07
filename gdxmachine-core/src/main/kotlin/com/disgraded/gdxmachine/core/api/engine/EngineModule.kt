@@ -52,4 +52,8 @@ class EngineModule : Core.Module {
     override fun unload() {
         ecs.clear()
     }
+
+    fun reset() {
+        ecs.clear()
+    }
 }
