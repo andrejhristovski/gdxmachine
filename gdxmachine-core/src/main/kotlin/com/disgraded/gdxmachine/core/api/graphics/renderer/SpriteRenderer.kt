@@ -114,7 +114,6 @@ class SpriteRenderer : Renderer<Sprite> {
         var x4 = x1 + sizeX
         var y4 = y1
 
-        sprite.rotation %= 360f
         if (sprite.rotation != 0f) {
             val cos = MathUtils.cosDeg(sprite.rotation)
             val sin = MathUtils.sinDeg(sprite.rotation)

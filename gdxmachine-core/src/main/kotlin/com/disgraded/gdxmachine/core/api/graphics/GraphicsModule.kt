@@ -54,7 +54,7 @@ class GraphicsModule : Core.Module {
 
     private fun getContext(name: String): RenderContext.Api {
         if (!contexts.containsKey(name)) {
-            contexts[name] = RenderContext(config.screenX, config.screenY)
+            contexts[name] = RenderContext(config.screenX , config.screenY)
         }
         return contexts[name]!!.api
     }

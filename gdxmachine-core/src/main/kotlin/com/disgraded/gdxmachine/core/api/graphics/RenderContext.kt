@@ -9,7 +9,7 @@ import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable2D
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 import com.disgraded.gdxmachine.core.api.graphics.renderer.SpriteRenderer
 
-class RenderContext(private val virtualWidth: Int, private val virtualHeight: Int) : Disposable {
+class RenderContext(private var virtualWidth: Int, private var virtualHeight: Int) : Disposable {
 
     class Api(private val renderContext: RenderContext) {
 
@@ -26,7 +26,7 @@ class RenderContext(private val virtualWidth: Int, private val virtualHeight: In
     private var screenHeight = Gdx.graphics.height
 
     private val camera = OrthographicCamera()
-    private val viewport = ScalingViewport(Scaling.fit, virtualWidth.toFloat(), virtualHeight.toFloat(), camera)
+    private val viewport = ScalingViewport(Scaling.fill, virtualWidth.toFloat(), virtualHeight.toFloat(), camera)
 
     val api = Api(this)
 

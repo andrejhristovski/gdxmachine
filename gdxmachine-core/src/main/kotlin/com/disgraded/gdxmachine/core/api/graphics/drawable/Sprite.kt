@@ -64,9 +64,4 @@ class Sprite : Drawable2D {
             Corner.BOTTOM_RIGHT -> colorMap[Corner.BOTTOM_RIGHT]!!
         }
     }
-
-
-
-    // TODO: set methods for easily defining properties
-
 }

@@ -26,7 +26,7 @@ class TestScene : Scene {
 
 
         var startX = -1280 / 2f
-        for (i in 0..500) {
+        for (i in 0..1500) {
             val sprite = Sprite(TextureRegion(texture, 100, 200))
             sprite.setColor(Drawable2D.Corner.TOP_LEFT, Color.random())
             sprite.setColor(Drawable2D.Corner.BOTTOM_RIGHT, Color.random())
@@ -38,7 +38,7 @@ class TestScene : Scene {
         }
 
         startX = -1280 / 2f
-        for (i in 0..500) {
+        for (i in 0..1000) {
             val sprite = Sprite(TextureRegion(texture, 50, 200))
             sprite.setColor(Drawable2D.Corner.TOP_LEFT, Color.random())
             sprite.setColor(Drawable2D.Corner.BOTTOM_RIGHT, Color.random())
