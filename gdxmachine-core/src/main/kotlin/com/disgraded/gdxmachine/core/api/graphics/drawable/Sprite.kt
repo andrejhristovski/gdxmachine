@@ -24,6 +24,8 @@ open class Sprite : Drawable2D {
         this.textureRegion = textureRegion
     }
 
+    override fun getType(): String = "sprite"
+
     fun setTexture(texture: Texture) {
         textureRegion = TextureRegion(texture)
     }

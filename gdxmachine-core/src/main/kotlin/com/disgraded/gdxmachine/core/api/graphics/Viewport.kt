@@ -8,6 +8,8 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.disgraded.gdxmachine.core.Config
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable2D
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
+import com.disgraded.gdxmachine.core.api.graphics.renderer.MaskedSpriteRenderer
+import com.disgraded.gdxmachine.core.api.graphics.renderer.Renderer2D
 import com.disgraded.gdxmachine.core.api.graphics.renderer.SpriteRenderer
 
 class Viewport : Disposable {
@@ -55,22 +57,38 @@ class Viewport : Disposable {
     private val camera = OrthographicCamera()
     private val viewport = ScalingViewport(Scaling.none, 0f, 0f, camera)
 
-    private val spriteRenderer = SpriteRenderer()
+    private val rendererMap = hashMapOf<String, Renderer2D>()
+    private var currentRenderer: Renderer2D
 
     val api = Api(this)
+
+    init {
+        rendererMap["sprite"] = SpriteRenderer()
+        rendererMap["masked_sprite"] = MaskedSpriteRenderer()
+
+        currentRenderer = rendererMap["masked_sprite"]!!
+    }
 
     fun render() {
         if(!api.visible) return
         applyViewport()
         drawableList.sortBy { it.z }
         viewport.camera.update()
-        spriteRenderer.setProjectionMatrix(viewport.camera.combined)
-        spriteRenderer.begin()
-        for(drawable in drawableList) {
-            if (!drawable.visible) continue
-            spriteRenderer.draw(drawable as Sprite)
+        for (renderer in rendererMap) {
+            renderer.value.setProjectionMatrix(camera.combined)
         }
-        spriteRenderer.end()
+
+        for (drawable in drawableList) {
+            if (!drawable.visible) continue
+            if (currentRenderer.typeHandled === drawable.getType() && !currentRenderer.active) currentRenderer.begin()
+            else if(currentRenderer.typeHandled !== drawable.getType()) {
+                if (currentRenderer.active) currentRenderer.end()
+                currentRenderer = rendererMap[drawable.getType()]!!
+                currentRenderer.begin()
+            }
+            currentRenderer.draw(drawable)
+        }
+        if (currentRenderer.active) currentRenderer.end()
         drawableList.clear()
         shouldUpdateViewport = true
     }
@@ -89,7 +107,10 @@ class Viewport : Disposable {
     }
 
     override fun dispose() {
-        spriteRenderer.dispose()
+        for(renderer in rendererMap) {
+            renderer.value.dispose()
+        }
+        rendererMap.clear()
         drawableList.clear()
     }
 

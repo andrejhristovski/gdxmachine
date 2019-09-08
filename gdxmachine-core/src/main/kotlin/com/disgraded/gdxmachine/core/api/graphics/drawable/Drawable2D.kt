@@ -15,6 +15,8 @@ abstract class Drawable2D {
         set(value) { field = value % 360 }
     var visible: Boolean = true
 
+    abstract fun getType(): String
+
     fun setPosition(x: Float, y: Float, z: Float) {
         this.x = x
         this.y = y
@@ -35,4 +37,5 @@ abstract class Drawable2D {
         anchorX = value
         anchorY = value
     }
+
 }

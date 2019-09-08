@@ -23,6 +23,8 @@ class MaskedSprite : Sprite {
         mask = maskRegion
     }
 
+    override fun getType(): String = "masked_sprite"
+
     fun setMask(mask: Texture) {
         this.mask = TextureRegion(mask)
     }
