@@ -22,6 +22,8 @@ class Viewport : Disposable {
 
         var order = 0
 
+        var glCalls = 0
+
         fun draw(drawable2D: Drawable2D) = viewport.drawableList.add(drawable2D)
 
         fun project(xRatio: Float, yRatio: Float, scaleX: Float, scaleY: Float, worldScaleX: Float = 1f,
@@ -74,22 +76,28 @@ class Viewport : Disposable {
         applyViewport()
         drawableList.sortBy { it.z }
         viewport.camera.update()
+
         for (renderer in rendererMap) {
             renderer.value.setProjectionMatrix(camera.combined)
         }
+
+        var gpuCalls = 0
 
         for (drawable in drawableList) {
             if (!drawable.visible) continue
             if (currentRenderer.typeHandled === drawable.getType() && !currentRenderer.active) currentRenderer.begin()
             else if(currentRenderer.typeHandled !== drawable.getType()) {
-                if (currentRenderer.active) currentRenderer.end()
+                if (currentRenderer.active) gpuCalls += currentRenderer.end()
                 currentRenderer = rendererMap[drawable.getType()]!!
                 currentRenderer.begin()
             }
             currentRenderer.draw(drawable)
         }
-        if (currentRenderer.active) currentRenderer.end()
+
+        if (currentRenderer.active) gpuCalls += currentRenderer.end()
+        api.glCalls = gpuCalls
         drawableList.clear()
+
         shouldUpdateViewport = true
     }
 

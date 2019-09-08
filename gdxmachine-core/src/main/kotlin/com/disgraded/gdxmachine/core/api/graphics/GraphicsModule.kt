@@ -10,6 +10,8 @@ class GraphicsModule : Core.Module {
 
     class Api(private val graphicsModule: GraphicsModule) : Core.Api {
 
+        var glCalls = 0
+
         fun getDeltaTime() : Float = Gdx.graphics.deltaTime
 
         fun getFPS() : Int = Gdx.graphics.framesPerSecond
@@ -44,7 +46,12 @@ class GraphicsModule : Core.Module {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         Gdx.gl.glClearDepthf(1f)
         Gdx.gl.glClearColor(0f, 0f ,0f, 1f)
-        viewports.toList().sortedBy { it.second.api.order }.forEach{ it.second.render() }
+        var glCalls = 0
+        viewports.toList().sortedBy { it.second.api.order }.forEach{
+            it.second.render()
+            glCalls += it.second.api.glCalls
+        }
+        (api as Api).glCalls = glCalls
     }
 
     override fun unload() {

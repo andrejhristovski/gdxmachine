@@ -22,8 +22,10 @@ class TestScene : Scene() {
     }
 
     override fun update(deltaTime: Float) {
-        context.graphics.getViewport().draw(background)
-        println(context.graphics.getFPS())
+        for (i in 1..10) {
+            context.graphics.getViewport().draw(background)
+        }
+        println(context.graphics.glCalls)
     }
 
     override fun pause() {
