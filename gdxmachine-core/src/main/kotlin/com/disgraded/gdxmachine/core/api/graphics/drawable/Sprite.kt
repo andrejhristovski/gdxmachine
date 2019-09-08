@@ -8,7 +8,6 @@ open class Sprite : Drawable {
 
     private var texture: TextureRegion
     private var normalMap: TextureRegion? = null
-    private var depthMap: TextureRegion? = null
     private val colorMap = hashMapOf<Corner, Color>()
 
     init {
@@ -66,18 +65,6 @@ open class Sprite : Drawable {
 
     fun getNormalMap(): TextureRegion? {
         return normalMap
-    }
-
-    fun setDepthMap(depthMap: TextureRegion) {
-        this.depthMap = depthMap
-    }
-
-    fun setDepthMap(depthMap: Texture) {
-        this.depthMap = TextureRegion(depthMap)
-    }
-
-    fun getDepthMap(): TextureRegion? {
-        return depthMap
     }
 
     fun getColor(): Color {
