@@ -15,12 +15,12 @@ class MaskedSprite : Sprite {
         this.mask = TextureRegion(mask)
     }
 
-    constructor(texture: Texture, maskRegion: TextureRegion): super(texture) {
-        mask = maskRegion
+    constructor(texture: Texture, mask: TextureRegion): super(texture) {
+        this.mask = mask
     }
 
-    constructor(textureRegion: TextureRegion, maskRegion: TextureRegion): super(textureRegion) {
-        mask = maskRegion
+    constructor(textureRegion: TextureRegion, mask: TextureRegion): super(textureRegion) {
+        this.mask = mask
     }
 
     override fun getType(): String = "masked_sprite"
@@ -29,8 +29,8 @@ class MaskedSprite : Sprite {
         this.mask = TextureRegion(mask)
     }
 
-    fun setMask(maskRegion: TextureRegion) {
-        this.mask = maskRegion
+    fun setMask(mask: TextureRegion) {
+        this.mask = mask
     }
 
     fun getMask() : TextureRegion {

@@ -182,6 +182,7 @@ class MaskedSpriteRenderer : Renderer2D {
 
         cachedTexture!!.bind()
         cachedMask!!.bind(1)
+        Gdx.gl.glActiveTexture(0)
         shaderProgram.setUniformMatrix("u_projectionTrans", projectionMatrix);
         shaderProgram.setUniformi("u_texture", 0)
         shaderProgram.setUniformi("u_texture_mask", 1)

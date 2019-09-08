@@ -168,7 +168,8 @@ class SpriteRenderer : Renderer2D {
         val indicesCount = bufferedCalls * INDICES_PER_BUFFER
         val verticesCount = bufferedCalls * BUFFER_SIZE
 
-        cachedTexture!!.bind()
+        cachedTexture!!.bind(0)
+        Gdx.gl.glActiveTexture(0)
         shaderProgram.setUniformMatrix("u_projectionTrans", projectionMatrix);
         shaderProgram.setUniformi("u_texture", 0);
         mesh.setVertices(vertices, 0, verticesCount)

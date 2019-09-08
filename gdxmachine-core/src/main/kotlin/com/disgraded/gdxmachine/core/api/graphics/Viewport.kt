@@ -7,7 +7,6 @@ import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.disgraded.gdxmachine.core.Config
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable2D
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 import com.disgraded.gdxmachine.core.api.graphics.renderer.MaskedSpriteRenderer
 import com.disgraded.gdxmachine.core.api.graphics.renderer.Renderer2D
 import com.disgraded.gdxmachine.core.api.graphics.renderer.SpriteRenderer
