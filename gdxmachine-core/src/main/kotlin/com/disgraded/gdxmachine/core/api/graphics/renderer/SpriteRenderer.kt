@@ -71,7 +71,7 @@ class SpriteRenderer : Renderer<Sprite> {
     }
 
     override fun draw(drawable: Sprite) {
-        validateCachedTexture(drawable.getTextureRegion().texture)
+        validateCachedTexture(drawable.getTexture().texture)
         validateShader(drawable)
         if (bufferedCalls == MAX_BUFFERED_CALLS) {
             flush()
@@ -102,8 +102,8 @@ class SpriteRenderer : Renderer<Sprite> {
 
     private fun appendVertices(sprite: Sprite) {
         val idx = bufferedCalls * BUFFER_SIZE
-        val sizeX = sprite.getTextureRegion().regionWidth * sprite.scaleX
-        val sizeY = sprite.getTextureRegion().regionHeight * sprite.scaleY
+        val sizeX = sprite.getTexture().regionWidth * sprite.scaleX
+        val sizeY = sprite.getTexture().regionHeight * sprite.scaleY
 
         var x1 = sprite.x - (sizeX * sprite.anchorX)
         var y1 = sprite.y - (sizeY * sprite.anchorY)
@@ -136,26 +136,26 @@ class SpriteRenderer : Renderer<Sprite> {
         vertices[idx] = x1
         vertices[idx + 1] = y1
         vertices[idx + 2] = sprite.getColor(Drawable2D.Corner.BOTTOM_LEFT).toFloatBits()
-        vertices[idx + 3] = sprite.getTextureRegion().u
-        vertices[idx + 4] = sprite.getTextureRegion().v2
+        vertices[idx + 3] = sprite.getTexture().u
+        vertices[idx + 4] = sprite.getTexture().v2
 
         vertices[idx + 5] = x2
         vertices[idx + 6] = y2
         vertices[idx + 7] = sprite.getColor(Drawable2D.Corner.TOP_LEFT).toFloatBits()
-        vertices[idx + 8] = sprite.getTextureRegion().u
-        vertices[idx + 9] = sprite.getTextureRegion().v
+        vertices[idx + 8] = sprite.getTexture().u
+        vertices[idx + 9] = sprite.getTexture().v
 
         vertices[idx + 10] = x3
         vertices[idx + 11] = y3
         vertices[idx + 12] = sprite.getColor(Drawable2D.Corner.TOP_RIGHT).toFloatBits()
-        vertices[idx + 13] = sprite.getTextureRegion().u2
-        vertices[idx + 14] = sprite.getTextureRegion().v
+        vertices[idx + 13] = sprite.getTexture().u2
+        vertices[idx + 14] = sprite.getTexture().v
 
         vertices[idx + 15] = x4
         vertices[idx + 16] = y4
         vertices[idx + 17] = sprite.getColor(Drawable2D.Corner.BOTTOM_RIGHT).toFloatBits()
-        vertices[idx + 18] = sprite.getTextureRegion().u2
-        vertices[idx + 19] = sprite.getTextureRegion().v2
+        vertices[idx + 18] = sprite.getTexture().u2
+        vertices[idx + 19] = sprite.getTexture().v2
     }
 
     private fun flush() {

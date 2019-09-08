@@ -1,12 +1,8 @@
 package com.disgraded.gdxmachine.core.api.graphics.drawable
 
-abstract class Drawable2D(val type: Type) {
+abstract class Drawable2D {
 
     enum class Corner { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
-
-    enum class Type(val key: String) {
-        SPRITE("sprite")
-    }
 
     var x: Float = 0f
     var y: Float = 0f

@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 
-class Sprite : Drawable2D {
+open class Sprite : Drawable2D {
 
     private var textureRegion: TextureRegion
     private val colorMap = hashMapOf<Corner, Color>()
@@ -16,11 +16,11 @@ class Sprite : Drawable2D {
         colorMap[Corner.BOTTOM_RIGHT] = Color("#ffffff")
     }
 
-    constructor(texture: Texture) : super(Type.SPRITE) {
+    constructor(texture: Texture) {
         textureRegion = TextureRegion(texture)
     }
 
-    constructor(textureRegion: TextureRegion) : super(Type.SPRITE) {
+    constructor(textureRegion: TextureRegion) {
         this.textureRegion = textureRegion
     }
 
@@ -28,11 +28,11 @@ class Sprite : Drawable2D {
         textureRegion = TextureRegion(texture)
     }
 
-    fun setTextureRegion(textureRegion: TextureRegion) {
+    fun setTexture(textureRegion: TextureRegion) {
         this.textureRegion = textureRegion
     }
 
-    fun getTextureRegion(): TextureRegion {
+    fun getTexture(): TextureRegion {
         return textureRegion
     }
 
