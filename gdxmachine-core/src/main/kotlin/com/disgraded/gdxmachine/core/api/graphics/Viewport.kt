@@ -72,6 +72,7 @@ class Viewport : Disposable {
         }
         spriteRenderer.end()
         drawableList.clear()
+        shouldUpdateViewport = true
     }
 
     fun resize(width: Int, height: Int) {
@@ -132,8 +133,8 @@ class Viewport : Disposable {
                 viewportY = (screenHeight * viewportRatioY).toInt()
                 viewportSizeX = (screenWidth * viewportScaleX).toInt()
                 viewportSizeY = (screenHeight * viewportScaleY).toInt()
-                previewWidth = screenWidth.toFloat() * (1f / scale) * (1f / worldScaleX) * (1f / viewportScaleX)
-                previewHeight = screenHeight.toFloat() * (1f / scale) * (1f / worldScaleY) * (1f / viewportScaleY)
+                previewWidth = screenWidth.toFloat() * (1f / scale) * worldScaleX * viewportScaleX
+                previewHeight = screenHeight.toFloat() * (1f / scale) * worldScaleY * viewportScaleY
             }
         }
 

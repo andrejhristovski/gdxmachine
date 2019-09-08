@@ -6,5 +6,6 @@ class InitialAssets : AssetPackage("initial") {
     init {
         loadTexture("rock", "rock.png")
         loadTexture("background", "bg.jpg")
+        loadTexture("player", "texture.png")
     }
 }
