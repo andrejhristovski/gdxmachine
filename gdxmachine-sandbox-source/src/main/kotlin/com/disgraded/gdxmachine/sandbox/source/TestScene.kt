@@ -22,6 +22,7 @@ class TestScene : Scene() {
         for (i in 0..10) {
             for(j in 0..10) {
                 val background = Sprite(rockTexture)
+                background.setNormalMap(rockNormalTexture)
                 background.x = startX + rockTexture.width.toFloat() * j
                 background.y = startY + rockTexture.height.toFloat() * i
                 this.background.add(background)
