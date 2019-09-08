@@ -13,7 +13,7 @@ import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 
 
 
-class SpriteRenderer : Renderer2D {
+class SpriteRenderer : Renderer {
 
     companion object {
         private const val BUFFER_SIZE = 20

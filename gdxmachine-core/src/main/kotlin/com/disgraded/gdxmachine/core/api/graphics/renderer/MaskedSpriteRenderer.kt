@@ -10,8 +10,7 @@ import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.MaskedSprite
 
-
-class MaskedSpriteRenderer : Renderer2D {
+class MaskedSpriteRenderer : Renderer {
 
     companion object {
         private const val BUFFER_SIZE = 28

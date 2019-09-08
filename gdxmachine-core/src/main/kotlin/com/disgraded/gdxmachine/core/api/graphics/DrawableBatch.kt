@@ -3,13 +3,13 @@ package com.disgraded.gdxmachine.core.api.graphics
 import com.badlogic.gdx.utils.Disposable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.renderer.MaskedSpriteRenderer
-import com.disgraded.gdxmachine.core.api.graphics.renderer.Renderer2D
+import com.disgraded.gdxmachine.core.api.graphics.renderer.Renderer
 import com.disgraded.gdxmachine.core.api.graphics.renderer.SpriteRenderer
 
 class DrawableBatch(private val projection: Projection): Disposable {
 
-    private val rendererMap = hashMapOf<String, Renderer2D>()
-    private var currentRenderer: Renderer2D
+    private val rendererMap = hashMapOf<String, Renderer>()
+    private var currentRenderer: Renderer
     private val drawableList = arrayListOf<Drawable>()
 
     private var gpuCalls = 0
