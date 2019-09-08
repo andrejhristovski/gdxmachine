@@ -2,7 +2,7 @@ package com.disgraded.gdxmachine.core.api.graphics.renderer
 
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.utils.Disposable
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable2D
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 
 interface Renderer2D : Disposable {
 
@@ -11,7 +11,7 @@ interface Renderer2D : Disposable {
 
     fun begin()
 
-    fun draw(drawable: Drawable2D)
+    fun draw(drawable: Drawable)
 
     fun end(): Int
 

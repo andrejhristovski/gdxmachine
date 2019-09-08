@@ -1,7 +1,7 @@
 package com.disgraded.gdxmachine.core.api.graphics
 
 import com.badlogic.gdx.utils.Disposable
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable2D
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.renderer.MaskedSpriteRenderer
 import com.disgraded.gdxmachine.core.api.graphics.renderer.Renderer2D
 import com.disgraded.gdxmachine.core.api.graphics.renderer.SpriteRenderer
@@ -10,6 +10,9 @@ class DrawableBatch(private val projection: Projection): Disposable {
 
     private val rendererMap = hashMapOf<String, Renderer2D>()
     private var currentRenderer: Renderer2D
+    private val drawableList = arrayListOf<Drawable>()
+
+    private var gpuCalls = 0
 
     init {
         rendererMap["sprite"] = SpriteRenderer()
@@ -18,14 +21,21 @@ class DrawableBatch(private val projection: Projection): Disposable {
         currentRenderer = rendererMap["masked_sprite"]!!
     }
 
-    fun render(drawableList: ArrayList<Drawable2D>) {
+    fun addDrawable(drawable: Drawable) {
+        if (!drawable.visible) return
+        drawableList.add(drawable)
+    }
+
+    fun render() {
+        drawableList.sortBy { it.z }
         for (renderer in rendererMap) {
             renderer.value.setProjectionMatrix(projection.camera.combined)
         }
-        rawRender(drawableList)
+        gpuCalls += rawRender()
+        drawableList.clear()
     }
 
-    private fun rawRender(drawableList: ArrayList<Drawable2D>): Int {
+    private fun rawRender(): Int {
         var gpuCalls = 0
         for (drawable in drawableList) {
             if (!drawable.visible) continue
@@ -42,10 +52,15 @@ class DrawableBatch(private val projection: Projection): Disposable {
         return gpuCalls
     }
 
+    fun getGpuCallsNo(): Int {
+        return gpuCalls
+    }
+
     override fun dispose() {
         for(renderer in rendererMap) {
             renderer.value.dispose()
         }
         rendererMap.clear()
+        drawableList.clear()
     }
 }

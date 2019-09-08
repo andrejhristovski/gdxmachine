@@ -49,7 +49,7 @@ class GraphicsModule : Core.Module {
         var glCalls = 0
         viewports.toList().sortedBy { it.second.api.order }.forEach{
             it.second.render()
-            glCalls += it.second.api.glCalls
+            glCalls += it.second.api.getGPUCalls()
         }
         (api as Api).glCalls = glCalls
     }

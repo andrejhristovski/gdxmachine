@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 
-open class Sprite : Drawable2D {
+open class Sprite : Drawable {
 
     private var texture: TextureRegion
     private var normalMap: TextureRegion? = null
