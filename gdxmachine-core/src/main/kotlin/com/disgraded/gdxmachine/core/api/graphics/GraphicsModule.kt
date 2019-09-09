@@ -10,7 +10,7 @@ class GraphicsModule : Core.Module {
 
     class Api(private val graphicsModule: GraphicsModule) : Core.Api {
 
-        var glCalls = 0
+        fun getGPUCalls(): Int = graphicsModule.gpuCalls
 
         fun getDeltaTime() : Float = Gdx.graphics.deltaTime
 
@@ -32,6 +32,7 @@ class GraphicsModule : Core.Module {
     override val api: Core.Api = Api(this)
 
     private val viewports = hashMapOf<String, Viewport>()
+    private var gpuCalls = 0
 
     lateinit var config: Config
 
@@ -47,7 +48,7 @@ class GraphicsModule : Core.Module {
             it.second.render()
             glCalls += it.second.api.getGPUCalls()
         }
-        (api as Api).glCalls = glCalls
+        this.gpuCalls = glCalls
     }
 
     override fun unload() {
