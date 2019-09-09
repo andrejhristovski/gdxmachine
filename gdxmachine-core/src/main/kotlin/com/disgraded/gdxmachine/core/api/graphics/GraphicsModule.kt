@@ -37,14 +37,10 @@ class GraphicsModule : Core.Module {
 
     override fun load(core: Core, config: Config) {
         this.config = config
-
-        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST)
-        Gdx.gl.glDepthFunc(GL20.GL_ALWAYS)
     }
 
     override fun update(deltaTime: Float) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-        Gdx.gl.glClearDepthf(1f)
         Gdx.gl.glClearColor(0f, 0f ,0f, 1f)
         var glCalls = 0
         viewports.toList().sortedBy { it.second.api.order }.forEach{

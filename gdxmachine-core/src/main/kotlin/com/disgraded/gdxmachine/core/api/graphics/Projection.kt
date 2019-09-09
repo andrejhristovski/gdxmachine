@@ -49,6 +49,7 @@ class Projection {
     }
 
     fun update(width: Float, height: Float, scale: Config.Graphics.Scale) {
+        println("$width x $height")
         viewportWidth = width
         viewportHeight = height
         viewportScale = scale
@@ -98,6 +99,14 @@ class Projection {
         viewport.setWorldSize(previewWidth, previewHeight)
         viewport.setScreenBounds(viewportX, viewportY, viewportSizeX, viewportSizeY)
         viewport.apply()
+    }
+
+    fun getVirtualWidth(): Float {
+        return viewport.worldWidth
+    }
+
+    fun getVirtualHeight(): Float {
+        return viewport.worldHeight
     }
 
 }

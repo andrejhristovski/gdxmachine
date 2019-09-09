@@ -6,6 +6,7 @@ class Color {
 
     companion object {
         val WHITE: Color = Color("#ffffff")
+        val WARM_WHITE: Color = Color("#efebd8")
         val RED: Color = Color("#f44336")
         val PINK: Color = Color("#e91e63")
         val PURPLE: Color = Color("#9c27b0")

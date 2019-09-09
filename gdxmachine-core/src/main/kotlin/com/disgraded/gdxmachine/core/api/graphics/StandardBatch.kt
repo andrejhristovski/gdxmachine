@@ -1,18 +1,20 @@
 package com.disgraded.gdxmachine.core.api.graphics
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.Pixmap
+import com.badlogic.gdx.graphics.glutils.FrameBuffer
 import com.badlogic.gdx.utils.Disposable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
-import com.disgraded.gdxmachine.core.api.graphics.renderer.MaskedSpriteRenderer
-import com.disgraded.gdxmachine.core.api.graphics.renderer.Renderer
-import com.disgraded.gdxmachine.core.api.graphics.renderer.SpriteRenderer
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
+import com.disgraded.gdxmachine.core.api.graphics.renderer.*
 
-class DrawableBatch(private val projection: Projection): Disposable {
+class StandardBatch(private val projection: Projection): Disposable {
 
     private val rendererMap = hashMapOf<String, Renderer>()
     private var currentRenderer: Renderer
     private val drawableList = arrayListOf<Drawable>()
-
-    private var gpuCalls = 0
+    var lightsEnabled = false
 
     init {
         rendererMap["sprite"] = SpriteRenderer()
@@ -26,17 +28,14 @@ class DrawableBatch(private val projection: Projection): Disposable {
         drawableList.add(drawable)
     }
 
-    fun render() {
+    fun render(): Int {
+        var gpuCalls = 0
         drawableList.sortBy { it.z }
+        projection.apply()
         for (renderer in rendererMap) {
             renderer.value.setProjectionMatrix(projection.camera.combined)
         }
-        gpuCalls += rawRender()
-        drawableList.clear()
-    }
 
-    private fun rawRender(): Int {
-        var gpuCalls = 0
         for (drawable in drawableList) {
             if (!drawable.visible) continue
             if (currentRenderer.typeHandled === drawable.getType() && !currentRenderer.active) currentRenderer.begin()
@@ -49,10 +48,7 @@ class DrawableBatch(private val projection: Projection): Disposable {
         }
 
         if (currentRenderer.active) gpuCalls += currentRenderer.end()
-        return gpuCalls
-    }
-
-    fun getGpuCallsNo(): Int {
+        drawableList.clear()
         return gpuCalls
     }
 

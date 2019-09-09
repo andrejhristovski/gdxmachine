@@ -13,6 +13,8 @@ class TestScene : Scene() {
 
     override fun initialize() {
         context.graphics.createViewport()
+//        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
+        context.graphics.getViewport().enableLights(true)
         val rockTexture = context.resources.get<Texture>("initial", "rock")
         val rockNormalTexture = context.resources.get<Texture>("initial", "rock_normal")
         val playerTexture = context.resources.get<Texture>("initial", "player")
@@ -22,7 +24,7 @@ class TestScene : Scene() {
         for (i in 0..10) {
             for(j in 0..10) {
                 val background = Sprite(rockTexture)
-                background.setNormalMap(rockNormalTexture)
+//                background.setNormalMap(rockNormalTexture)
                 background.x = startX + rockTexture.width.toFloat() * j
                 background.y = startY + rockTexture.height.toFloat() * i
                 this.background.add(background)

@@ -10,6 +10,10 @@ class ShaderFactory private constructor() {
         fun getInstance(): ShaderFactory = shaderFactory
     }
 
+    init {
+        ShaderProgram.pedantic = false
+    }
+
     private val shaderMap = hashMapOf<String, ShaderProgram>()
 
     fun get(vertexKey: String, fragmentKey: String): ShaderProgram {

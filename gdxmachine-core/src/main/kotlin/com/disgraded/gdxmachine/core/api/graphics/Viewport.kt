@@ -15,7 +15,11 @@ class Viewport : Disposable {
 
         var order = 0
 
-        fun getGPUCalls(): Int = viewport.batch.getGpuCallsNo()
+        fun enableLights(enabled: Boolean) {
+            viewport.batch.lightsEnabled = enabled
+        }
+
+        fun getGPUCalls(): Int = viewport.gpuCalls
 
         fun draw(drawable: Drawable) = viewport.batch.addDrawable(drawable)
         fun project(xRatio: Float, yRatio: Float, scaleX: Float, scaleY: Float, worldScaleX: Float = 1f,
@@ -24,14 +28,15 @@ class Viewport : Disposable {
         }
     }
 
+    private var gpuCalls = 0
     private val projection = Projection()
-    private val batch = DrawableBatch(projection)
+    private val batch = StandardBatch(projection)
     val api = Api(this)
 
     fun render() {
         if(!api.visible) return
         projection.apply()
-        batch.render()
+        gpuCalls = batch.render()
     }
 
     fun resize(width: Int, height: Int) = projection.resize(width, height)
