@@ -1,55 +1,35 @@
 package com.disgraded.gdxmachine.core.api.graphics
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.Pixmap
-import com.badlogic.gdx.graphics.glutils.FrameBuffer
-import com.badlogic.gdx.utils.Disposable
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
+import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 import com.disgraded.gdxmachine.core.api.graphics.renderer.*
 
-class StandardBatch(private val projection: Projection): Disposable {
+class StandardBatch: SpriteBatch {
 
-    private val rendererMap = hashMapOf<String, Renderer>()
-    private var currentRenderer: Renderer
-    private val drawableList = arrayListOf<Drawable>()
-    var lightsEnabled = false
+    private val rendererMap = hashMapOf<String, SpriteRenderer>()
+    private var currentRenderer: SpriteRenderer? = null
+    private var currentRendererType: String? = null
+
+    private val spriteStandardRenderer = SpriteStandardRenderer()
 
     init {
-        rendererMap["sprite"] = SpriteRenderer()
-        rendererMap["masked_sprite"] = MaskedSpriteRenderer()
-
-        currentRenderer = rendererMap["masked_sprite"]!!
+        rendererMap["standard_sprite"] = SpriteStandardRenderer()
+//        rendererMap["masked_sprite"] = SpriteMaskRenderer()
     }
 
-    fun addDrawable(drawable: Drawable) {
-        if (!drawable.visible) return
-        drawableList.add(drawable)
-    }
-
-    fun render(): Int {
+    override fun render(spriteList: ArrayList<Sprite>, projectionMatrix: Matrix4): Int {
         var gpuCalls = 0
-        drawableList.sortBy { it.z }
-        projection.apply()
-        for (renderer in rendererMap) {
-            renderer.value.setProjectionMatrix(projection.camera.combined)
+        spriteStandardRenderer.setProjectionMatrix(projectionMatrix)
+        spriteStandardRenderer.begin()
+        for (sprite in spriteList) {
+            spriteStandardRenderer.draw(sprite)
         }
-
-        for (drawable in drawableList) {
-            if (!drawable.visible) continue
-            if (currentRenderer.typeHandled === drawable.getType() && !currentRenderer.active) currentRenderer.begin()
-            else if(currentRenderer.typeHandled !== drawable.getType()) {
-                if (currentRenderer.active) gpuCalls += currentRenderer.end()
-                currentRenderer = rendererMap[drawable.getType()]!!
-                currentRenderer.begin()
-            }
-            currentRenderer.draw(drawable)
-        }
-
-        if (currentRenderer.active) gpuCalls += currentRenderer.end()
-        drawableList.clear()
+        gpuCalls += spriteStandardRenderer.end()
         return gpuCalls
+    }
+
+    private fun validateRenderer(sprite: Sprite) {
+        val rendererType =  if (sprite.getMask() !== null) "standard_sprite" else "masked_sprite"
     }
 
     override fun dispose() {
@@ -57,6 +37,5 @@ class StandardBatch(private val projection: Projection): Disposable {
             renderer.value.dispose()
         }
         rendererMap.clear()
-        drawableList.clear()
     }
 }

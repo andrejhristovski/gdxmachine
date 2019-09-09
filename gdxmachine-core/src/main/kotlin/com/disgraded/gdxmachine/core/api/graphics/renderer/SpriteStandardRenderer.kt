@@ -2,18 +2,18 @@ package com.disgraded.gdxmachine.core.api.graphics.renderer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.*
-import com.badlogic.gdx.graphics.VertexAttributes.Usage
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
-import com.disgraded.gdxmachine.core.api.graphics.drawable.MaskedSprite
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 
-class MaskedSpriteRenderer : Renderer {
+class SpriteStandardRenderer : SpriteRenderer {
 
     companion object {
-        private const val BUFFER_SIZE = 28
+        private const val BUFFER_SIZE = 20
         private const val VERTICES_PER_BUFFER = 4
         private const val INDICES_PER_BUFFER = 6
         private const val MAX_BUFFERED_CALLS = Short.MAX_VALUE / VERTICES_PER_BUFFER
@@ -21,37 +21,31 @@ class MaskedSpriteRenderer : Renderer {
 
     private val shaderFactory = ShaderFactory.getInstance()
 
+    override var active: Boolean = false
+    private var gpuCalls = 0
+    private var bufferedCalls = 0
+
     private val mesh: Mesh
     private val vertices: FloatArray
     private val indices: ShortArray
-    private val shaderProgram: ShaderProgram
+    private var shaderProgram: ShaderProgram
     private lateinit var projectionMatrix: Matrix4
 
-    override var active = false
-    private var gpuCalls = 0
-
-    private var bufferedCalls = 0
     private var cachedTexture: Texture? = null
-    private var cachedMask: Texture? = null
-
-    override val typeHandled: String = "masked_sprite"
 
     init {
         val maxVertices = VERTICES_PER_BUFFER * MAX_BUFFERED_CALLS
         val maxIndices = INDICES_PER_BUFFER * MAX_BUFFERED_CALLS
         val vertexAttributes = VertexAttributes(
-                VertexAttribute(Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
-                VertexAttribute(Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
-                VertexAttribute(Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE),
-                VertexAttribute(Usage.TextureCoordinates, 2, "${ShaderProgram.TEXCOORD_ATTRIBUTE}_mask")
+                VertexAttribute(VertexAttributes.Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
+                VertexAttribute(VertexAttributes.Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
+                VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE)
         )
 
         mesh = Mesh(false, maxVertices, maxIndices, vertexAttributes)
 
         vertices = FloatArray(MAX_BUFFERED_CALLS * BUFFER_SIZE)
         indices = ShortArray(MAX_BUFFERED_CALLS * INDICES_PER_BUFFER)
-
-        // generate indices
         for (i in indices.indices) {
             val module = i % 6
             val idx = (i / 6) * 4
@@ -61,26 +55,20 @@ class MaskedSpriteRenderer : Renderer {
             if (module == 4) indices[i] = (idx + 3).toShort()
         }
 
-        shaderProgram = shaderFactory.get("masked_sprite", "masked_sprite")
+        shaderProgram = shaderFactory.get("sprite_standard", "sprite_standard")
     }
 
     override fun begin() {
         if(active) throw RuntimeException("The renderer is already active")
         gpuCalls = 0
         shaderProgram.begin()
-        Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0)
         active = true
     }
 
-    override fun draw(drawable: Drawable) {
-        validateCachedTexture((drawable as MaskedSprite).getTexture().texture,
-                drawable.getMask().texture)
-        validateShader(drawable)
-        if (bufferedCalls == MAX_BUFFERED_CALLS) {
-            flush()
-        }
-        appendVertices(drawable)
-        bufferedCalls++
+    override fun draw(sprite: Sprite) {
+        validateTexture(sprite.getTexture())
+        if (bufferedCalls == MAX_BUFFERED_CALLS) flush()
+        appendVertices(sprite)
     }
 
     override fun end(): Int {
@@ -95,15 +83,19 @@ class MaskedSpriteRenderer : Renderer {
     }
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4) {
-        if (active) {
-            flush()
-        }
         this.projectionMatrix = projectionMatrix
     }
 
     override fun dispose() = mesh.dispose()
 
-    private fun appendVertices(sprite: MaskedSprite) {
+    private fun validateTexture(textureRegion: TextureRegion) {
+        if (cachedTexture !== textureRegion.texture) {
+            flush()
+            cachedTexture = textureRegion.texture
+        }
+    }
+
+    private fun appendVertices(sprite: Sprite) {
         val idx = bufferedCalls * BUFFER_SIZE
         val sizeX = sprite.getTexture().regionWidth * sprite.scaleX
         val sizeY = sprite.getTexture().regionHeight * sprite.scaleY
@@ -141,65 +133,46 @@ class MaskedSpriteRenderer : Renderer {
         vertices[idx + 2] = sprite.getColor(Drawable.Corner.BOTTOM_LEFT).toFloatBits()
         vertices[idx + 3] = sprite.getTexture().u
         vertices[idx + 4] = sprite.getTexture().v2
-        vertices[idx + 5] = sprite.getMask().u
-        vertices[idx + 6] = sprite.getMask().v2
 
-        vertices[idx + 7] = x2
-        vertices[idx + 8] = y2
-        vertices[idx + 9] = sprite.getColor(Drawable.Corner.TOP_LEFT).toFloatBits()
-        vertices[idx + 10] = sprite.getTexture().u
-        vertices[idx + 11] = sprite.getTexture().v
-        vertices[idx + 12] = sprite.getMask().u
-        vertices[idx + 13] = sprite.getMask().v
+        vertices[idx + 5] = x2
+        vertices[idx + 6] = y2
+        vertices[idx + 7] = sprite.getColor(Drawable.Corner.TOP_LEFT).toFloatBits()
+        vertices[idx + 8] = sprite.getTexture().u
+        vertices[idx + 9] = sprite.getTexture().v
 
-        vertices[idx + 14] = x3
-        vertices[idx + 15] = y3
-        vertices[idx + 16] = sprite.getColor(Drawable.Corner.TOP_RIGHT).toFloatBits()
-        vertices[idx + 17] = sprite.getTexture().u2
-        vertices[idx + 18] = sprite.getTexture().v
-        vertices[idx + 19] = sprite.getMask().u2
-        vertices[idx + 20] = sprite.getMask().v
+        vertices[idx + 10] = x3
+        vertices[idx + 11] = y3
+        vertices[idx + 12] = sprite.getColor(Drawable.Corner.TOP_RIGHT).toFloatBits()
+        vertices[idx + 13] = sprite.getTexture().u2
+        vertices[idx + 14] = sprite.getTexture().v
 
-        vertices[idx + 21] = x4
-        vertices[idx + 22] = y4
-        vertices[idx + 23] = sprite.getColor(Drawable.Corner.BOTTOM_RIGHT).toFloatBits()
-        vertices[idx + 24] = sprite.getTexture().u2
-        vertices[idx + 25] = sprite.getTexture().v2
-        vertices[idx + 26] = sprite.getMask().u2
-        vertices[idx + 27] = sprite.getMask().v2
+        vertices[idx + 15] = x4
+        vertices[idx + 16] = y4
+        vertices[idx + 17] = sprite.getColor(Drawable.Corner.BOTTOM_RIGHT).toFloatBits()
+        vertices[idx + 18] = sprite.getTexture().u2
+        vertices[idx + 19] = sprite.getTexture().v2
+        bufferedCalls++
     }
 
     private fun flush() {
         if(bufferedCalls == 0) return
-
         gpuCalls++
+
         val indicesCount = bufferedCalls * INDICES_PER_BUFFER
         val verticesCount = bufferedCalls * BUFFER_SIZE
 
-        cachedTexture!!.bind()
-        cachedMask!!.bind(1)
-        Gdx.gl.glActiveTexture(0)
+        cachedTexture!!.bind(0)
+
         shaderProgram.setUniformMatrix("u_projectionTrans", projectionMatrix);
         shaderProgram.setUniformi("u_texture", 0)
-        shaderProgram.setUniformi("u_texture_mask", 1)
+
         mesh.setVertices(vertices, 0, verticesCount)
         mesh.setIndices(indices, 0, indicesCount)
+
         Gdx.gl.glEnable(GL20.GL_BLEND)
         Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,
                 GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
         mesh.render(shaderProgram, GL20.GL_TRIANGLES, 0, indicesCount)
         bufferedCalls = 0
-    }
-
-    private fun validateCachedTexture(texture: Texture, mask: Texture) {
-        if (cachedTexture !== texture || cachedMask !== mask) {
-            if (bufferedCalls > 0) flush()
-            cachedTexture = texture
-            cachedMask = mask
-        }
-    }
-
-    private fun validateShader(sprite: MaskedSprite) {
-
     }
 }

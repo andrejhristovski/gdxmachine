@@ -1,7 +1,6 @@
 package com.disgraded.gdxmachine.sandbox.source
 
 import com.badlogic.gdx.graphics.Texture
-import com.disgraded.gdxmachine.core.api.graphics.drawable.MaskedSprite
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 import com.disgraded.gdxmachine.core.api.scene.Scene
 
@@ -14,7 +13,7 @@ class TestScene : Scene() {
     override fun initialize() {
         context.graphics.createViewport()
 //        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
-        context.graphics.getViewport().enableLights(true)
+//        context.graphics.getViewport().enableLights(true)
         val rockTexture = context.resources.get<Texture>("initial", "rock")
         val rockNormalTexture = context.resources.get<Texture>("initial", "rock_normal")
         val playerTexture = context.resources.get<Texture>("initial", "player")

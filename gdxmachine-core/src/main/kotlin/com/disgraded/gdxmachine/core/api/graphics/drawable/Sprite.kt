@@ -4,28 +4,28 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 
-open class Sprite : Drawable {
+class Sprite : Drawable {
 
     private var texture: TextureRegion
+    private var mask: TextureRegion? = null
     private var normalMap: TextureRegion? = null
+    private var depthMap: TextureRegion? = null
     private val colorMap = hashMapOf<Corner, Color>()
 
     init {
-        colorMap[Corner.TOP_LEFT] = Color("#ffffff")
-        colorMap[Corner.TOP_RIGHT] = Color("#ffffff")
-        colorMap[Corner.BOTTOM_LEFT] = Color("#ffffff")
-        colorMap[Corner.BOTTOM_RIGHT] = Color("#ffffff")
+        colorMap[Corner.TOP_LEFT] = Color.WHITE
+        colorMap[Corner.TOP_RIGHT] = Color.WHITE
+        colorMap[Corner.BOTTOM_LEFT] = Color.WHITE
+        colorMap[Corner.BOTTOM_RIGHT] = Color.WHITE
     }
 
-    constructor(texture: Texture) {
+    constructor(texture: Texture): super(Type.SPRITE) {
         this.texture = TextureRegion(texture)
     }
 
-    constructor(textureRegion: TextureRegion) {
+    constructor(textureRegion: TextureRegion): super(Type.SPRITE) {
         this.texture = textureRegion
     }
-
-    override fun getType(): String = "sprite"
 
     fun setTexture(texture: Texture) {
         this.texture = TextureRegion(texture)
@@ -37,6 +37,42 @@ open class Sprite : Drawable {
 
     fun getTexture(): TextureRegion {
         return texture
+    }
+
+    fun setMask(mask: Texture) {
+        this.mask = TextureRegion(mask)
+    }
+
+    fun setMask(mask: TextureRegion) {
+        this.mask = mask
+    }
+
+    fun getMask() : TextureRegion? {
+        return mask
+    }
+
+    fun setNormalMap(normalMap: TextureRegion) {
+        this.normalMap = normalMap
+    }
+
+    fun setNormalMap(normalMap: Texture) {
+        this.normalMap = TextureRegion(normalMap)
+    }
+
+    fun getNormalMap(): TextureRegion? {
+        return normalMap
+    }
+
+    fun setDepthMap(depthMap: TextureRegion) {
+        this.depthMap = depthMap
+    }
+
+    fun setDepthMap(depthMap: Texture) {
+        this.depthMap = TextureRegion(depthMap)
+    }
+
+    fun getDepthMap(): TextureRegion? {
+        return depthMap
     }
 
     fun setColor(color: Color) {
@@ -53,18 +89,6 @@ open class Sprite : Drawable {
             Corner.BOTTOM_LEFT -> colorMap[Corner.BOTTOM_LEFT] = color
             Corner.BOTTOM_RIGHT -> colorMap[Corner.BOTTOM_RIGHT] = color
         }
-    }
-
-    fun setNormalMap(normalMap: TextureRegion) {
-        this.normalMap = normalMap
-    }
-
-    fun setNormalMap(normalMap: Texture) {
-        this.normalMap = TextureRegion(normalMap)
-    }
-
-    fun getNormalMap(): TextureRegion? {
-        return normalMap
     }
 
     fun getColor(): Color {

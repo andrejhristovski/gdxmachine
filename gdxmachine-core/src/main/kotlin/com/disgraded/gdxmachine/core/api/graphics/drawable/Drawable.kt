@@ -1,9 +1,12 @@
 package com.disgraded.gdxmachine.core.api.graphics.drawable
 
-abstract class Drawable {
+abstract class Drawable(val type: Type) {
+
+    enum class Type { SPRITE, LIGHT }
 
     enum class Corner { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
 
+    var visible: Boolean = true
     var x: Float = 0f
     var y: Float = 0f
     var z: Float = 0f
@@ -13,9 +16,6 @@ abstract class Drawable {
     var anchorY: Float = .5f
     var rotation: Float = 0f
         set(value) { field = value % 360 }
-    var visible: Boolean = true
-
-    abstract fun getType(): String
 
     fun setPosition(x: Float, y: Float, z: Float) {
         this.x = x

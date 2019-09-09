@@ -11,7 +11,7 @@ class ShaderFactory private constructor() {
     }
 
     init {
-        ShaderProgram.pedantic = false
+//        ShaderProgram.pedantic = false
     }
 
     private val shaderMap = hashMapOf<String, ShaderProgram>()

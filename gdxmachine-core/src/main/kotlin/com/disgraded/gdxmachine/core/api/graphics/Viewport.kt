@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.utils.Disposable
 import com.disgraded.gdxmachine.core.Config
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Light
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 
 class Viewport : Disposable {
 
@@ -13,15 +15,28 @@ class Viewport : Disposable {
 
         var visible = true
 
-        var order = 0
+        var z = 0
 
-        fun enableLights(enabled: Boolean) {
-            viewport.batch.lightsEnabled = enabled
+        fun enableLights() {
+            viewport.lightsEnabled = true
         }
+
+        fun disableLights() {
+            viewport.lightsEnabled = false
+        }
+
+        fun isLightsEnabled(): Boolean = viewport.lightsEnabled
 
         fun getGPUCalls(): Int = viewport.gpuCalls
 
-        fun draw(drawable: Drawable) = viewport.batch.addDrawable(drawable)
+        fun draw(drawable: Drawable) {
+            if (!drawable.visible) return
+            when (drawable.type) {
+                Drawable.Type.SPRITE -> viewport.spriteList.add(drawable as Sprite)
+                Drawable.Type.LIGHT -> viewport.lightList.add(drawable as Light)
+            }
+        }
+
         fun project(xRatio: Float, yRatio: Float, scaleX: Float, scaleY: Float, worldScaleX: Float = 1f,
                     worldScaleY: Float = 1f) {
             viewport.projection.project(xRatio, yRatio, scaleX, scaleY, worldScaleX, worldScaleY)
@@ -29,14 +44,28 @@ class Viewport : Disposable {
     }
 
     private var gpuCalls = 0
+    private var lightsEnabled = false
+
     private val projection = Projection()
-    private val batch = StandardBatch(projection)
+    private val standardBatch = StandardBatch()
+    private val deferredLightingBatch = DeferredLightingBatch()
+
+    private val spriteList = arrayListOf<Sprite>()
+    private val lightList = arrayListOf<Light>()
+
     val api = Api(this)
 
     fun render() {
         if(!api.visible) return
+        spriteList.sortBy { it.z }
         projection.apply()
-        gpuCalls = batch.render()
+        if (lightsEnabled) {
+            gpuCalls = deferredLightingBatch.render(spriteList, projection.camera.combined)
+        } else {
+            gpuCalls = standardBatch.render(spriteList, projection.camera.combined)
+        }
+        spriteList.clear()
+        lightList.clear()
     }
 
     fun resize(width: Int, height: Int) = projection.resize(width, height)
@@ -46,6 +75,6 @@ class Viewport : Disposable {
     }
 
     override fun dispose() {
-        batch.dispose()
+        standardBatch.dispose()
     }
 }

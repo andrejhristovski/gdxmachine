@@ -44,7 +44,7 @@ class GraphicsModule : Core.Module {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         Gdx.gl.glClearColor(0f, 0f ,0f, 1f)
         var glCalls = 0
-        viewports.toList().sortedBy { it.second.api.order }.forEach{
+        viewports.toList().sortedBy { it.second.api.z }.forEach{
             it.second.render()
             glCalls += it.second.api.getGPUCalls()
         }
