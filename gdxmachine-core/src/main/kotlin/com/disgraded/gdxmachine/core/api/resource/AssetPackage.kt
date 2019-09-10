@@ -104,6 +104,10 @@ open class AssetPackage(val packageKey: String) : Disposable {
         }
     }
 
+    fun getProgress(): Float {
+        return gdxAssetManager.progress
+    }
+
     override fun dispose() {
         gdxAssetManager.clear()
         assetKeys.clear()

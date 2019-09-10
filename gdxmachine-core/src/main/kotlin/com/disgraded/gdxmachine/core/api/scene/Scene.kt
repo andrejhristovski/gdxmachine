@@ -2,12 +2,18 @@ package com.disgraded.gdxmachine.core.api.scene
 
 import com.disgraded.gdxmachine.core.Context
 
-interface Scene {
+abstract class Scene {
 
-    fun initialize(context: Context)
+    lateinit var context: Context
 
-    fun update(deltaTime: Float)
+    abstract fun initialize()
 
-    fun destroy()
+    abstract fun update(deltaTime: Float)
+
+    abstract fun pause()
+
+    abstract fun resume()
+
+    abstract fun destroy()
 
 }

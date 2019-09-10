@@ -11,12 +11,14 @@
 
     <application
             android:allowBackup="true"
+            android:fullBackupContent="true"
             android:label="Gdx Machine Sandbox"
             android:icon="@mipmap/ic_launcher"
             android:supportsRtl="false">
 
         <activity
                 android:name=".MainActivity"
+                android:screenOrientation="userLandscape"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

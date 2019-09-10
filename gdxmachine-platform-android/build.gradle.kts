@@ -24,11 +24,11 @@ plugins {
 
 android {
 
-    compileSdkVersion(28)
+    compileSdkVersion(29)
 
     defaultConfig {
-        minSdkVersion(15)
-        targetSdkVersion(28)
+        minSdkVersion(18)
+        targetSdkVersion(29)
         versionCode = versionNumber
         versionName = project.version.toString()
     }
