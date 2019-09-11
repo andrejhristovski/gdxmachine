@@ -3,7 +3,7 @@ package com.disgraded.gdxmachine.core.api.graphics
 import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 
-class DeferredLightingBatch : SpriteBatch {
+class NormalMapBatch : SpriteBatch {
     override fun render(spriteList: ArrayList<Sprite>, projectionMatrix: Matrix4): Int {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

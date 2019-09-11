@@ -48,7 +48,7 @@ class Viewport : Disposable {
 
     private val projection = Projection()
     private val standardBatch = StandardBatch()
-    private val deferredLightingBatch = DeferredLightingBatch()
+    private val deferredLightingBatch = NormalMapBatch()
 
     private val spriteList = arrayListOf<Sprite>()
     private val lightList = arrayListOf<Light>()
