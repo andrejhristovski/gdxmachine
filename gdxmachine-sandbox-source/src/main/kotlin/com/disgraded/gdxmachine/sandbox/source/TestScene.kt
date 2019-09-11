@@ -12,7 +12,7 @@ class TestScene : Scene() {
 
     override fun initialize() {
         context.graphics.createViewport()
-        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
+//        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
 //        context.graphics.getViewport().enableLights(true)
         val rockTexture = context.resources.get<Texture>("initial", "rock")
         val rockNormalTexture = context.resources.get<Texture>("initial", "rock_normal")
