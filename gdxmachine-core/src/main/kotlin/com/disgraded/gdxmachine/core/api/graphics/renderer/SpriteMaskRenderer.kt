@@ -57,7 +57,7 @@ class SpriteMaskRenderer : SpriteRenderer {
             if (module == 4) indices[i] = (idx + 3).toShort()
         }
 
-        shaderProgram = shaderFactory.get("sprite_masked", "sprite_masked")
+        shaderProgram = shaderFactory.get("sprite_mask", "sprite_mask")
     }
 
     override fun begin() {
