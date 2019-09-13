@@ -10,7 +10,7 @@ import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 
-class SpriteMaskRenderer : SpriteRenderer {
+class SpriteMaskRenderer : Renderer {
 
     companion object {
         private const val BUFFER_SIZE = 28
@@ -67,7 +67,8 @@ class SpriteMaskRenderer : SpriteRenderer {
         active = true
     }
 
-    override fun draw(sprite: Sprite) {
+    override fun draw(drawable: Drawable) {
+        val sprite = drawable as Sprite
         validateTexture(sprite.getTexture(), sprite.getMask()!!)
         if (bufferedCalls == MAX_BUFFERED_CALLS) flush()
         appendVertices(sprite)

@@ -5,7 +5,6 @@ import com.badlogic.gdx.utils.Disposable
 import com.disgraded.gdxmachine.core.Config
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Light
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 
 class Viewport : Disposable {
 
@@ -32,7 +31,7 @@ class Viewport : Disposable {
         fun draw(drawable: Drawable) {
             if (!drawable.visible) return
             when (drawable.type) {
-                Drawable.Type.SPRITE -> viewport.spriteList.add(drawable as Sprite)
+                Drawable.Type.SPRITE -> viewport.drawableList.add(drawable)
                 Drawable.Type.LIGHT -> viewport.lightList.add(drawable as Light)
             }
         }
@@ -48,23 +47,26 @@ class Viewport : Disposable {
 
     private val projection = Projection()
     private val standardBatch = StandardBatch()
-    private val deferredLightingBatch = NormalMapBatch()
+    private val deferredLightBatch = DefferedLightBatch()
 
-    private val spriteList = arrayListOf<Sprite>()
+    private val drawableList = arrayListOf<Drawable>()
     private val lightList = arrayListOf<Light>()
 
     val api = Api(this)
 
     fun render() {
         if(!api.visible) return
-        spriteList.sortBy { it.z }
+        drawableList.sortByDescending { it.z }
         projection.apply()
         if (lightsEnabled) {
-            gpuCalls = deferredLightingBatch.render(spriteList, projection.camera.combined)
+            deferredLightBatch.applyLights(lightList)
+            gpuCalls = deferredLightBatch.render(drawableList, projection.camera.combined)
+            projection.apply()
+            deferredLightBatch.flush()
         } else {
-            gpuCalls = standardBatch.render(spriteList, projection.camera.combined)
+            gpuCalls = standardBatch.render(drawableList, projection.camera.combined)
         }
-        spriteList.clear()
+        drawableList.clear()
         lightList.clear()
     }
 

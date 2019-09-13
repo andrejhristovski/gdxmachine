@@ -12,20 +12,18 @@ class TestScene : Scene() {
 
     override fun initialize() {
         context.graphics.createViewport()
-//        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
-//        context.graphics.getViewport().enableLights(true)
-        val rockTexture = context.resources.get<Texture>("initial", "wall")
-        val rockNormalTexture = context.resources.get<Texture>("initial", "wall_normal")
+        val wallTexture = context.resources.get<Texture>("initial", "wall")
+        val wallNormalTexture = context.resources.get<Texture>("initial", "wall_normal")
         val playerTexture = context.resources.get<Texture>("initial", "player")
 
         val startX = -800
         val startY = -500
         for (i in 0..10) {
             for(j in 0..10) {
-                val background = Sprite(rockTexture)
-//                background.setNormalMap(rockNormalTexture)
-                background.x = startX + rockTexture.width.toFloat() * j
-                background.y = startY + rockTexture.height.toFloat() * i
+                val background = Sprite(wallTexture)
+                background.setNormalMap(wallNormalTexture)
+                background.x = startX + wallTexture.width.toFloat() * j
+                background.y = startY + wallTexture.height.toFloat() * i
                 this.background.add(background)
             }
         }
@@ -34,12 +32,10 @@ class TestScene : Scene() {
     }
 
     override fun update(deltaTime: Float) {
-
+        context.graphics.getViewport().draw(player)
         for (background in this.background) {
             context.graphics.getViewport().draw(background)
         }
-        context.graphics.getViewport().draw(player)
-        println(context.graphics.getFPS())
     }
 
     override fun pause() {

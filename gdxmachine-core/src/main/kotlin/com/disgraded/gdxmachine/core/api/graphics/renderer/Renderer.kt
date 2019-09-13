@@ -5,13 +5,13 @@ import com.badlogic.gdx.utils.Disposable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 
-interface SpriteRenderer : Disposable {
+interface Renderer : Disposable {
 
     var active: Boolean
 
     fun begin()
 
-    fun draw(sprite: Sprite)
+    fun draw(drawable: Drawable)
 
     fun end(): Int
 

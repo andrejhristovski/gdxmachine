@@ -1,4 +1,4 @@
-package com.disgraded.gdxmachine.core.api.graphics.renderer
+package com.disgraded.gdxmachine.core.api.graphics.renderer.normal
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.*
@@ -9,8 +9,9 @@ import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
+import com.disgraded.gdxmachine.core.api.graphics.renderer.Renderer
 
-class SpriteNormalRenderer : SpriteRenderer {
+class SpriteNormalRenderer : Renderer {
 
     companion object {
         private const val BUFFER_SIZE = 24
@@ -66,7 +67,8 @@ class SpriteNormalRenderer : SpriteRenderer {
         active = true
     }
 
-    override fun draw(sprite: Sprite) {
+    override fun draw(drawable: Drawable) {
+        val sprite = drawable as Sprite
         val texture = if (sprite.getMask() === null) sprite.getTexture() else sprite.getMask()!!
         validateTexture(texture, sprite.getNormalMap())
         if (bufferedCalls == MAX_BUFFERED_CALLS) flush()
