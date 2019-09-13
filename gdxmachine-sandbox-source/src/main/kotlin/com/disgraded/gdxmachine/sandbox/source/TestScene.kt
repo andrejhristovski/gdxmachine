@@ -1,7 +1,9 @@
 package com.disgraded.gdxmachine.sandbox.source
 
 import com.badlogic.gdx.graphics.Texture
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
+import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 import com.disgraded.gdxmachine.core.api.scene.Scene
 
 
@@ -29,6 +31,10 @@ class TestScene : Scene() {
         }
 
         player = Sprite(playerTexture)
+        player.setScale(.5f)
+        player.filter = Sprite.Filter.SEPIA
+        player.setColor(Color.GREEN)
+        player.setColor(Drawable.Corner.BOTTOM_RIGHT, Color.DEEP_ORANGE)
     }
 
     override fun update(deltaTime: Float) {

@@ -29,6 +29,8 @@ class SpriteStandardRenderer : Renderer {
     private val vertices: FloatArray
     private val indices: ShortArray
     private var shaderProgram: ShaderProgram
+    private val shaderVertexPrefix = "sprite_standard"
+    private var shaderFragmentPrefix = "sprite_standard.tint"
     private lateinit var projectionMatrix: Matrix4
 
     private var cachedTexture: Texture? = null
@@ -55,7 +57,7 @@ class SpriteStandardRenderer : Renderer {
             if (module == 4) indices[i] = (idx + 3).toShort()
         }
 
-        shaderProgram = shaderFactory.get("sprite_standard", "sprite_standard")
+        shaderProgram = shaderFactory.get(shaderVertexPrefix, shaderFragmentPrefix)
     }
 
     override fun begin() {
@@ -67,6 +69,7 @@ class SpriteStandardRenderer : Renderer {
 
     override fun draw(drawable: Drawable) {
         val sprite = drawable as Sprite
+        validateShaderProgram(sprite)
         validateTexture(sprite.getTexture())
         if (bufferedCalls == MAX_BUFFERED_CALLS) flush()
         appendVertices(sprite)
@@ -88,6 +91,17 @@ class SpriteStandardRenderer : Renderer {
     }
 
     override fun dispose() = mesh.dispose()
+
+    private fun validateShaderProgram(sprite: Sprite) {
+        val fragmentPrefix = "sprite_standard.${sprite.filter.type}"
+        if (fragmentPrefix != shaderFragmentPrefix) {
+            flush()
+            shaderFragmentPrefix = fragmentPrefix
+            shaderProgram.end()
+            shaderProgram = shaderFactory.get(shaderVertexPrefix, shaderFragmentPrefix)
+            shaderProgram.begin()
+        }
+    }
 
     private fun validateTexture(textureRegion: TextureRegion) {
         if (cachedTexture !== textureRegion.texture) {
