@@ -5,7 +5,7 @@ import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 import com.disgraded.gdxmachine.core.api.graphics.renderer.*
 
-class StandardBatch: SpriteBatch {
+class StandardBatch: DrawableBatch {
 
     private val rendererMap = hashMapOf<String, Renderer>()
     private var currentRenderer: Renderer? = null
