@@ -29,6 +29,8 @@ class SpriteMaskRenderer : Renderer {
     private val vertices: FloatArray
     private val indices: ShortArray
     private var shaderProgram: ShaderProgram
+    private val shaderVertexPrefix = "sprite_mask"
+    private var shaderFragmentPrefix = "sprite_mask.tint"
     private lateinit var projectionMatrix: Matrix4
 
     private var cachedTexture: Texture? = null
@@ -57,7 +59,7 @@ class SpriteMaskRenderer : Renderer {
             if (module == 4) indices[i] = (idx + 3).toShort()
         }
 
-        shaderProgram = shaderFactory.get("sprite_mask", "sprite_mask")
+        shaderProgram = shaderFactory.get(shaderVertexPrefix, shaderFragmentPrefix)
     }
 
     override fun begin() {
@@ -69,6 +71,7 @@ class SpriteMaskRenderer : Renderer {
 
     override fun draw(drawable: Drawable) {
         val sprite = drawable as Sprite
+        validateShaderProgram(sprite)
         validateTexture(sprite.getTexture(), sprite.getMask()!!)
         if (bufferedCalls == MAX_BUFFERED_CALLS) flush()
         appendVertices(sprite)
@@ -90,6 +93,17 @@ class SpriteMaskRenderer : Renderer {
     }
 
     override fun dispose() = mesh.dispose()
+
+    private fun validateShaderProgram(sprite: Sprite) {
+        val fragmentPrefix = "sprite_mask.${sprite.filter.type}"
+        if (fragmentPrefix != shaderFragmentPrefix) {
+            flush()
+            shaderFragmentPrefix = fragmentPrefix
+            shaderProgram.end()
+            shaderProgram = shaderFactory.get(shaderVertexPrefix, shaderFragmentPrefix)
+            shaderProgram.begin()
+        }
+    }
 
     private fun validateTexture(texture: TextureRegion, mask: TextureRegion) {
         if (cachedTexture !== texture.texture || cachedMask !== mask.texture) {

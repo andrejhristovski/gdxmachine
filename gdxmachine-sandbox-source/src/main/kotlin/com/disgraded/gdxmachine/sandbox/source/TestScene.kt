@@ -24,6 +24,8 @@ class TestScene : Scene() {
             for(j in 0..10) {
                 val background = Sprite(wallTexture)
                 background.setNormalMap(wallNormalTexture)
+                background.setMask(playerTexture)
+                background.filter = Sprite.Filter.SEPIA
                 background.x = startX + wallTexture.width.toFloat() * j
                 background.y = startY + wallTexture.height.toFloat() * i
                 this.background.add(background)
@@ -33,8 +35,6 @@ class TestScene : Scene() {
         player = Sprite(playerTexture)
         player.setScale(.5f)
         player.filter = Sprite.Filter.SEPIA
-        player.setColor(Color.GREEN)
-        player.setColor(Drawable.Corner.BOTTOM_RIGHT, Color.DEEP_ORANGE)
     }
 
     override fun update(deltaTime: Float) {
