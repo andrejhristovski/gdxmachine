@@ -6,10 +6,14 @@ import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 
 class Sprite : Drawable {
 
+    enum class Filter(private val type: String) { TINT("tint"), FILL("fill"), GREYSCALE("greyscale"),
+        SEPIA("sepia") }
+
     private var texture: TextureRegion
     private var mask: TextureRegion? = null
     private var normalMap: TextureRegion? = null
     private val colorMap = hashMapOf<Corner, Color>()
+    var filter = Filter.TINT
 
     init {
         colorMap[Corner.TOP_LEFT] = Color.WHITE
