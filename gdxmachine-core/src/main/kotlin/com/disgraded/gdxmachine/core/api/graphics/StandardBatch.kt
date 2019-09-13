@@ -26,16 +26,22 @@ class StandardBatch: DrawableBatch {
             adaptCurrentRenderer(drawable)
             currentRenderer!!.draw(drawable)
         }
+        if (currentRenderer != null && currentRenderer!!.active) {
+            currentRenderer!!.end()
+        }
         return gpuCalls
     }
 
     private fun adaptCurrentRenderer(drawable: Drawable) {
         val type = getRendererType(drawable) ?: throw RuntimeException("Wrong drawable type sent to the standard batch [${drawable.type}]")
-        if (currentRendererType !== type) {
-            if (currentRenderer !== null) gpuCalls += currentRenderer!!.end()
+        if (currentRendererType != type) {
+            if (currentRenderer != null) gpuCalls += currentRenderer!!.end()
             currentRendererType = type
             val newRenderer = rendererMap[type] ?: throw RuntimeException("Renderer with type $type isn't registered yet")
             currentRenderer = newRenderer
+            currentRenderer!!.begin()
+        }
+        if (!currentRenderer!!.active) {
             currentRenderer!!.begin()
         }
     }

@@ -5,7 +5,6 @@ precision mediump float;
 #define LOWP
 #endif
 
-varying LOWP vec4 v_color;
 varying vec2 v_texCoords;
 varying vec2 v_texCoords_normal;
 
@@ -44,5 +43,5 @@ void main()
     vec3 intensity = ambientColor + diffuse * attenuation;
     vec3 finalColor = texColor.rgb * intensity;
 
-    gl_FragColor = v_color * vec4(finalColor, texColor.a);
+    gl_FragColor = vec4(finalColor, texColor.a);
 }

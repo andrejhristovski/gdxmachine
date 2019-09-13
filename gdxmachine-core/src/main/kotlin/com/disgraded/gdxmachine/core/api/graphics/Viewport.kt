@@ -5,10 +5,13 @@ import com.badlogic.gdx.utils.Disposable
 import com.disgraded.gdxmachine.core.Config
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Light
+import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 
 class Viewport : Disposable {
 
     class Api(private val viewport: Viewport) {
+
+        var ambientColor = Color.BLACK
 
         val camera: OrthographicCamera = viewport.projection.camera
 
@@ -47,7 +50,7 @@ class Viewport : Disposable {
 
     private val projection = Projection()
     private val standardBatch = StandardBatch()
-    private val deferredLightBatch = DefferedLightBatch()
+    private val deferredLightBatch = DeferredLightBatch(projection)
 
     private val drawableList = arrayListOf<Drawable>()
     private val lightList = arrayListOf<Light>()
@@ -56,13 +59,11 @@ class Viewport : Disposable {
 
     fun render() {
         if(!api.visible) return
-        drawableList.sortByDescending { it.z }
+        drawableList.sortBy { it.z }
         projection.apply()
         if (lightsEnabled) {
-            deferredLightBatch.applyLights(lightList)
+            deferredLightBatch.apply(lightList, api.ambientColor)
             gpuCalls = deferredLightBatch.render(drawableList, projection.camera.combined)
-            projection.apply()
-            deferredLightBatch.flush()
         } else {
             gpuCalls = standardBatch.render(drawableList, projection.camera.combined)
         }
@@ -78,5 +79,6 @@ class Viewport : Disposable {
 
     override fun dispose() {
         standardBatch.dispose()
+        deferredLightBatch.dispose()
     }
 }
