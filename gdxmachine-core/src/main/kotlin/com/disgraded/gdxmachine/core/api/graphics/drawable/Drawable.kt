@@ -4,8 +4,6 @@ abstract class Drawable(val type: Type) {
 
     enum class Type { SPRITE, LIGHT }
 
-    enum class Corner { TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT }
-
     var visible: Boolean = true
     var x: Float = 0f
     var y: Float = 0f

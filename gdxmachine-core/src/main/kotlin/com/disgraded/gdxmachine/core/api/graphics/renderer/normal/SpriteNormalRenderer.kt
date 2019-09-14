@@ -108,8 +108,8 @@ class SpriteNormalRenderer : Renderer {
         val sizeX = sprite.getTexture().regionWidth * sprite.scaleX
         val sizeY = sprite.getTexture().regionHeight * sprite.scaleY
 
-        var x1 = sprite.x - (sizeX * sprite.anchorX)
-        var y1 = sprite.y - (sizeY * sprite.anchorY)
+        var x1 = 0 - (sizeX * sprite.anchorX)
+        var y1 = 0 - (sizeY * sprite.anchorY)
         var x2 = x1
         var y2 = y1 + sizeY
         var x3 = x1 + sizeX
@@ -135,6 +135,15 @@ class SpriteNormalRenderer : Renderer {
             x4 = x1 + (x3 - x2)
             y4 = y3 - (y2 - y1)
         }
+
+        x1 += sprite.x
+        x2 += sprite.x
+        x3 += sprite.x
+        x4 += sprite.x
+        y1 += sprite.y
+        y2 += sprite.y
+        y3 += sprite.y
+        y4 += sprite.y
 
         vertices[idx] = x1
         vertices[idx + 1] = y1

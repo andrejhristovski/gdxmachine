@@ -6,9 +6,6 @@ import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 
 class Sprite : Drawable {
 
-    enum class Filter(val type: String) { TINT("tint"), FILL("fill"), GREYSCALE("greyscale"),
-        SEPIA("sepia"), INVERT("invert") }
-
     private var texture: TextureRegion
     private var mask: TextureRegion? = null
     private var normalMap: TextureRegion? = null

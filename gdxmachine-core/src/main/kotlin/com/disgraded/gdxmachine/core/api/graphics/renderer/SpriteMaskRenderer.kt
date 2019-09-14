@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Corner
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 
@@ -157,7 +158,7 @@ class SpriteMaskRenderer : Renderer {
 
         vertices[idx] = x1
         vertices[idx + 1] = y1
-        vertices[idx + 2] = sprite.getColor(Drawable.Corner.BOTTOM_LEFT).toFloatBits()
+        vertices[idx + 2] = sprite.getColor(Corner.BOTTOM_LEFT).toFloatBits()
         vertices[idx + 3] = sprite.getTexture().u
         vertices[idx + 4] = sprite.getTexture().v2
         vertices[idx + 5] = sprite.getMask()!!.u
@@ -165,7 +166,7 @@ class SpriteMaskRenderer : Renderer {
 
         vertices[idx + 7] = x2
         vertices[idx + 8] = y2
-        vertices[idx + 9] = sprite.getColor(Drawable.Corner.TOP_LEFT).toFloatBits()
+        vertices[idx + 9] = sprite.getColor(Corner.TOP_LEFT).toFloatBits()
         vertices[idx + 10] = sprite.getTexture().u
         vertices[idx + 11] = sprite.getTexture().v
         vertices[idx + 12] = sprite.getMask()!!.u
@@ -173,7 +174,7 @@ class SpriteMaskRenderer : Renderer {
 
         vertices[idx + 14] = x3
         vertices[idx + 15] = y3
-        vertices[idx + 16] = sprite.getColor(Drawable.Corner.TOP_RIGHT).toFloatBits()
+        vertices[idx + 16] = sprite.getColor(Corner.TOP_RIGHT).toFloatBits()
         vertices[idx + 17] = sprite.getTexture().u2
         vertices[idx + 18] = sprite.getTexture().v
         vertices[idx + 19] = sprite.getMask()!!.u2
@@ -181,7 +182,7 @@ class SpriteMaskRenderer : Renderer {
 
         vertices[idx + 21] = x4
         vertices[idx + 22] = y4
-        vertices[idx + 23] = sprite.getColor(Drawable.Corner.BOTTOM_RIGHT).toFloatBits()
+        vertices[idx + 23] = sprite.getColor(Corner.BOTTOM_RIGHT).toFloatBits()
         vertices[idx + 24] = sprite.getTexture().u2
         vertices[idx + 25] = sprite.getTexture().v2
         vertices[idx + 26] = sprite.getMask()!!.u2
