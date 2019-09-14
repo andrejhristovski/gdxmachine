@@ -49,7 +49,6 @@ class Projection {
     }
 
     fun update(width: Float, height: Float, scale: Config.Graphics.Scale) {
-        println("$width x $height")
         viewportWidth = width
         viewportHeight = height
         viewportScale = scale
