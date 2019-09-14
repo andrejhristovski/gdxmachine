@@ -8,6 +8,6 @@ class Light: Drawable(Type.LIGHT) {
     val falloff = Vector3(.4f, 3f, 20f)
 
     init {
-        z = .075f
+        z = .1f
     }
 }
