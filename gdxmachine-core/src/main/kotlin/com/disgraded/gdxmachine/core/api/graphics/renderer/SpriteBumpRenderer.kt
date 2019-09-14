@@ -10,7 +10,7 @@ import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 
-class SpriteDepthRenderer : Renderer {
+class SpriteBumpRenderer : Renderer {
 
     companion object {
         private const val BUFFER_SIZE = 24
@@ -29,8 +29,8 @@ class SpriteDepthRenderer : Renderer {
     private val vertices: FloatArray
     private val indices: ShortArray
     private var shaderProgram: ShaderProgram
-    private val shaderVertexPrefix = "sprite_depth"
-    private var shaderFragmentPrefix = "sprite_depth"
+    private val shaderVertexPrefix = "sprite_bump"
+    private var shaderFragmentPrefix = "sprite_bump"
     private lateinit var projectionMatrix: Matrix4
 
     private var cachedTexture: Texture? = null

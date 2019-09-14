@@ -14,7 +14,7 @@ class DeferredLightBatch(private val projection: Projection) : DrawableBatch {
     private lateinit var lightList: ArrayList<Light>
     private lateinit var ambientColor: Color
     private val diffuseBatch = DiffuseBatch()
-    private val depthBatch = DepthBatch()
+    private val bumpBatch = BumpBatch()
     private val deferredLightRenderer = DeferredLightRenderer()
 
     fun apply(lightList: ArrayList<Light>, ambientColor: Color) {
@@ -33,12 +33,12 @@ class DeferredLightBatch(private val projection: Projection) : DrawableBatch {
         diffuseTexture.flip(false, true)
 
 
-        val depthMap = FrameBuffer(Pixmap.Format.RGBA8888, projection.getVirtualWidth().toInt(),
+        val bumpMap = FrameBuffer(Pixmap.Format.RGBA8888, projection.getVirtualWidth().toInt(),
                 projection.getVirtualHeight().toInt(), false)
-        depthMap.begin()
-        gpuCalls += depthBatch.render(drawableList, projectionMatrix)
-        depthMap.end()
-        val depthTexture = TextureRegion(depthMap.colorBufferTexture)
+        bumpMap.begin()
+        gpuCalls += bumpBatch.render(drawableList, projectionMatrix)
+        bumpMap.end()
+        val depthTexture = TextureRegion(bumpMap.colorBufferTexture)
         depthTexture.flip(false, true)
 
 
@@ -47,13 +47,13 @@ class DeferredLightBatch(private val projection: Projection) : DrawableBatch {
         gpuCalls += deferredLightRenderer.render(ambientColor, lightList, diffuseTexture, depthTexture, projectionMatrix)
 
         diffuseMap.dispose()
-        depthMap.dispose()
+        bumpMap.dispose()
         return gpuCalls
     }
 
     override fun dispose() {
         diffuseBatch.dispose()
-        depthBatch.dispose()
+        bumpBatch.dispose()
         deferredLightRenderer.dispose()
     }
 }
