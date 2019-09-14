@@ -1,15 +1,15 @@
 attribute vec3 a_position;
-attribute vec2 a_texCoord;
-attribute vec2 a_texCoord_normal;
+attribute vec2 a_texCoord_diffuse;
+attribute vec2 a_texCoord_depth;
 
 uniform mat4 u_projectionTrans;
 
-varying vec2 v_texCoords;
-varying vec2 v_texCoords_normal;
+varying vec2 v_texCoords_diffuse;
+varying vec2 v_texCoords_depth;
 
 void main()
 {
-    v_texCoords = a_texCoord;
-    v_texCoords_normal = a_texCoord_normal;
+    v_texCoords_diffuse = a_texCoord_diffuse;
+    v_texCoords_depth = a_texCoord_depth;
     gl_Position =  u_projectionTrans * vec4(a_position, 1);
 }

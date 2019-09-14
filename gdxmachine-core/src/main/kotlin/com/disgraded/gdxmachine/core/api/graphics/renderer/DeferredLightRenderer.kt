@@ -36,8 +36,8 @@ class DeferredLightRenderer: Disposable {
         val maxIndices = INDICES_PER_BUFFER * MAX_BUFFERED_CALLS
         val vertexAttributes = VertexAttributes(
                 VertexAttribute(VertexAttributes.Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
-                VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE),
-                VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "${ShaderProgram.TEXCOORD_ATTRIBUTE}_normal")
+                VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "${ShaderProgram.TEXCOORD_ATTRIBUTE}_diffuse"),
+                VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "${ShaderProgram.TEXCOORD_ATTRIBUTE}_depth")
         )
 
         mesh = Mesh(false, maxVertices, maxIndices, vertexAttributes)
@@ -111,8 +111,8 @@ class DeferredLightRenderer: Disposable {
         val light = lightList[0]
 
         shaderProgram.setUniformMatrix("u_projectionTrans", projectionMatrix)
-        shaderProgram.setUniformi("u_texture", 0)
-        shaderProgram.setUniformi("u_texture_normal", 1)
+        shaderProgram.setUniformi("u_texture_diffuse", 0)
+        shaderProgram.setUniformi("u_texture_depth", 1)
         shaderProgram.setUniformf("light_position", light.x, light.y, light.z)
         shaderProgram.setUniformf("light_color", light.color.r, light.color.g, light.color.b, light.color.alpha)
         shaderProgram.setUniformf("resolution", 1280f, 720f)

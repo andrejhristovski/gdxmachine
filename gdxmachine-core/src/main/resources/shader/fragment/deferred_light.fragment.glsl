@@ -5,11 +5,11 @@ precision mediump float;
 #define LOWP
 #endif
 
-varying vec2 v_texCoords;
-varying vec2 v_texCoords_normal;
+varying vec2 v_texCoords_diffuse;
+varying vec2 v_texCoords_depth;
 
-uniform sampler2D u_texture;
-uniform sampler2D u_texture_normal;
+uniform sampler2D u_texture_diffuse;
+uniform sampler2D u_texture_depth;
 
 uniform vec3 light_position;
 uniform vec4 light_color;
@@ -19,8 +19,8 @@ uniform vec3 falloff;
 
 void main()
 {
-    vec4 texColor = texture2D(u_texture, v_texCoords);
-    vec3 normalMapColor = texture2D(u_texture_normal, v_texCoords_normal).rgb;
+    vec4 diffuseColor = texture2D(u_texture_diffuse, v_texCoords_diffuse);
+    vec3 depthColor = texture2D(u_texture_depth, v_texCoords_depth).rgb;
 
-    gl_FragColor = vec4(normalMapColor, texColor.a);
+    gl_FragColor = vec4(depthColor, diffuseColor.a);
 }
