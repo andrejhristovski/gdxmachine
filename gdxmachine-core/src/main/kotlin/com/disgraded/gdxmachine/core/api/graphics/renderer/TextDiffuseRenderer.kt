@@ -36,8 +36,8 @@ class TextDiffuseRenderer : SpriteBatch(8191), Renderer {
         projection.scale(text.scaleX, text.scaleY, 0f)
         projection.rotate(Vector3(0f, 0f, 1f), text.rotation)
         projectionMatrix = projection
-        text.bitmapFont.draw(this, text.glyphLayout, 0 - (text.glyphLayout.width * text.anchorX),
-                0 + (text.glyphLayout.height * text.anchorY))
+        text.getBitmapFont().draw(this, text.getGlyph(), 0 - (text.getGlyph().width * text.anchorX),
+                0 + (text.getGlyph().height * text.anchorY))
         projectionMatrix = oldProjectionMatrix
 
     }

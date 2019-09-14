@@ -19,7 +19,7 @@ class TestScene : Scene() {
 
     override fun initialize() {
         context.graphics.createViewport()
-        context.graphics.getViewport().enableLights()
+//        context.graphics.getViewport().enableLights()
 //        context.graphics.getViewport().ambientColor = Color.WARM_WHITE
 //        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
         val wallTexture = context.resources.get<Texture>("initial", "wall")
@@ -51,7 +51,6 @@ class TestScene : Scene() {
         light.y = .5f
 
         text = Text(textBitmap)
-        text.content = "example"
     }
 
     override fun update(deltaTime: Float) {
