@@ -35,6 +35,7 @@ class Viewport : Disposable {
             if (!drawable.visible) return
             when (drawable.type) {
                 Drawable.Type.SPRITE -> viewport.drawableList.add(drawable)
+                Drawable.Type.TEXT -> viewport.drawableList.add(drawable)
                 Drawable.Type.LIGHT -> viewport.lightList.add(drawable as Light)
             }
         }

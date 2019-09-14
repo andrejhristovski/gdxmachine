@@ -1,8 +1,10 @@
 package com.disgraded.gdxmachine.sandbox.source
 
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Light
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Text
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 import com.disgraded.gdxmachine.core.api.scene.Scene
 
@@ -12,15 +14,17 @@ class TestScene : Scene() {
     private var background = arrayListOf<Sprite>()
     private lateinit var player: Sprite
     private lateinit var light: Light
+    private lateinit var text: Text
 
     override fun initialize() {
         context.graphics.createViewport()
-        context.graphics.getViewport().enableLights()
+//        context.graphics.getViewport().enableLights()
 //        context.graphics.getViewport().ambientColor = Color.WARM_WHITE
 //        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
         val wallTexture = context.resources.get<Texture>("initial", "wall")
         val wallNormalTexture = context.resources.get<Texture>("initial", "wall_normal")
         val playerTexture = context.resources.get<Texture>("initial", "player")
+        val textBitmap = context.resources.get<BitmapFont>("initial", "text")
 
         val startX = -800
         val startY = -500
@@ -44,6 +48,9 @@ class TestScene : Scene() {
         light.color = Color.WARM_WHITE
         light.x = .5f
         light.y = .5f
+
+        text = Text(textBitmap)
+        text.content = "hahahahah sadsadas sad asdsa"
     }
 
     override fun update(deltaTime: Float) {
@@ -52,7 +59,7 @@ class TestScene : Scene() {
         }
         context.graphics.getViewport().draw(player)
         context.graphics.getViewport().draw(light)
-
+        context.graphics.getViewport().draw(text)
         println(context.graphics.getFPS())
 //        player.x += 40f * deltaTime
         player.rotation += 100f * deltaTime

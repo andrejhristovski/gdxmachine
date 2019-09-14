@@ -63,7 +63,7 @@ class SpriteDiffuseMaskRenderer : Renderer {
         shaderProgram = shaderFactory.get(shaderVertexPrefix, shaderFragmentPrefix)
     }
 
-    override fun begin() {
+    override fun start() {
         if(active) throw RuntimeException("The renderer is already active")
         gpuCalls = 0
         shaderProgram.begin()
@@ -78,7 +78,7 @@ class SpriteDiffuseMaskRenderer : Renderer {
         appendVertices(sprite)
     }
 
-    override fun end(): Int {
+    override fun finish(): Int {
         if(!active) throw RuntimeException("The renderer isn't active")
         if (bufferedCalls > 0) flush()
         cachedTexture = null

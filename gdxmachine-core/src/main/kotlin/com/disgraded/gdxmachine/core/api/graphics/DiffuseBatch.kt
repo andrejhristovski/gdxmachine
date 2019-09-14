@@ -15,6 +15,7 @@ class DiffuseBatch: DrawableBatch {
     init {
         rendererMap["sprite_diffuse"] = SpriteDiffuseRenderer()
         rendererMap["sprite_diffuse_mask"] = SpriteDiffuseMaskRenderer()
+        rendererMap["text_diffuse"] = TextDiffuseRenderer()
     }
 
     override fun render(drawableList: ArrayList<Drawable>, projectionMatrix: Matrix4): Int {
@@ -27,7 +28,7 @@ class DiffuseBatch: DrawableBatch {
             currentRenderer!!.draw(drawable)
         }
         if (currentRenderer != null && currentRenderer!!.active) {
-            currentRenderer!!.end()
+            gpuCalls += currentRenderer!!.finish()
         }
         return gpuCalls
     }
@@ -36,15 +37,15 @@ class DiffuseBatch: DrawableBatch {
         val type = getRendererType(drawable) ?: throw RuntimeException("Wrong drawable type sent to the standard batch [${drawable.type}]")
         if (currentRendererType != type) {
             if (currentRenderer != null && currentRenderer!!.active) {
-                gpuCalls += currentRenderer!!.end()
+                gpuCalls += currentRenderer!!.finish()
             }
             currentRendererType = type
             val newRenderer = rendererMap[type] ?: throw RuntimeException("Renderer for type $type isn't registered yet")
             currentRenderer = newRenderer
-            currentRenderer!!.begin()
+            currentRenderer!!.start()
         }
         if (!currentRenderer!!.active) {
-            currentRenderer!!.begin()
+            currentRenderer!!.start()
         }
     }
 
@@ -54,6 +55,7 @@ class DiffuseBatch: DrawableBatch {
                 val sprite = drawable as Sprite
                 return if (sprite.getMask() === null) "sprite_diffuse" else "sprite_diffuse_mask"
             }
+            Drawable.Type.TEXT -> "text_diffuse"
             else -> null
         }
     }

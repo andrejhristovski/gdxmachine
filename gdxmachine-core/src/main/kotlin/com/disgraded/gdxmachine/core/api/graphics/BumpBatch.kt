@@ -10,11 +10,11 @@ class BumpBatch : DrawableBatch {
 
     override fun render(drawableList: ArrayList<Drawable>, projectionMatrix: Matrix4): Int {
         bumpRenderer.setProjectionMatrix(projectionMatrix)
-        bumpRenderer.begin()
+        bumpRenderer.start()
         for (drawable in drawableList) {
             bumpRenderer.draw(drawable)
         }
-        return bumpRenderer.end()
+        return bumpRenderer.finish()
     }
 
     override fun dispose() {

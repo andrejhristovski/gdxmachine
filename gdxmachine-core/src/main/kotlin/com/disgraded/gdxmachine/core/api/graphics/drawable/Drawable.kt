@@ -2,7 +2,7 @@ package com.disgraded.gdxmachine.core.api.graphics.drawable
 
 abstract class Drawable(val type: Type) {
 
-    enum class Type { SPRITE, LIGHT }
+    enum class Type { SPRITE, TEXT, LIGHT }
 
     var visible: Boolean = true
     var x: Float = 0f

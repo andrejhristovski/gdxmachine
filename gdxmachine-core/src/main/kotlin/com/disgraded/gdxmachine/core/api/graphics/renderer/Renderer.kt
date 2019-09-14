@@ -9,11 +9,11 @@ interface Renderer : Disposable {
 
     var active: Boolean
 
-    fun begin()
+    fun start()
 
     fun draw(drawable: Drawable)
 
-    fun end(): Int
+    fun finish(): Int
 
     fun setProjectionMatrix(projectionMatrix: Matrix4)
 }

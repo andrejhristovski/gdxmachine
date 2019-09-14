@@ -28,7 +28,7 @@ open class AssetPackage(val packageKey: String) : Disposable {
                 FreetypeFontLoader(gdxAssetManager.fileHandleResolver))
     }
 
-    fun loadTexture(key: String, path: String, format: Pixmap.Format? = null, genMipMaps: Boolean = false,
+    protected fun loadTexture(key: String, path: String, format: Pixmap.Format? = null, genMipMaps: Boolean = false,
                     minFilter: Texture.TextureFilter = Texture.TextureFilter.Nearest,
                     magFilter: Texture.TextureFilter = Texture.TextureFilter.Nearest,
                     wrapU: Texture.TextureWrap = Texture.TextureWrap.ClampToEdge,
@@ -45,12 +45,12 @@ open class AssetPackage(val packageKey: String) : Disposable {
         assetKeys[key] = path
     }
 
-    fun loadPixelMap(key: String, path: String) {
+    protected fun loadPixelMap(key: String, path: String) {
         gdxAssetManager.load(path, Pixmap::class.java)
         assetKeys[key] = path
     }
 
-    fun loadBitmapFont(key: String, path: String, flip: Boolean = false, genMipMaps: Boolean = false,
+    protected fun loadBitmapFont(key: String, path: String, flip: Boolean = false, genMipMaps: Boolean = false,
                        minFilter: Texture.TextureFilter = Texture.TextureFilter.Nearest,
                        magFilter: Texture.TextureFilter = Texture.TextureFilter.Nearest) {
         val params = BitmapFontLoader.BitmapFontParameter()
@@ -62,7 +62,7 @@ open class AssetPackage(val packageKey: String) : Disposable {
         assetKeys[key] = path
     }
 
-    fun loadFreeTypeFont(key: String, path: String, fontParams: FreeTypeFontGenerator.FreeTypeFontParameter
+    protected fun loadFreeTypeFont(key: String, path: String, fontParams: FreeTypeFontGenerator.FreeTypeFontParameter
     = FreeTypeFontGenerator.FreeTypeFontParameter()) {
         val params = FreetypeFontLoader.FreeTypeFontLoaderParameter()
         params.fontFileName = path
@@ -71,19 +71,19 @@ open class AssetPackage(val packageKey: String) : Disposable {
         assetKeys[key] = path
     }
 
-    fun loadTextureAtlas(key: String, path: String, flip: Boolean = false) {
+    protected fun loadTextureAtlas(key: String, path: String, flip: Boolean = false) {
         val params = TextureAtlasLoader.TextureAtlasParameter()
         params.flip = flip
         gdxAssetManager.load(path, TextureAtlas::class.java, params)
         assetKeys[key] = path
     }
 
-    fun loadMusic(key: String, path: String) {
+    protected fun loadMusic(key: String, path: String) {
         gdxAssetManager.load(path, Music::class.java)
         assetKeys[key] = path
     }
 
-    fun loadSound(key: String, path: String) {
+    protected fun loadSound(key: String, path: String) {
         gdxAssetManager.load(path, Sound::class.java)
         assetKeys[key] = path
     }
