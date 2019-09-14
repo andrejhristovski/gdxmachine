@@ -2,6 +2,7 @@ package com.disgraded.gdxmachine.sandbox.source
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Filter
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Light
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Text
@@ -50,7 +51,7 @@ class TestScene : Scene() {
         light.y = .5f
 
         text = Text(textBitmap)
-        text.content = "hahahahah sadsadas sad asdsa"
+        text.content = "example"
     }
 
     override fun update(deltaTime: Float) {

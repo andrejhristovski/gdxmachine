@@ -1,6 +1,9 @@
 package com.disgraded.gdxmachine.core.api.graphics.renderer
 
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
@@ -10,10 +13,13 @@ class TextDiffuseRenderer : SpriteBatch(8191), Renderer {
 
     private val shaderFactory = ShaderFactory.getInstance()
 
+    private val shaderVertexPrefix = "text_diffuse"
+    private val shaderFragmentPrefix = "text_diffuse"
+
     override var active: Boolean = false
 
     init {
-//        this.shader = shaderFactory.get("text_diffuse", "text_diffuse")
+        shader = shaderFactory.get(shaderVertexPrefix, shaderFragmentPrefix)
     }
 
     override fun start() {
@@ -23,8 +29,8 @@ class TextDiffuseRenderer : SpriteBatch(8191), Renderer {
 
     override fun draw(drawable: Drawable) {
         val text = drawable as Text
-        this.packedColor = text.color.toFloatBits()
-        text.bitmapFont.draw(this, text.content, text.x, text.y, 0, 9, 0f, 1, true)
+        text.bitmapFont.draw(this, text.glyphLayout, text.x - (text.glyphLayout.width * text.anchorX),
+                text.y - (text.glyphLayout.height * text.anchorY))
     }
 
     override fun finish(): Int {

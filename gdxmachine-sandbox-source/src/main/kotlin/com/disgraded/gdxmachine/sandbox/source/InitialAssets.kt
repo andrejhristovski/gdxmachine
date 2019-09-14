@@ -10,6 +10,8 @@ class InitialAssets : AssetPackage("initial") {
         loadTexture("wall", "wall.png")
         loadTexture("wall_normal", "wall_normal.png")
         loadTexture("player", "texture.png")
-        loadFont("text", "imperfecta.ttf")
+        loadFont("text", "imperfecta.ttf", FontParams().apply {
+            color = Color.AMBER
+        })
     }
 }
