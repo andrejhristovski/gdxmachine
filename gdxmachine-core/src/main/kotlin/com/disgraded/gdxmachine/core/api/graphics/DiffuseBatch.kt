@@ -33,6 +33,13 @@ class DiffuseBatch: DrawableBatch {
         return gpuCalls
     }
 
+    override fun dispose() {
+        for(renderer in rendererMap) {
+            renderer.value.dispose()
+        }
+        rendererMap.clear()
+    }
+
     private fun adaptCurrentRenderer(drawable: Drawable) {
         val type = getRendererType(drawable) ?: throw RuntimeException("Wrong drawable type sent to the standard batch [${drawable.type}]")
         if (currentRendererType != type) {
@@ -58,12 +65,5 @@ class DiffuseBatch: DrawableBatch {
             Drawable.Type.TEXT -> "text_diffuse"
             else -> null
         }
-    }
-
-    override fun dispose() {
-        for(renderer in rendererMap) {
-            renderer.value.dispose()
-        }
-        rendererMap.clear()
     }
 }

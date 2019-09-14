@@ -19,7 +19,7 @@ class TestScene : Scene() {
 
     override fun initialize() {
         context.graphics.createViewport()
-//        context.graphics.getViewport().enableLights()
+        context.graphics.getViewport().enableLights()
 //        context.graphics.getViewport().ambientColor = Color.WARM_WHITE
 //        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
         val wallTexture = context.resources.get<Texture>("initial", "wall")
@@ -59,8 +59,8 @@ class TestScene : Scene() {
             context.graphics.getViewport().draw(background)
         }
         context.graphics.getViewport().draw(player)
-        context.graphics.getViewport().draw(light)
         context.graphics.getViewport().draw(text)
+        context.graphics.getViewport().draw(light)
         println(context.graphics.getFPS())
 //        player.x += 40f * deltaTime
         player.rotation += 100f * deltaTime
