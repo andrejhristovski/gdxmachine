@@ -58,14 +58,12 @@ class TestScene : Scene() {
         for (background in this.background) {
             context.graphics.getViewport().draw(background)
         }
-        context.graphics.getViewport().draw(player)
         context.graphics.getViewport().draw(text)
+        context.graphics.getViewport().draw(player)
         context.graphics.getViewport().draw(light)
         println(context.graphics.getFPS())
-//        player.x += 40f * deltaTime
         player.rotation += 100f * deltaTime
-//        light.z += .1f * deltaTime
-//        println(light.falloff.x)
+        text.rotation += 100f * deltaTime
     }
 
     override fun pause() {

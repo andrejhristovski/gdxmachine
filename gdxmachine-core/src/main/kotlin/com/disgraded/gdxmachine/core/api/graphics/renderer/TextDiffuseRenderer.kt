@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.Matrix4
+import com.badlogic.gdx.math.Vector3
 import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Text
@@ -29,8 +30,16 @@ class TextDiffuseRenderer : SpriteBatch(8191), Renderer {
 
     override fun draw(drawable: Drawable) {
         val text = drawable as Text
-        text.bitmapFont.draw(this, text.glyphLayout, text.x - (text.glyphLayout.width * text.anchorX),
-                text.y - (text.glyphLayout.height * text.anchorY))
+        val oldProjectionMatrix = projectionMatrix
+        val projection = projectionMatrix.cpy()
+        projection.translate(text.x, text.y, 0f)
+        projection.scale(text.scaleX, text.scaleY, 0f)
+        projection.rotate(Vector3(0f, 0f, 1f), text.rotation)
+        projectionMatrix = projection
+        text.bitmapFont.draw(this, text.glyphLayout, 0 - (text.glyphLayout.width * text.anchorX),
+                0 + (text.glyphLayout.height * text.anchorY))
+        projectionMatrix = oldProjectionMatrix
+
     }
 
     override fun finish(): Int {
