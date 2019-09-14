@@ -49,7 +49,7 @@ class Viewport : Disposable {
     private var lightsEnabled = false
 
     private val projection = Projection()
-    private val standardBatch = StandardBatch()
+    private val diffuseBatch = DiffuseBatch()
     private val deferredLightBatch = DeferredLightBatch(projection)
 
     private val drawableList = arrayListOf<Drawable>()
@@ -65,7 +65,7 @@ class Viewport : Disposable {
             deferredLightBatch.apply(lightList, api.ambientColor)
             gpuCalls = deferredLightBatch.render(drawableList, projection.camera.combined)
         } else {
-            gpuCalls = standardBatch.render(drawableList, projection.camera.combined)
+            gpuCalls = diffuseBatch.render(drawableList, projection.camera.combined)
         }
         drawableList.clear()
         lightList.clear()
@@ -78,7 +78,7 @@ class Viewport : Disposable {
     }
 
     override fun dispose() {
-        standardBatch.dispose()
+        diffuseBatch.dispose()
         deferredLightBatch.dispose()
     }
 }

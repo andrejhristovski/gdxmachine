@@ -11,10 +11,10 @@ import com.disgraded.gdxmachine.core.api.graphics.drawable.Corner
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 
-class SpriteMaskRenderer : Renderer {
+class SpriteDiffuseRenderer : Renderer {
 
     companion object {
-        private const val BUFFER_SIZE = 28
+        private const val BUFFER_SIZE = 20
         private const val VERTICES_PER_BUFFER = 4
         private const val INDICES_PER_BUFFER = 6
         private const val MAX_BUFFERED_CALLS = Short.MAX_VALUE / VERTICES_PER_BUFFER
@@ -30,12 +30,11 @@ class SpriteMaskRenderer : Renderer {
     private val vertices: FloatArray
     private val indices: ShortArray
     private var shaderProgram: ShaderProgram
-    private val shaderVertexPrefix = "sprite_mask"
-    private var shaderFragmentPrefix = "sprite_mask.tint"
+    private val shaderVertexPrefix = "sprite_diffuse"
+    private var shaderFragmentPrefix = "sprite_diffuse.tint"
     private lateinit var projectionMatrix: Matrix4
 
     private var cachedTexture: Texture? = null
-    private var cachedMask: Texture? = null
 
     init {
         val maxVertices = VERTICES_PER_BUFFER * MAX_BUFFERED_CALLS
@@ -43,8 +42,7 @@ class SpriteMaskRenderer : Renderer {
         val vertexAttributes = VertexAttributes(
                 VertexAttribute(VertexAttributes.Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
                 VertexAttribute(VertexAttributes.Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
-                VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE),
-                VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "${ShaderProgram.TEXCOORD_ATTRIBUTE}_mask")
+                VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE)
         )
 
         mesh = Mesh(false, maxVertices, maxIndices, vertexAttributes)
@@ -73,7 +71,7 @@ class SpriteMaskRenderer : Renderer {
     override fun draw(drawable: Drawable) {
         val sprite = drawable as Sprite
         validateShaderProgram(sprite)
-        validateTexture(sprite.getTexture(), sprite.getMask()!!)
+        validateTexture(sprite.getTexture())
         if (bufferedCalls == MAX_BUFFERED_CALLS) flush()
         appendVertices(sprite)
     }
@@ -96,7 +94,7 @@ class SpriteMaskRenderer : Renderer {
     override fun dispose() = mesh.dispose()
 
     private fun validateShaderProgram(sprite: Sprite) {
-        val fragmentPrefix = "sprite_mask.${sprite.filter.type}"
+        val fragmentPrefix = "sprite_diffuse.${sprite.filter.type}"
         if (fragmentPrefix != shaderFragmentPrefix) {
             flush()
             shaderFragmentPrefix = fragmentPrefix
@@ -106,11 +104,10 @@ class SpriteMaskRenderer : Renderer {
         }
     }
 
-    private fun validateTexture(texture: TextureRegion, mask: TextureRegion) {
-        if (cachedTexture !== texture.texture || cachedMask !== mask.texture) {
+    private fun validateTexture(textureRegion: TextureRegion) {
+        if (cachedTexture !== textureRegion.texture) {
             flush()
-            cachedTexture = texture.texture
-            cachedMask = mask.texture
+            cachedTexture = textureRegion.texture
         }
     }
 
@@ -161,32 +158,24 @@ class SpriteMaskRenderer : Renderer {
         vertices[idx + 2] = sprite.getColor(Corner.BOTTOM_LEFT).toFloatBits()
         vertices[idx + 3] = sprite.getTexture().u
         vertices[idx + 4] = sprite.getTexture().v2
-        vertices[idx + 5] = sprite.getMask()!!.u
-        vertices[idx + 6] = sprite.getMask()!!.v2
 
-        vertices[idx + 7] = x2
-        vertices[idx + 8] = y2
-        vertices[idx + 9] = sprite.getColor(Corner.TOP_LEFT).toFloatBits()
-        vertices[idx + 10] = sprite.getTexture().u
-        vertices[idx + 11] = sprite.getTexture().v
-        vertices[idx + 12] = sprite.getMask()!!.u
-        vertices[idx + 13] = sprite.getMask()!!.v
+        vertices[idx + 5] = x2
+        vertices[idx + 6] = y2
+        vertices[idx + 7] = sprite.getColor(Corner.TOP_LEFT).toFloatBits()
+        vertices[idx + 8] = sprite.getTexture().u
+        vertices[idx + 9] = sprite.getTexture().v
 
-        vertices[idx + 14] = x3
-        vertices[idx + 15] = y3
-        vertices[idx + 16] = sprite.getColor(Corner.TOP_RIGHT).toFloatBits()
-        vertices[idx + 17] = sprite.getTexture().u2
-        vertices[idx + 18] = sprite.getTexture().v
-        vertices[idx + 19] = sprite.getMask()!!.u2
-        vertices[idx + 20] = sprite.getMask()!!.v
+        vertices[idx + 10] = x3
+        vertices[idx + 11] = y3
+        vertices[idx + 12] = sprite.getColor(Corner.TOP_RIGHT).toFloatBits()
+        vertices[idx + 13] = sprite.getTexture().u2
+        vertices[idx + 14] = sprite.getTexture().v
 
-        vertices[idx + 21] = x4
-        vertices[idx + 22] = y4
-        vertices[idx + 23] = sprite.getColor(Corner.BOTTOM_RIGHT).toFloatBits()
-        vertices[idx + 24] = sprite.getTexture().u2
-        vertices[idx + 25] = sprite.getTexture().v2
-        vertices[idx + 26] = sprite.getMask()!!.u2
-        vertices[idx + 27] = sprite.getMask()!!.v2
+        vertices[idx + 15] = x4
+        vertices[idx + 16] = y4
+        vertices[idx + 17] = sprite.getColor(Corner.BOTTOM_RIGHT).toFloatBits()
+        vertices[idx + 18] = sprite.getTexture().u2
+        vertices[idx + 19] = sprite.getTexture().v2
         bufferedCalls++
     }
 
@@ -198,11 +187,9 @@ class SpriteMaskRenderer : Renderer {
         val verticesCount = bufferedCalls * BUFFER_SIZE
 
         cachedTexture!!.bind(0)
-        cachedMask!!.bind(1)
 
         shaderProgram.setUniformMatrix("u_projectionTrans", projectionMatrix);
         shaderProgram.setUniformi("u_texture", 0)
-        shaderProgram.setUniformi("u_texture_mask", 1)
 
         mesh.setVertices(vertices, 0, verticesCount)
         mesh.setIndices(indices, 0, indicesCount)

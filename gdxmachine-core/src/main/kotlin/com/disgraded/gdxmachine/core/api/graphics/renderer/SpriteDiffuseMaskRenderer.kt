@@ -1,4 +1,4 @@
-package com.disgraded.gdxmachine.core.api.graphics.renderer.normal
+package com.disgraded.gdxmachine.core.api.graphics.renderer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.*
@@ -7,14 +7,14 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Corner
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
-import com.disgraded.gdxmachine.core.api.graphics.renderer.Renderer
 
-class SpriteNormalRenderer : Renderer {
+class SpriteDiffuseMaskRenderer : Renderer {
 
     companion object {
-        private const val BUFFER_SIZE = 24
+        private const val BUFFER_SIZE = 28
         private const val VERTICES_PER_BUFFER = 4
         private const val INDICES_PER_BUFFER = 6
         private const val MAX_BUFFERED_CALLS = Short.MAX_VALUE / VERTICES_PER_BUFFER
@@ -30,18 +30,21 @@ class SpriteNormalRenderer : Renderer {
     private val vertices: FloatArray
     private val indices: ShortArray
     private var shaderProgram: ShaderProgram
+    private val shaderVertexPrefix = "sprite_diffuse_mask"
+    private var shaderFragmentPrefix = "sprite_diffuse_mask.tint"
     private lateinit var projectionMatrix: Matrix4
 
     private var cachedTexture: Texture? = null
-    private var cachedNormal: Texture? = null
+    private var cachedMask: Texture? = null
 
     init {
         val maxVertices = VERTICES_PER_BUFFER * MAX_BUFFERED_CALLS
         val maxIndices = INDICES_PER_BUFFER * MAX_BUFFERED_CALLS
         val vertexAttributes = VertexAttributes(
                 VertexAttribute(VertexAttributes.Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
+                VertexAttribute(VertexAttributes.Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
                 VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE),
-                VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "${ShaderProgram.TEXCOORD_ATTRIBUTE}_normal")
+                VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, "${ShaderProgram.TEXCOORD_ATTRIBUTE}_mask")
         )
 
         mesh = Mesh(false, maxVertices, maxIndices, vertexAttributes)
@@ -57,7 +60,7 @@ class SpriteNormalRenderer : Renderer {
             if (module == 4) indices[i] = (idx + 3).toShort()
         }
 
-        shaderProgram = shaderFactory.get("sprite_normal", "sprite_normal")
+        shaderProgram = shaderFactory.get(shaderVertexPrefix, shaderFragmentPrefix)
     }
 
     override fun begin() {
@@ -69,8 +72,8 @@ class SpriteNormalRenderer : Renderer {
 
     override fun draw(drawable: Drawable) {
         val sprite = drawable as Sprite
-        val texture = if (sprite.getMask() === null) sprite.getTexture() else sprite.getMask()!!
-        validateTexture(texture, sprite.getNormalMap())
+        validateShaderProgram(sprite)
+        validateTexture(sprite.getTexture(), sprite.getMask()!!)
         if (bufferedCalls == MAX_BUFFERED_CALLS) flush()
         appendVertices(sprite)
     }
@@ -92,18 +95,26 @@ class SpriteNormalRenderer : Renderer {
 
     override fun dispose() = mesh.dispose()
 
-    private fun validateTexture(texture: TextureRegion, normalMap: TextureRegion?) {
-        val normalMapTexture = if (normalMap !== null) normalMap.texture else null
-        if (cachedTexture !== texture.texture || cachedNormal !== normalMapTexture) {
+    private fun validateShaderProgram(sprite: Sprite) {
+        val fragmentPrefix = "sprite_diffuse_mask.${sprite.filter.type}"
+        if (fragmentPrefix != shaderFragmentPrefix) {
+            flush()
+            shaderFragmentPrefix = fragmentPrefix
+            shaderProgram.end()
+            shaderProgram = shaderFactory.get(shaderVertexPrefix, shaderFragmentPrefix)
+            shaderProgram.begin()
+        }
+    }
+
+    private fun validateTexture(texture: TextureRegion, mask: TextureRegion) {
+        if (cachedTexture !== texture.texture || cachedMask !== mask.texture) {
             flush()
             cachedTexture = texture.texture
-            cachedNormal = normalMapTexture
+            cachedMask = mask.texture
         }
     }
 
     private fun appendVertices(sprite: Sprite) {
-        val texture = if (sprite.getMask() === null) sprite.getTexture() else sprite.getMask()!!
-        val normal: TextureRegion? = if (sprite.getNormalMap() !== null) sprite.getNormalMap() else null
         val idx = bufferedCalls * BUFFER_SIZE
         val sizeX = sprite.getTexture().regionWidth * sprite.scaleX
         val sizeY = sprite.getTexture().regionHeight * sprite.scaleY
@@ -147,31 +158,35 @@ class SpriteNormalRenderer : Renderer {
 
         vertices[idx] = x1
         vertices[idx + 1] = y1
-        vertices[idx + 2] = texture.u
-        vertices[idx + 3] = texture.v2
-        vertices[idx + 4] = if (normal !== null) normal.u else 0f
-        vertices[idx + 5] = if (normal !== null) normal.v2 else 0f
+        vertices[idx + 2] = sprite.getColor(Corner.BOTTOM_LEFT).toFloatBits()
+        vertices[idx + 3] = sprite.getTexture().u
+        vertices[idx + 4] = sprite.getTexture().v2
+        vertices[idx + 5] = sprite.getMask()!!.u
+        vertices[idx + 6] = sprite.getMask()!!.v2
 
-        vertices[idx + 6] = x2
-        vertices[idx + 7] = y2
-        vertices[idx + 8] = texture.u
-        vertices[idx + 9] = texture.v
-        vertices[idx + 10] = if (normal !== null) normal.u else 0f
-        vertices[idx + 11] = if (normal !== null) normal.v else 0f
+        vertices[idx + 7] = x2
+        vertices[idx + 8] = y2
+        vertices[idx + 9] = sprite.getColor(Corner.TOP_LEFT).toFloatBits()
+        vertices[idx + 10] = sprite.getTexture().u
+        vertices[idx + 11] = sprite.getTexture().v
+        vertices[idx + 12] = sprite.getMask()!!.u
+        vertices[idx + 13] = sprite.getMask()!!.v
 
-        vertices[idx + 12] = x3
-        vertices[idx + 13] = y3
-        vertices[idx + 14] = texture.u2
-        vertices[idx + 15] = texture.v
-        vertices[idx + 16] = if (normal !== null) normal.u2 else 0f
-        vertices[idx + 17] = if (normal !== null) normal.v else 0f
+        vertices[idx + 14] = x3
+        vertices[idx + 15] = y3
+        vertices[idx + 16] = sprite.getColor(Corner.TOP_RIGHT).toFloatBits()
+        vertices[idx + 17] = sprite.getTexture().u2
+        vertices[idx + 18] = sprite.getTexture().v
+        vertices[idx + 19] = sprite.getMask()!!.u2
+        vertices[idx + 20] = sprite.getMask()!!.v
 
-        vertices[idx + 18] = x4
-        vertices[idx + 19] = y4
-        vertices[idx + 20] = texture.u2
-        vertices[idx + 21] = texture.v2
-        vertices[idx + 22] = if (normal !== null) normal.u2 else 0f
-        vertices[idx + 23] = if (normal !== null) normal.v2 else 0f
+        vertices[idx + 21] = x4
+        vertices[idx + 22] = y4
+        vertices[idx + 23] = sprite.getColor(Corner.BOTTOM_RIGHT).toFloatBits()
+        vertices[idx + 24] = sprite.getTexture().u2
+        vertices[idx + 25] = sprite.getTexture().v2
+        vertices[idx + 26] = sprite.getMask()!!.u2
+        vertices[idx + 27] = sprite.getMask()!!.v2
         bufferedCalls++
     }
 
@@ -183,15 +198,11 @@ class SpriteNormalRenderer : Renderer {
         val verticesCount = bufferedCalls * BUFFER_SIZE
 
         cachedTexture!!.bind(0)
-        val normalExist = if (cachedNormal !== null) 1 else 0
-        if (normalExist == 1) {
-            cachedNormal!!.bind(1)
-        }
+        cachedMask!!.bind(1)
 
         shaderProgram.setUniformMatrix("u_projectionTrans", projectionMatrix);
         shaderProgram.setUniformi("u_texture", 0)
-        shaderProgram.setUniformi("u_texture_normal", normalExist)
-        shaderProgram.setUniformi("normal_exist", normalExist)
+        shaderProgram.setUniformi("u_texture_mask", 1)
 
         mesh.setVertices(vertices, 0, verticesCount)
         mesh.setIndices(indices, 0, indicesCount)

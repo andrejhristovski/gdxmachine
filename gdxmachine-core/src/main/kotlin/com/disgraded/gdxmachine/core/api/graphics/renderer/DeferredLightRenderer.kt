@@ -28,8 +28,8 @@ class DeferredLightRenderer: Disposable {
     private val vertices: FloatArray
     private val indices: ShortArray
     private var shaderProgram: ShaderProgram
-    private val shaderVertexPrefix = "deferred.light"
-    private var shaderFragmentPrefix = "deferred.light"
+    private val shaderVertexPrefix = "deferred_light"
+    private var shaderFragmentPrefix = "deferred_light"
 
     init {
         val maxVertices = VERTICES_PER_BUFFER * MAX_BUFFERED_CALLS
@@ -56,13 +56,13 @@ class DeferredLightRenderer: Disposable {
         shaderProgram = shaderFactory.get(shaderVertexPrefix, shaderFragmentPrefix)
     }
 
-    fun render(ambientColor: Color, lightList: ArrayList<Light>, standardSnap: TextureRegion, normalSnap: TextureRegion,
-               projectionMatrix: Matrix4): Int {
+    fun render(ambientColor: Color, lightList: ArrayList<Light>, diffuseTexture: TextureRegion,
+               depthTexture: TextureRegion, projectionMatrix: Matrix4): Int {
         shaderProgram.end()
         shaderProgram.begin()
 
-        appendVertices(standardSnap, normalSnap)
-        flush(ambientColor, lightList, standardSnap, normalSnap, projectionMatrix)
+        appendVertices(diffuseTexture, depthTexture)
+        flush(ambientColor, lightList, diffuseTexture, depthTexture, projectionMatrix)
 
         shaderProgram.end()
         return 1
@@ -70,43 +70,43 @@ class DeferredLightRenderer: Disposable {
 
     override fun dispose() = mesh.dispose()
 
-    private fun appendVertices(standardSnap: TextureRegion, normalSnap: TextureRegion) {
-        vertices[0] = 0 - standardSnap.regionWidth * .5f
-        vertices[1] = 0 - standardSnap.regionHeight * .5f
-        vertices[2] = standardSnap.u
-        vertices[3] = standardSnap.v2
-        vertices[4] = normalSnap.u
-        vertices[5] = normalSnap.v2
+    private fun appendVertices(diffuseTexture: TextureRegion, depthTexture: TextureRegion) {
+        vertices[0] = 0 - diffuseTexture.regionWidth * .5f
+        vertices[1] = 0 - diffuseTexture.regionHeight * .5f
+        vertices[2] = diffuseTexture.u
+        vertices[3] = diffuseTexture.v2
+        vertices[4] = depthTexture.u
+        vertices[5] = depthTexture.v2
 
         vertices[6] = vertices[0]
-        vertices[7] = vertices[1] + standardSnap.regionHeight
-        vertices[8] = standardSnap.u
-        vertices[9] = standardSnap.v
-        vertices[10] = normalSnap.u
-        vertices[11] = normalSnap.v
+        vertices[7] = vertices[1] + diffuseTexture.regionHeight
+        vertices[8] = diffuseTexture.u
+        vertices[9] = diffuseTexture.v
+        vertices[10] = depthTexture.u
+        vertices[11] = depthTexture.v
 
-        vertices[12] = vertices[0] + standardSnap.regionWidth
-        vertices[13] = vertices[1] + standardSnap.regionHeight
-        vertices[14] = standardSnap.u2
-        vertices[15] = standardSnap.v
-        vertices[16] = normalSnap.u2
-        vertices[17] = normalSnap.v
+        vertices[12] = vertices[0] + diffuseTexture.regionWidth
+        vertices[13] = vertices[1] + diffuseTexture.regionHeight
+        vertices[14] = diffuseTexture.u2
+        vertices[15] = diffuseTexture.v
+        vertices[16] = depthTexture.u2
+        vertices[17] = depthTexture.v
 
-        vertices[18] = vertices[0] + standardSnap.regionWidth
+        vertices[18] = vertices[0] + diffuseTexture.regionWidth
         vertices[19] = vertices[1]
-        vertices[20] = standardSnap.u2
-        vertices[21] = standardSnap.v2
-        vertices[22] = normalSnap.u2
-        vertices[23] = normalSnap.v2
+        vertices[20] = diffuseTexture.u2
+        vertices[21] = diffuseTexture.v2
+        vertices[22] = depthTexture.u2
+        vertices[23] = depthTexture.v2
     }
 
-    private fun flush(ambientColor: Color, lightList: ArrayList<Light>,standardSnap: TextureRegion,
-                      normalSnap: TextureRegion, projectionMatrix: Matrix4) {
+    private fun flush(ambientColor: Color, lightList: ArrayList<Light>,diffuseTexture: TextureRegion,
+                      depthTexture: TextureRegion, projectionMatrix: Matrix4) {
         val indicesCount = MAX_BUFFERED_CALLS * INDICES_PER_BUFFER
         val verticesCount = MAX_BUFFERED_CALLS * BUFFER_SIZE
 
-        standardSnap.texture.bind(0)
-        normalSnap.texture.bind(1)
+        diffuseTexture.texture.bind(0)
+        depthTexture.texture.bind(1)
 
         val light = lightList[0]
 

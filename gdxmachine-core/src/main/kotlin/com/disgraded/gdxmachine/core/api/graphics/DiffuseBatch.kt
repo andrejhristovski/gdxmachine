@@ -5,7 +5,7 @@ import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
 import com.disgraded.gdxmachine.core.api.graphics.renderer.*
 
-class StandardBatch: DrawableBatch {
+class DiffuseBatch: DrawableBatch {
 
     private val rendererMap = hashMapOf<String, Renderer>()
     private var currentRenderer: Renderer? = null
@@ -13,8 +13,8 @@ class StandardBatch: DrawableBatch {
     private var gpuCalls = 0
 
     init {
-        rendererMap["sprite_standard"] = SpriteStandardRenderer()
-        rendererMap["sprite_mask"] = SpriteMaskRenderer()
+        rendererMap["sprite_diffuse"] = SpriteDiffuseRenderer()
+        rendererMap["sprite_diffuse_mask"] = SpriteDiffuseMaskRenderer()
     }
 
     override fun render(drawableList: ArrayList<Drawable>, projectionMatrix: Matrix4): Int {
@@ -52,7 +52,7 @@ class StandardBatch: DrawableBatch {
         return when(drawable.type) {
             Drawable.Type.SPRITE -> {
                 val sprite = drawable as Sprite
-                return if (sprite.getMask() === null) "sprite_standard" else "sprite_mask"
+                return if (sprite.getMask() === null) "sprite_diffuse" else "sprite_diffuse_mask"
             }
             else -> null
         }
