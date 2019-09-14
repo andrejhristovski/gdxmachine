@@ -43,7 +43,7 @@ class TestScene : Scene() {
         player = Sprite(playerTexture)
         player.x = -100f
         player.y = -100f
-        player.setAnchor(.5f)
+        player.setScale(.5f)
 
         light = Light()
         light.color = Color.WARM_WHITE
@@ -51,6 +51,9 @@ class TestScene : Scene() {
         light.y = .5f
 
         text = Text(textBitmap)
+        text.x = -600f
+        text.y = 320f
+        text.anchorX = 0f
     }
 
     override fun update(deltaTime: Float) {
@@ -60,9 +63,8 @@ class TestScene : Scene() {
         context.graphics.getViewport().draw(text)
         context.graphics.getViewport().draw(player)
         context.graphics.getViewport().draw(light)
-        println(context.graphics.getFPS())
+        text.displayText = "FPS: ${context.graphics.getFPS()}"
         player.rotation += 100f * deltaTime
-        text.rotation += 100f * deltaTime
     }
 
     override fun pause() {
