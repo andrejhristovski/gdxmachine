@@ -114,9 +114,9 @@ class DeferredLightRenderer: Disposable {
         shaderProgram.setUniformi("u_texture_diffuse", 0)
         shaderProgram.setUniformi("u_texture_depth", 1)
         shaderProgram.setUniformf("light_position", light.x, light.y, light.z)
-        shaderProgram.setUniformf("light_color", light.color.r, light.color.g, light.color.b, light.color.alpha)
+        shaderProgram.setUniformf("light_color", light.color.r, light.color.g, light.color.b, light.color.a)
         shaderProgram.setUniformf("resolution", 1280f, 720f)
-        shaderProgram.setUniformf("ambient_color", ambientColor.r, ambientColor.g, ambientColor.b, ambientColor.alpha)
+        shaderProgram.setUniformf("ambient_color", ambientColor.r, ambientColor.g, ambientColor.b, ambientColor.a)
         shaderProgram.setUniformf("falloff", light.falloff.x, light.falloff.y, light.falloff.z)
 
         mesh.setVertices(vertices, 0, verticesCount)
