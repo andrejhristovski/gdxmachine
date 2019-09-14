@@ -18,7 +18,7 @@ void main()
     vec4 texColor = texture2D(u_texture, v_texCoords);
     vec4 normalColor = vec4(.5, .5, 1, texColor.a);
     if (normal_exist == 1) {
-        normalColor = texture2D(u_texture_normal, v_texCoords_normal);
+        normalColor = vec4(texture2D(u_texture_normal, v_texCoords_normal).rgb, texColor.a);
     }
     gl_FragColor = normalColor;
 
