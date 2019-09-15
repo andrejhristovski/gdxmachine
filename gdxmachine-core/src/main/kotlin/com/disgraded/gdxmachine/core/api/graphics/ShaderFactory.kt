@@ -12,10 +12,6 @@ class ShaderFactory private constructor() {
 
     private val shaderMap = hashMapOf<String, ShaderProgram>()
 
-    init {
-        ShaderProgram.pedantic = false
-    }
-
     fun get(vertexKey: String, fragmentKey: String): ShaderProgram {
         val key = "$vertexKey-$fragmentKey"
         if (!shaderMap.containsKey(key)) {

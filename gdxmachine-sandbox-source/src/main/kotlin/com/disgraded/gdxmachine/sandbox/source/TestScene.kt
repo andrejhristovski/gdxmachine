@@ -19,7 +19,8 @@ class TestScene : Scene() {
 
     override fun initialize() {
         context.graphics.createViewport()
-//        context.graphics.getViewport().enableLights()
+        context.graphics.createViewport("hud")
+        context.graphics.getViewport().enableLights()
 //        context.graphics.getViewport().ambientColor = Color.WARM_WHITE
 //        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
         val wallTexture = context.resources.get<Texture>("initial", "wall")
@@ -57,14 +58,13 @@ class TestScene : Scene() {
     }
 
     override fun update(deltaTime: Float) {
+        text.displayText = "FPS: ${context.graphics.getFPS()} :: GPU CALLS: ${context.graphics.getGPUCalls()}"
+
         for (background in this.background) {
             context.graphics.getViewport().draw(background)
         }
-        context.graphics.getViewport().draw(text)
         context.graphics.getViewport().draw(player)
-        context.graphics.getViewport().draw(light)
-        text.displayText = "FPS: ${context.graphics.getFPS()}"
-        player.rotation += 100f * deltaTime
+        context.graphics.getViewport("hud").draw(text)
     }
 
     override fun pause() {
