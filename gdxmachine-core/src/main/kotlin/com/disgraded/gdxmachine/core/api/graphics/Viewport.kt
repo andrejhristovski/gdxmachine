@@ -36,7 +36,7 @@ class Viewport : Disposable {
             when (drawable.type) {
                 Drawable.Type.SPRITE -> viewport.drawableList.add(drawable)
                 Drawable.Type.TEXT -> viewport.drawableList.add(drawable)
-                Drawable.Type.LIGHT -> viewport.lightList.add(drawable as Light)
+                Drawable.Type.LIGHT -> viewport.lightList.add(drawable)
             }
         }
 
@@ -54,7 +54,7 @@ class Viewport : Disposable {
     private val deferredLightBatch = DeferredLightBatch(projection)
 
     private val drawableList = arrayListOf<Drawable>()
-    private val lightList = arrayListOf<Light>()
+    private val lightList = arrayListOf<Drawable>()
 
     val api = Api(this)
 

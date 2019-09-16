@@ -2,10 +2,7 @@ package com.disgraded.gdxmachine.sandbox.source
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Filter
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Light
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Text
+import com.disgraded.gdxmachine.core.api.graphics.drawable.*
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 import com.disgraded.gdxmachine.core.api.scene.Scene
 
@@ -15,6 +12,7 @@ class TestScene : Scene() {
     private var background = arrayListOf<Sprite>()
     private lateinit var player: Sprite
     private lateinit var light: Light
+    private lateinit var light2: Light
     private lateinit var text: Text
 
     override fun initialize() {
@@ -46,10 +44,12 @@ class TestScene : Scene() {
         player.y = -100f
         player.setScale(.5f)
 
-        light = Light()
-        light.color = Color.WARM_WHITE
-        light.x = .5f
-        light.y = .5f
+        light = PointLight(200f, 200f)
+        light.setColor(Color.CYAN)
+
+        light2 = PointLight(100f, 10f)
+        light2.x = 200f
+        light2.y -200f
 
         text = Text(textBitmap)
         text.x = -600f
@@ -60,10 +60,12 @@ class TestScene : Scene() {
     override fun update(deltaTime: Float) {
         text.displayText = "FPS: ${context.graphics.getFPS()} :: GPU CALLS: ${context.graphics.getGPUCalls()}"
 
-        for (background in this.background) {
-            context.graphics.getViewport().draw(background)
-        }
-        context.graphics.getViewport().draw(player)
+//        for (background in this.background) {
+//            context.graphics.getViewport().draw(background)
+//        }
+//        context.graphics.getViewport().draw(player)
+        context.graphics.getViewport().draw(light)
+        context.graphics.getViewport().draw(light2)
         context.graphics.getViewport("hud").draw(text)
     }
 

@@ -12,7 +12,7 @@ abstract class Drawable(val type: Type) {
     var scaleY: Float = 1f
     var anchorX: Float = .5f
     var anchorY: Float = .5f
-    var rotation: Float = 0f
+    var angle: Float = 0f
         set(value) { field = value % 360 }
 
     fun setPosition(x: Float, y: Float, z: Float) {

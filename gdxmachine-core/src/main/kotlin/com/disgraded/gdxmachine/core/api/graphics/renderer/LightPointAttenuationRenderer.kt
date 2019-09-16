@@ -1,20 +1,23 @@
 package com.disgraded.gdxmachine.core.api.graphics.renderer
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.*
-import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.Mesh
+import com.badlogic.gdx.graphics.VertexAttribute
+import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Matrix4
+import com.disgraded.gdxmachine.core.api.graphics.Projection
 import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Corner
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
+import com.disgraded.gdxmachine.core.api.graphics.drawable.PointLight
 
-class SpriteDiffuseRenderer : Renderer {
+class LightPointAttenuationRenderer(private val projection: Projection) : Renderer {
 
     companion object {
-        private const val BUFFER_SIZE = 20
+        private const val BUFFER_SIZE = 36
         private const val VERTICES_PER_BUFFER = 4
         private const val INDICES_PER_BUFFER = 6
         private const val MAX_BUFFERED_CALLS = Short.MAX_VALUE / VERTICES_PER_BUFFER
@@ -30,19 +33,20 @@ class SpriteDiffuseRenderer : Renderer {
     private val vertices: FloatArray
     private val indices: ShortArray
     private var shaderProgram: ShaderProgram
-    private val shaderVertexPrefix = "sprite_diffuse"
-    private var shaderFragmentPrefix = "sprite_diffuse.tint"
+    private val shaderVertexPrefix = "light_point_attenuation"
+    private var shaderFragmentPrefix = "light_point_attenuation"
     private lateinit var projectionMatrix: Matrix4
-
-    private var cachedTexture: Texture? = null
 
     init {
         val maxVertices = VERTICES_PER_BUFFER * MAX_BUFFERED_CALLS
         val maxIndices = INDICES_PER_BUFFER * MAX_BUFFERED_CALLS
         val vertexAttributes = VertexAttributes(
                 VertexAttribute(VertexAttributes.Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
-                VertexAttribute(VertexAttributes.Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE),
-                VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE)
+                VertexAttribute(VertexAttributes.Usage.Position, 2, "${ShaderProgram.POSITION_ATTRIBUTE}_size"),
+                VertexAttribute(VertexAttributes.Usage.Position, 2, "${ShaderProgram.POSITION_ATTRIBUTE}_relative"),
+                VertexAttribute(VertexAttributes.Usage.Generic, 1, "a_generic_radius"),
+                VertexAttribute(VertexAttributes.Usage.Generic, 1, "a_generic_intensity"),
+                VertexAttribute(VertexAttributes.Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE)
         )
 
         mesh = Mesh(false, maxVertices, maxIndices, vertexAttributes)
@@ -69,17 +73,13 @@ class SpriteDiffuseRenderer : Renderer {
     }
 
     override fun draw(drawable: Drawable) {
-        val sprite = drawable as Sprite
-        validateShaderProgram(sprite)
-        validateTexture(sprite.getTexture())
-        if (bufferedCalls == MAX_BUFFERED_CALLS) flush()
-        appendVertices(sprite)
+        val pointLight = drawable as PointLight
+        appendVertices(pointLight)
     }
 
     override fun finish(): Int {
         if(!active) throw RuntimeException("The renderer isn't active")
         if (bufferedCalls > 0) flush()
-        cachedTexture = null
         active = false
         shaderProgram.end()
         val calculatedGpuCalls = gpuCalls
@@ -93,31 +93,13 @@ class SpriteDiffuseRenderer : Renderer {
 
     override fun dispose() = mesh.dispose()
 
-    private fun validateShaderProgram(sprite: Sprite) {
-        val fragmentPrefix = "sprite_diffuse.${sprite.filter.type}"
-        if (fragmentPrefix != shaderFragmentPrefix) {
-            flush()
-            shaderFragmentPrefix = fragmentPrefix
-            shaderProgram.end()
-            shaderProgram = shaderFactory.get(shaderVertexPrefix, shaderFragmentPrefix)
-            shaderProgram.begin()
-        }
-    }
-
-    private fun validateTexture(textureRegion: TextureRegion) {
-        if (cachedTexture !== textureRegion.texture) {
-            flush()
-            cachedTexture = textureRegion.texture
-        }
-    }
-
-    private fun appendVertices(sprite: Sprite) {
+    private fun appendVertices(pointLight: PointLight) {
         val idx = bufferedCalls * BUFFER_SIZE
-        val sizeX = sprite.getTexture().regionWidth * sprite.scaleX
-        val sizeY = sprite.getTexture().regionHeight * sprite.scaleY
+        val sizeX = pointLight.sizeX * 32
+        val sizeY = pointLight.sizeY * 32
 
-        var x1 = 0 - (sizeX * sprite.anchorX)
-        var y1 = 0 - (sizeY * sprite.anchorY)
+        var x1 = 0 - (sizeX * .5f)
+        var y1 = 0 - (sizeY * .5f)
         var x2 = x1
         var y2 = y1 + sizeY
         var x3 = x1 + sizeX
@@ -125,9 +107,9 @@ class SpriteDiffuseRenderer : Renderer {
         var x4 = x1 + sizeX
         var y4 = y1
 
-        if (sprite.angle != 0f) {
-            val cos = MathUtils.cosDeg(sprite.angle)
-            val sin = MathUtils.sinDeg(sprite.angle)
+        if (pointLight.angle != 0f) {
+            val cos = MathUtils.cosDeg(pointLight.angle)
+            val sin = MathUtils.sinDeg(pointLight.angle)
             val rx1 = cos * x1 - sin * y1
             val ry1 = sin * x1 + cos * y1
             val rx2 = cos * x2 - sin * y2
@@ -144,38 +126,54 @@ class SpriteDiffuseRenderer : Renderer {
             y4 = y3 - (y2 - y1)
         }
 
-        x1 += sprite.x
-        x2 += sprite.x
-        x3 += sprite.x
-        x4 += sprite.x
-        y1 += sprite.y
-        y2 += sprite.y
-        y3 += sprite.y
-        y4 += sprite.y
+        x1 += pointLight.x
+        x2 += pointLight.x
+        x3 += pointLight.x
+        x4 += pointLight.x
+        y1 += pointLight.y
+        y2 += pointLight.y
+        y3 += pointLight.y
+        y4 += pointLight.y
 
         vertices[idx] = x1
         vertices[idx + 1] = y1
-        vertices[idx + 2] = sprite.getColor(Corner.BOTTOM_LEFT).toFloatBits()
-        vertices[idx + 3] = sprite.getTexture().u
-        vertices[idx + 4] = sprite.getTexture().v2
+        vertices[idx + 2] = sizeX * pointLight.scaleX
+        vertices[idx + 3] = sizeY * pointLight.scaleY
+        vertices[idx + 4] = x1 - pointLight.x
+        vertices[idx + 5] = y1 - pointLight.y
+        vertices[idx + 6] = pointLight.radius
+        vertices[idx + 7] = pointLight.intensity
+        vertices[idx + 8] = pointLight.getColor(Corner.BOTTOM_LEFT).toFloatBits()
 
-        vertices[idx + 5] = x2
-        vertices[idx + 6] = y2
-        vertices[idx + 7] = sprite.getColor(Corner.TOP_LEFT).toFloatBits()
-        vertices[idx + 8] = sprite.getTexture().u
-        vertices[idx + 9] = sprite.getTexture().v
+        vertices[idx + 9] = x2
+        vertices[idx + 10] = y2
+        vertices[idx + 11] = sizeX * pointLight.scaleX
+        vertices[idx + 12] = sizeY * pointLight.scaleY
+        vertices[idx + 13] = x2 - pointLight.x
+        vertices[idx + 14] = y2 - pointLight.y
+        vertices[idx + 15] = pointLight.radius
+        vertices[idx + 16] = pointLight.intensity
+        vertices[idx + 17] = pointLight.getColor(Corner.TOP_LEFT).toFloatBits()
 
-        vertices[idx + 10] = x3
-        vertices[idx + 11] = y3
-        vertices[idx + 12] = sprite.getColor(Corner.TOP_RIGHT).toFloatBits()
-        vertices[idx + 13] = sprite.getTexture().u2
-        vertices[idx + 14] = sprite.getTexture().v
+        vertices[idx + 18] = x3
+        vertices[idx + 19] = y3
+        vertices[idx + 20] = sizeX * pointLight.scaleX
+        vertices[idx + 21] = sizeY * pointLight.scaleY
+        vertices[idx + 22] = x3 - pointLight.x
+        vertices[idx + 23] = y3 - pointLight.y
+        vertices[idx + 24] = pointLight.radius
+        vertices[idx + 25] = pointLight.intensity
+        vertices[idx + 26] = pointLight.getColor(Corner.TOP_RIGHT).toFloatBits()
 
-        vertices[idx + 15] = x4
-        vertices[idx + 16] = y4
-        vertices[idx + 17] = sprite.getColor(Corner.BOTTOM_RIGHT).toFloatBits()
-        vertices[idx + 18] = sprite.getTexture().u2
-        vertices[idx + 19] = sprite.getTexture().v2
+        vertices[idx + 27] = x4
+        vertices[idx + 28] = y4
+        vertices[idx + 29] = sizeX * pointLight.scaleX
+        vertices[idx + 30] = sizeY * pointLight.scaleY
+        vertices[idx + 31] = x4 - pointLight.x
+        vertices[idx + 32] = y4 - pointLight.y
+        vertices[idx + 33] = pointLight.radius
+        vertices[idx + 34] = pointLight.intensity
+        vertices[idx + 35] = pointLight.getColor(Corner.BOTTOM_RIGHT).toFloatBits()
         bufferedCalls++
     }
 
@@ -186,10 +184,7 @@ class SpriteDiffuseRenderer : Renderer {
         val indicesCount = bufferedCalls * INDICES_PER_BUFFER
         val verticesCount = bufferedCalls * BUFFER_SIZE
 
-        cachedTexture!!.bind(0)
-
-        shaderProgram.setUniformMatrix("u_projectionTrans", projectionMatrix);
-        shaderProgram.setUniformi("u_texture", 0)
+        shaderProgram.setUniformMatrix("u_projectionTrans", projectionMatrix)
 
         mesh.setVertices(vertices, 0, verticesCount)
         mesh.setIndices(indices, 0, indicesCount)

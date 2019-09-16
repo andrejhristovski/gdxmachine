@@ -128,9 +128,9 @@ class SpriteDiffuseMaskRenderer : Renderer {
         var x4 = x1 + sizeX
         var y4 = y1
 
-        if (sprite.rotation != 0f) {
-            val cos = MathUtils.cosDeg(sprite.rotation)
-            val sin = MathUtils.sinDeg(sprite.rotation)
+        if (sprite.angle != 0f) {
+            val cos = MathUtils.cosDeg(sprite.angle)
+            val sin = MathUtils.sinDeg(sprite.angle)
             val rx1 = cos * x1 - sin * y1
             val ry1 = sin * x1 + cos * y1
             val rx2 = cos * x2 - sin * y2
