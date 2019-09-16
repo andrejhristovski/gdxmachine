@@ -44,12 +44,11 @@ class TestScene : Scene() {
         player.y = -100f
         player.setScale(.5f)
 
-        light = PointLight(200f, 200f)
-        light.setColor(Color.CYAN)
+        light = PointLight(300f, 300f)
+        light.setColor(Color.WARM_WHITE)
 
         light2 = PointLight(100f, 10f)
-        light2.x = 200f
-        light2.y -200f
+        light2.setColor(Color.RED)
 
         text = Text(textBitmap)
         text.x = -600f
@@ -59,11 +58,12 @@ class TestScene : Scene() {
 
     override fun update(deltaTime: Float) {
         text.displayText = "FPS: ${context.graphics.getFPS()} :: GPU CALLS: ${context.graphics.getGPUCalls()}"
+        light.x += 10f * deltaTime
 
-//        for (background in this.background) {
-//            context.graphics.getViewport().draw(background)
-//        }
-//        context.graphics.getViewport().draw(player)
+        for (background in this.background) {
+            context.graphics.getViewport().draw(background)
+        }
+        context.graphics.getViewport().draw(player)
         context.graphics.getViewport().draw(light)
         context.graphics.getViewport().draw(light2)
         context.graphics.getViewport("hud").draw(text)

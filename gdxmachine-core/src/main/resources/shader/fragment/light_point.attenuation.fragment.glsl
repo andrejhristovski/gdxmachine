@@ -16,5 +16,5 @@ void main()
     vec2 light_direction = v_position_relative / (v_size / 12.0);
     float distance = length(light_direction);
     float attenuation = 1.0 / (0.4 + (3.0 * distance) + (20.0 * distance * distance * (1.0 / v_generic_intensity)));
-    gl_FragColor = vec4(1, 1, 1, attenuation);
+    gl_FragColor = vec4(v_color.rgb, attenuation);
 }

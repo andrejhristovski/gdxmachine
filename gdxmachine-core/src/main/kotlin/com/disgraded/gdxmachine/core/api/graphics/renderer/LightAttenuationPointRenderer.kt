@@ -14,7 +14,7 @@ import com.disgraded.gdxmachine.core.api.graphics.drawable.Corner
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.PointLight
 
-class LightPointAttenuationRenderer(private val projection: Projection) : Renderer {
+class LightAttenuationPointRenderer(private val projection: Projection) : Renderer {
 
     companion object {
         private const val BUFFER_SIZE = 36
@@ -33,8 +33,8 @@ class LightPointAttenuationRenderer(private val projection: Projection) : Render
     private val vertices: FloatArray
     private val indices: ShortArray
     private var shaderProgram: ShaderProgram
-    private val shaderVertexPrefix = "light_point_attenuation"
-    private var shaderFragmentPrefix = "light_point_attenuation"
+    private val shaderVertexPrefix = "light_point"
+    private var shaderFragmentPrefix = "light_point.attenuation"
     private lateinit var projectionMatrix: Matrix4
 
     init {

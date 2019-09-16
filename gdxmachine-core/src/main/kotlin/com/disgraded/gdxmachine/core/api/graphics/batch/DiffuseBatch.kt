@@ -1,14 +1,11 @@
-package com.disgraded.gdxmachine.core.api.graphics
+package com.disgraded.gdxmachine.core.api.graphics.batch
 
 import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Light
-import com.disgraded.gdxmachine.core.api.graphics.drawable.LightType
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
-import com.disgraded.gdxmachine.core.api.graphics.renderer.LightPointAttenuationRenderer
-import com.disgraded.gdxmachine.core.api.graphics.renderer.Renderer
+import com.disgraded.gdxmachine.core.api.graphics.renderer.*
 
-class AttenuationBatch(private val projection: Projection) : DrawableBatch {
+class DiffuseBatch: DrawableBatch {
 
     private val rendererMap = hashMapOf<String, Renderer>()
     private var currentRenderer: Renderer? = null
@@ -16,7 +13,9 @@ class AttenuationBatch(private val projection: Projection) : DrawableBatch {
     private var gpuCalls = 0
 
     init {
-        rendererMap["light_point_attenuation"] = LightPointAttenuationRenderer(projection)
+        rendererMap["sprite_diffuse"] = SpriteDiffuseRenderer()
+        rendererMap["sprite_diffuse_mask"] = SpriteDiffuseMaskRenderer()
+        rendererMap["text_diffuse"] = TextDiffuseRenderer()
     }
 
     override fun render(drawableList: ArrayList<Drawable>, projectionMatrix: Matrix4): Int {
@@ -59,9 +58,11 @@ class AttenuationBatch(private val projection: Projection) : DrawableBatch {
 
     private fun getRendererType(drawable: Drawable): String? {
         return when(drawable.type) {
-            Drawable.Type.LIGHT -> when((drawable as Light).lightType) {
-                LightType.POINT -> "light_point_attenuation"
+            Drawable.Type.SPRITE -> {
+                val sprite = drawable as Sprite
+                return if (sprite.getMask() === null) "sprite_diffuse" else "sprite_diffuse_mask"
             }
+            Drawable.Type.TEXT -> "text_diffuse"
             else -> null
         }
     }

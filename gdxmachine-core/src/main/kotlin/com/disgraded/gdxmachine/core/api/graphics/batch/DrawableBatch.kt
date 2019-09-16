@@ -1,4 +1,4 @@
-package com.disgraded.gdxmachine.core.api.graphics
+package com.disgraded.gdxmachine.core.api.graphics.batch
 
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.utils.Disposable

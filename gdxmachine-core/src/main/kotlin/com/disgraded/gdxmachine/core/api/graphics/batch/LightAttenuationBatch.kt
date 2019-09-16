@@ -1,11 +1,14 @@
-package com.disgraded.gdxmachine.core.api.graphics
+package com.disgraded.gdxmachine.core.api.graphics.batch
 
 import com.badlogic.gdx.math.Matrix4
+import com.disgraded.gdxmachine.core.api.graphics.Projection
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
-import com.disgraded.gdxmachine.core.api.graphics.renderer.*
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Light
+import com.disgraded.gdxmachine.core.api.graphics.drawable.LightType
+import com.disgraded.gdxmachine.core.api.graphics.renderer.LightAttenuationPointRenderer
+import com.disgraded.gdxmachine.core.api.graphics.renderer.Renderer
 
-class DiffuseBatch: DrawableBatch {
+class LightAttenuationBatch(private val projection: Projection) : DrawableBatch {
 
     private val rendererMap = hashMapOf<String, Renderer>()
     private var currentRenderer: Renderer? = null
@@ -13,9 +16,7 @@ class DiffuseBatch: DrawableBatch {
     private var gpuCalls = 0
 
     init {
-        rendererMap["sprite_diffuse"] = SpriteDiffuseRenderer()
-        rendererMap["sprite_diffuse_mask"] = SpriteDiffuseMaskRenderer()
-        rendererMap["text_diffuse"] = TextDiffuseRenderer()
+        rendererMap["point_light"] = LightAttenuationPointRenderer(projection)
     }
 
     override fun render(drawableList: ArrayList<Drawable>, projectionMatrix: Matrix4): Int {
@@ -58,11 +59,9 @@ class DiffuseBatch: DrawableBatch {
 
     private fun getRendererType(drawable: Drawable): String? {
         return when(drawable.type) {
-            Drawable.Type.SPRITE -> {
-                val sprite = drawable as Sprite
-                return if (sprite.getMask() === null) "sprite_diffuse" else "sprite_diffuse_mask"
+            Drawable.Type.LIGHT -> when((drawable as Light).lightType) {
+                LightType.POINT -> "point_light"
             }
-            Drawable.Type.TEXT -> "text_diffuse"
             else -> null
         }
     }

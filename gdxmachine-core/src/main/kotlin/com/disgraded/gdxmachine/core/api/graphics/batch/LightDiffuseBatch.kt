@@ -1,13 +1,15 @@
-package com.disgraded.gdxmachine.core.api.graphics
+package com.disgraded.gdxmachine.core.api.graphics.batch
 
 import com.badlogic.gdx.math.Matrix4
+import com.disgraded.gdxmachine.core.api.graphics.Projection
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Sprite
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Light
+import com.disgraded.gdxmachine.core.api.graphics.drawable.LightType
+import com.disgraded.gdxmachine.core.api.graphics.renderer.LightAttenuationPointRenderer
+import com.disgraded.gdxmachine.core.api.graphics.renderer.LightDiffusePointRenderer
 import com.disgraded.gdxmachine.core.api.graphics.renderer.Renderer
-import com.disgraded.gdxmachine.core.api.graphics.renderer.SpriteBumpRenderer
-import com.disgraded.gdxmachine.core.api.graphics.renderer.TextBumpRenderer
 
-class BumpBatch : DrawableBatch {
+class LightDiffuseBatch(private val projection: Projection) : DrawableBatch {
 
     private val rendererMap = hashMapOf<String, Renderer>()
     private var currentRenderer: Renderer? = null
@@ -15,8 +17,7 @@ class BumpBatch : DrawableBatch {
     private var gpuCalls = 0
 
     init {
-        rendererMap["sprite_bump"] = SpriteBumpRenderer()
-        rendererMap["text_bump"] = TextBumpRenderer()
+        rendererMap["point_light"] = LightDiffusePointRenderer(projection)
     }
 
     override fun render(drawableList: ArrayList<Drawable>, projectionMatrix: Matrix4): Int {
@@ -59,8 +60,9 @@ class BumpBatch : DrawableBatch {
 
     private fun getRendererType(drawable: Drawable): String? {
         return when(drawable.type) {
-            Drawable.Type.SPRITE -> "sprite_bump"
-            Drawable.Type.TEXT -> "text_bump"
+            Drawable.Type.LIGHT -> when((drawable as Light).lightType) {
+                LightType.POINT -> "point_light"
+            }
             else -> null
         }
     }

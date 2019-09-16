@@ -3,8 +3,9 @@ package com.disgraded.gdxmachine.core.api.graphics
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.utils.Disposable
 import com.disgraded.gdxmachine.core.Config
+import com.disgraded.gdxmachine.core.api.graphics.batch.DeferredLightBatch
+import com.disgraded.gdxmachine.core.api.graphics.batch.DiffuseBatch
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
-import com.disgraded.gdxmachine.core.api.graphics.drawable.Light
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 
 class Viewport : Disposable {
