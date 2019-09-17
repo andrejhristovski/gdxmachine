@@ -10,11 +10,11 @@ class ShaderFactory private constructor() {
         fun getInstance(): ShaderFactory = shaderFactory
     }
 
-    init {
-//        ShaderProgram.pedantic = false
-    }
-
     private val shaderMap = hashMapOf<String, ShaderProgram>()
+
+    init {
+        ShaderProgram.pedantic = false
+    }
 
     fun get(vertexKey: String, fragmentKey: String): ShaderProgram {
         val key = "$vertexKey-$fragmentKey"
@@ -37,7 +37,7 @@ class ShaderFactory private constructor() {
     }
 
     private fun readInternalFragmentShaderSource(key: String): String {
-        return Gdx.files.classpath("shader/$key.fragment.glsl").readString()
+        return Gdx.files.classpath("shader/fragment/$key.fragment.glsl").readString()
     }
 
 }

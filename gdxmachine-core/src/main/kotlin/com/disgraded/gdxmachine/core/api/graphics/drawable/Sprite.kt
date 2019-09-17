@@ -9,8 +9,8 @@ class Sprite : Drawable {
     private var texture: TextureRegion
     private var mask: TextureRegion? = null
     private var normalMap: TextureRegion? = null
-    private var depthMap: TextureRegion? = null
     private val colorMap = hashMapOf<Corner, Color>()
+    var filter = Filter.TINT
 
     init {
         colorMap[Corner.TOP_LEFT] = Color.WHITE
@@ -61,18 +61,6 @@ class Sprite : Drawable {
 
     fun getNormalMap(): TextureRegion? {
         return normalMap
-    }
-
-    fun setDepthMap(depthMap: TextureRegion) {
-        this.depthMap = depthMap
-    }
-
-    fun setDepthMap(depthMap: Texture) {
-        this.depthMap = TextureRegion(depthMap)
-    }
-
-    fun getDepthMap(): TextureRegion? {
-        return depthMap
     }
 
     fun setColor(color: Color) {

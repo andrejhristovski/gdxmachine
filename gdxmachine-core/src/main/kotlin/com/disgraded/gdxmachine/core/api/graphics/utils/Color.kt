@@ -37,7 +37,7 @@ class Color {
     var r : Float = 0f
     var g : Float = 0f
     var b : Float = 0f
-    var alpha : Float = 1f
+    var a : Float = 1f
 
 
     constructor(r : Float, g : Float, b: Float, alpha : Float = 1f) {
@@ -65,15 +65,15 @@ class Color {
         this.r = r
         this.g = g
         this.b = b
-        this.alpha = a
+        this.a = a
     }
 
     fun toFloatBits(): Float {
-        val color = (255 * alpha).toInt() shl 24 or ((255 * b).toInt() shl 16) or ((255 * g).toInt() shl 8) or (255 * r).toInt()
+        val color = (255 * a).toInt() shl 24 or ((255 * b).toInt() shl 16) or ((255 * g).toInt() shl 8) or (255 * r).toInt()
         return NumberUtils.intToFloatColor(color)
     }
 
     fun copy(): Color {
-        return Color(r, g, b, alpha)
+        return Color(r, g, b, a)
     }
 }
