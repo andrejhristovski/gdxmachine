@@ -11,19 +11,18 @@ class TestScene : Scene() {
 
     private var background = arrayListOf<Sprite>()
     private lateinit var player: Sprite
-    private lateinit var light: Light
-    private lateinit var light2: Light
+    private var lights = arrayListOf<Light>()
     private lateinit var text: Text
 
     override fun initialize() {
         context.graphics.createViewport()
         context.graphics.createViewport("hud")
         context.graphics.getViewport().enableLights()
-//        context.graphics.getViewport().ambientColor = Color.WARM_WHITE
-//        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
+        context.graphics.getViewport().ambientColor = Color.BLUE_GREY
         val wallTexture = context.resources.get<Texture>("initial", "wall")
         val wallNormalTexture = context.resources.get<Texture>("initial", "wall_normal")
         val playerTexture = context.resources.get<Texture>("initial", "player")
+        val playerNormalTexture = context.resources.get<Texture>("initial", "player_normal")
         val textBitmap = context.resources.get<BitmapFont>("initial", "text")
 
         val startX = -800
@@ -40,15 +39,27 @@ class TestScene : Scene() {
         }
 
         player = Sprite(playerTexture)
+        player.setNormalMap(playerNormalTexture)
         player.x = -100f
         player.y = -100f
         player.setScale(.5f)
 
-        light = PointLight(300f, 300f)
-        light.setColor(Color.WARM_WHITE)
+        var light = PointLight(300f, 300f)
+        light.setColor(Color.YELLOW)
+        lights.add(light)
 
-        light2 = PointLight(100f, 10f)
-        light2.setColor(Color.RED)
+        light = PointLight(2200f, 200f)
+        light.y = 400f
+        light.setColor(Color.RED)
+        light.setColor(Corner.TOP_LEFT, Color.BLUE_GREY)
+        lights.add(light)
+
+        light = PointLight(150f, 150f)
+        light.x = 500f
+        light.y = -200f
+        light.setColor(Color.GREEN)
+        lights.add(light)
+
 
         text = Text(textBitmap)
         text.x = -600f
@@ -57,15 +68,15 @@ class TestScene : Scene() {
     }
 
     override fun update(deltaTime: Float) {
-        text.displayText = "FPS: ${context.graphics.getFPS()} :: GPU CALLS: ${context.graphics.getGPUCalls()}"
-        light.x += 10f * deltaTime
+        text.displayText = "FPS:${context.graphics.getFPS()} :: GPU CALLS:${context.graphics.getGPUCalls()}"
 
         for (background in this.background) {
             context.graphics.getViewport().draw(background)
         }
         context.graphics.getViewport().draw(player)
-        context.graphics.getViewport().draw(light)
-        context.graphics.getViewport().draw(light2)
+        for (light in lights) {
+            context.graphics.getViewport().draw(light)
+        }
         context.graphics.getViewport("hud").draw(text)
     }
 

@@ -190,9 +190,11 @@ class LightDiffusePointRenderer(private val projection: Projection) : Renderer {
         mesh.setIndices(indices, 0, indicesCount)
 
         Gdx.gl.glEnable(GL20.GL_BLEND)
-        Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,
-                GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+        Gdx.gl.glEnable(GL20.GL_BLEND_EQUATION)
+        Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA , GL20.GL_ONE)
+        Gdx.gl.glBlendEquation(GL20.GL_FUNC_ADD)
         mesh.render(shaderProgram, GL20.GL_TRIANGLES, 0, indicesCount)
+
         bufferedCalls = 0
     }
 }

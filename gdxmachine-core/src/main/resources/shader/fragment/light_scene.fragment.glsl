@@ -28,6 +28,6 @@ void main()
     vec3 diffuse = lightColor * max(dot(normal, lightNormal), 0.0);
 
     vec3 intensity = ambient + diffuse * attenuation;
-    vec3 final = diffuseColor.rgb * intensity;
-    gl_FragColor = vec4(final, diffuseColor.a);
+    vec3 final = diffuseColor.rgb * intensity * lightAttenuationColor.rgb;
+    gl_FragColor = vec4(final, 1);
 }
