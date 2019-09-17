@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Disposable
 import com.disgraded.gdxmachine.core.api.graphics.Projection
 import com.badlogic.gdx.graphics.glutils.FrameBuffer as GdxFrameBuffer
 
-class FrameBuffer(private val projection: Projection): Disposable {
+class FrameBuffer(private val projection: Projection, private val color: Color = Color.WHITE): Disposable {
 
     private var virtualWidth = 0f
     private var virtualHeight = 0f
@@ -24,7 +24,7 @@ class FrameBuffer(private val projection: Projection): Disposable {
         adapt(projection.getVirtualWidth(), projection.getVirtualHeight())
         fb!!.begin()
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-        Gdx.gl.glClearColor(0f, 0f ,0f, 1f)
+        Gdx.gl.glClearColor(color.r, color.g ,color.b, color.a)
         action(this)
         fb!!.end()
         buffer = TextureRegion(fb!!.colorBufferTexture)
