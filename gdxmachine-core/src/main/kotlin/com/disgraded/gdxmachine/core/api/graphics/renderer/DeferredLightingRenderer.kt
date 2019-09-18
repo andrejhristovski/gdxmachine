@@ -1,4 +1,4 @@
-package com.disgraded.gdxmachine.core.api.graphics.batch
+package com.disgraded.gdxmachine.core.api.graphics.renderer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
@@ -11,20 +11,20 @@ import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 
-class LightSceneBatch {
+class DeferredLightingRenderer {
 
     private val shaderFactory = ShaderFactory.getInstance()
 
     private val mesh: Mesh
     private val vertices: FloatArray
     private val indices: ShortArray
-    private var shaderProgram: ShaderProgram
-    private val shaderVertexPrefix = "light_scene"
-    private var shaderFragmentPrefix = "light_scene"
+    private val shaderProgram: ShaderProgram
+    private val shaderVertexPrefix = "deferred_lighting"
+    private val shaderFragmentPrefix = "deferred_lighting"
 
     private lateinit var diffuse: TextureRegion
     private lateinit var bump: TextureRegion
-    private lateinit var lightDiffuse: TextureRegion
+    private lateinit var lightBump: TextureRegion
     private lateinit var lightAttenuation: TextureRegion
 
     private lateinit var ambientLight: Color
@@ -55,11 +55,11 @@ class LightSceneBatch {
         shaderProgram = shaderFactory.get(shaderVertexPrefix, shaderFragmentPrefix)
     }
 
-    fun render(x: Float, y: Float, diffuse: TextureRegion, bump: TextureRegion, lightDiffuse: TextureRegion,
+    fun render(x: Float, y: Float, diffuse: TextureRegion, bump: TextureRegion, lightBump: TextureRegion,
                lightAttenuation: TextureRegion, ambientLight: Color, projectionMatrix: Matrix4): Int {
         this.diffuse = diffuse
         this.bump = bump
-        this.lightDiffuse = lightDiffuse
+        this.lightBump = lightBump
         this.lightAttenuation = lightAttenuation
         this.ambientLight = ambientLight
         this.projectionMatrix = projectionMatrix
@@ -125,13 +125,13 @@ class LightSceneBatch {
 
         diffuse.texture.bind(0)
         bump.texture.bind(1)
-        lightDiffuse.texture.bind(2)
+        lightBump.texture.bind(2)
         lightAttenuation.texture.bind(3)
 
         shaderProgram.setUniformMatrix("u_projectionTrans", projectionMatrix)
         shaderProgram.setUniformi("u_texture_diffuse", 0)
         shaderProgram.setUniformi("u_texture_bump", 1)
-        shaderProgram.setUniformi("u_texture_light_diffuse", 2)
+        shaderProgram.setUniformi("u_texture_light_bump", 2)
         shaderProgram.setUniformi("u_texture_light_attenuation", 3)
 
         mesh.setVertices(vertices, 0, verticesCount)

@@ -2,7 +2,7 @@ package com.disgraded.gdxmachine.core.api.graphics.drawable
 
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 
-abstract class Light(val lightType: LightType, val sizeX: Float, val sizeY: Float): Drawable(Type.LIGHT) {
+abstract class Light(val lightType: LightType): Drawable(Type.LIGHT) {
 
     private val colorMap = hashMapOf<Corner, Color>()
 

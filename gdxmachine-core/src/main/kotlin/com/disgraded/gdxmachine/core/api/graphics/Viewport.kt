@@ -3,7 +3,7 @@ package com.disgraded.gdxmachine.core.api.graphics
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.utils.Disposable
 import com.disgraded.gdxmachine.core.Config
-import com.disgraded.gdxmachine.core.api.graphics.batch.DeferredLightBatch
+import com.disgraded.gdxmachine.core.api.graphics.batch.DeferredLightingBatch
 import com.disgraded.gdxmachine.core.api.graphics.batch.DiffuseBatch
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
@@ -12,7 +12,7 @@ class Viewport : Disposable {
 
     class Api(private val viewport: Viewport) {
 
-        var ambientColor = Color.BLACK
+        var ambientColor = Color(0.6f, 0.6f, 1f, 0.2f)
 
         val camera: OrthographicCamera = viewport.projection.camera
 
@@ -52,7 +52,7 @@ class Viewport : Disposable {
 
     private val projection = Projection()
     private val diffuseBatch = DiffuseBatch()
-    private val deferredLightBatch = DeferredLightBatch(projection)
+    private val deferredLightBatch = DeferredLightingBatch(projection)
 
     private val drawableList = arrayListOf<Drawable>()
     private val lightList = arrayListOf<Drawable>()

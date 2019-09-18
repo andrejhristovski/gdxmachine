@@ -16,7 +16,7 @@ class LightAttenuationBatch(private val projection: Projection) : DrawableBatch 
     private var gpuCalls = 0
 
     init {
-        rendererMap["point_light"] = LightAttenuationPointRenderer(projection)
+        rendererMap["light_attenuation_point"] = LightAttenuationPointRenderer(projection)
     }
 
     override fun render(drawableList: ArrayList<Drawable>, projectionMatrix: Matrix4): Int {
@@ -60,7 +60,7 @@ class LightAttenuationBatch(private val projection: Projection) : DrawableBatch 
     private fun getRendererType(drawable: Drawable): String? {
         return when(drawable.type) {
             Drawable.Type.LIGHT -> when((drawable as Light).lightType) {
-                LightType.POINT -> "point_light"
+                LightType.POINT -> "light_attenuation_point"
             }
             else -> null
         }

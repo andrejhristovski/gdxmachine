@@ -17,7 +17,7 @@ import com.disgraded.gdxmachine.core.api.graphics.drawable.PointLight
 class LightAttenuationPointRenderer(private val projection: Projection) : Renderer {
 
     companion object {
-        private const val BUFFER_SIZE = 36
+        private const val BUFFER_SIZE = 28
         private const val VERTICES_PER_BUFFER = 4
         private const val INDICES_PER_BUFFER = 6
         private const val MAX_BUFFERED_CALLS = Short.MAX_VALUE / VERTICES_PER_BUFFER
@@ -32,9 +32,9 @@ class LightAttenuationPointRenderer(private val projection: Projection) : Render
     private val mesh: Mesh
     private val vertices: FloatArray
     private val indices: ShortArray
-    private var shaderProgram: ShaderProgram
-    private val shaderVertexPrefix = "light_point"
-    private var shaderFragmentPrefix = "light_point.attenuation"
+    private val shaderProgram: ShaderProgram
+    private val shaderVertexPrefix = "light_attenuation_point"
+    private val shaderFragmentPrefix = "light_attenuation_point"
     private lateinit var projectionMatrix: Matrix4
 
     init {
@@ -42,11 +42,9 @@ class LightAttenuationPointRenderer(private val projection: Projection) : Render
         val maxIndices = INDICES_PER_BUFFER * MAX_BUFFERED_CALLS
         val vertexAttributes = VertexAttributes(
                 VertexAttribute(VertexAttributes.Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
-                VertexAttribute(VertexAttributes.Usage.Position, 2, "${ShaderProgram.POSITION_ATTRIBUTE}_size"),
+                VertexAttribute(VertexAttributes.Usage.Position, 2, "a_size"),
                 VertexAttribute(VertexAttributes.Usage.Position, 2, "${ShaderProgram.POSITION_ATTRIBUTE}_relative"),
-                VertexAttribute(VertexAttributes.Usage.Generic, 1, "a_generic_radius"),
-                VertexAttribute(VertexAttributes.Usage.Generic, 1, "a_generic_intensity"),
-                VertexAttribute(VertexAttributes.Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE)
+                VertexAttribute(VertexAttributes.Usage.Generic, 1, "a_generic_intensity")
         )
 
         mesh = Mesh(false, maxVertices, maxIndices, vertexAttributes)
@@ -95,8 +93,9 @@ class LightAttenuationPointRenderer(private val projection: Projection) : Render
 
     private fun appendVertices(pointLight: PointLight) {
         val idx = bufferedCalls * BUFFER_SIZE
-        val sizeX = pointLight.sizeX * 32
-        val sizeY = pointLight.sizeY * 32
+        val size = projection.getVirtualWidth() / 5
+        val sizeX = size * pointLight.intensity * 4
+        val sizeY = size * pointLight.intensity * 4
 
         var x1 = 0 - (sizeX * .5f)
         var y1 = 0 - (sizeY * .5f)
@@ -141,39 +140,31 @@ class LightAttenuationPointRenderer(private val projection: Projection) : Render
         vertices[idx + 3] = sizeY * pointLight.scaleY
         vertices[idx + 4] = x1 - pointLight.x
         vertices[idx + 5] = y1 - pointLight.y
-        vertices[idx + 6] = pointLight.radius
-        vertices[idx + 7] = pointLight.intensity
-        vertices[idx + 8] = pointLight.getColor(Corner.BOTTOM_LEFT).toFloatBits()
+        vertices[idx + 6] = pointLight.intensity
 
-        vertices[idx + 9] = x2
-        vertices[idx + 10] = y2
-        vertices[idx + 11] = sizeX * pointLight.scaleX
-        vertices[idx + 12] = sizeY * pointLight.scaleY
-        vertices[idx + 13] = x2 - pointLight.x
-        vertices[idx + 14] = y2 - pointLight.y
-        vertices[idx + 15] = pointLight.radius
-        vertices[idx + 16] = pointLight.intensity
-        vertices[idx + 17] = pointLight.getColor(Corner.TOP_LEFT).toFloatBits()
+        vertices[idx + 7] = x2
+        vertices[idx + 8] = y2
+        vertices[idx + 9] = sizeX * pointLight.scaleX
+        vertices[idx + 10] = sizeY * pointLight.scaleY
+        vertices[idx + 11] = x2 - pointLight.x
+        vertices[idx + 12] = y2 - pointLight.y
+        vertices[idx + 13] = pointLight.intensity
 
-        vertices[idx + 18] = x3
-        vertices[idx + 19] = y3
-        vertices[idx + 20] = sizeX * pointLight.scaleX
-        vertices[idx + 21] = sizeY * pointLight.scaleY
-        vertices[idx + 22] = x3 - pointLight.x
-        vertices[idx + 23] = y3 - pointLight.y
-        vertices[idx + 24] = pointLight.radius
-        vertices[idx + 25] = pointLight.intensity
-        vertices[idx + 26] = pointLight.getColor(Corner.TOP_RIGHT).toFloatBits()
+        vertices[idx + 14] = x3
+        vertices[idx + 15] = y3
+        vertices[idx + 16] = sizeX * pointLight.scaleX
+        vertices[idx + 17] = sizeY * pointLight.scaleY
+        vertices[idx + 18] = x3 - pointLight.x
+        vertices[idx + 19] = y3 - pointLight.y
+        vertices[idx + 20] = pointLight.intensity
 
-        vertices[idx + 27] = x4
-        vertices[idx + 28] = y4
-        vertices[idx + 29] = sizeX * pointLight.scaleX
-        vertices[idx + 30] = sizeY * pointLight.scaleY
-        vertices[idx + 31] = x4 - pointLight.x
-        vertices[idx + 32] = y4 - pointLight.y
-        vertices[idx + 33] = pointLight.radius
-        vertices[idx + 34] = pointLight.intensity
-        vertices[idx + 35] = pointLight.getColor(Corner.BOTTOM_RIGHT).toFloatBits()
+        vertices[idx + 21] = x4
+        vertices[idx + 22] = y4
+        vertices[idx + 23] = sizeX * pointLight.scaleX
+        vertices[idx + 24] = sizeY * pointLight.scaleY
+        vertices[idx + 25] = x4 - pointLight.x
+        vertices[idx + 26] = y4 - pointLight.y
+        vertices[idx + 27] = pointLight.intensity
         bufferedCalls++
     }
 
@@ -192,6 +183,8 @@ class LightAttenuationPointRenderer(private val projection: Projection) : Render
         Gdx.gl.glEnable(GL20.GL_BLEND)
         Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,
                 GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+        Gdx.gl.glEnable(GL20.GL_BLEND_EQUATION)
+        Gdx.gl.glBlendEquation(GL20.GL_FUNC_ADD)
         mesh.render(shaderProgram, GL20.GL_TRIANGLES, 0, indicesCount)
         bufferedCalls = 0
     }

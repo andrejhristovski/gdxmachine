@@ -5,11 +5,10 @@ import com.disgraded.gdxmachine.core.api.graphics.Projection
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Light
 import com.disgraded.gdxmachine.core.api.graphics.drawable.LightType
-import com.disgraded.gdxmachine.core.api.graphics.renderer.LightAttenuationPointRenderer
-import com.disgraded.gdxmachine.core.api.graphics.renderer.LightDiffusePointRenderer
+import com.disgraded.gdxmachine.core.api.graphics.renderer.LightBumpPointRenderer
 import com.disgraded.gdxmachine.core.api.graphics.renderer.Renderer
 
-class LightDiffuseBatch(private val projection: Projection) : DrawableBatch {
+class LightBumpBatch(private val projection: Projection) : DrawableBatch {
 
     private val rendererMap = hashMapOf<String, Renderer>()
     private var currentRenderer: Renderer? = null
@@ -17,7 +16,7 @@ class LightDiffuseBatch(private val projection: Projection) : DrawableBatch {
     private var gpuCalls = 0
 
     init {
-        rendererMap["point_light"] = LightDiffusePointRenderer(projection)
+        rendererMap["light_bump_point"] = LightBumpPointRenderer(projection)
     }
 
     override fun render(drawableList: ArrayList<Drawable>, projectionMatrix: Matrix4): Int {
@@ -61,7 +60,7 @@ class LightDiffuseBatch(private val projection: Projection) : DrawableBatch {
     private fun getRendererType(drawable: Drawable): String? {
         return when(drawable.type) {
             Drawable.Type.LIGHT -> when((drawable as Light).lightType) {
-                LightType.POINT -> "point_light"
+                LightType.POINT -> "light_bump_point"
             }
             else -> null
         }

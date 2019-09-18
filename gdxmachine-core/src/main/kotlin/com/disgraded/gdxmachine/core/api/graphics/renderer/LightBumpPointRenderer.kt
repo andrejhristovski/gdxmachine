@@ -14,10 +14,10 @@ import com.disgraded.gdxmachine.core.api.graphics.drawable.Corner
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
 import com.disgraded.gdxmachine.core.api.graphics.drawable.PointLight
 
-class LightDiffusePointRenderer(private val projection: Projection) : Renderer {
+class LightBumpPointRenderer(private val projection: Projection) : Renderer {
 
     companion object {
-        private const val BUFFER_SIZE = 36
+        private const val BUFFER_SIZE = 24
         private const val VERTICES_PER_BUFFER = 4
         private const val INDICES_PER_BUFFER = 6
         private const val MAX_BUFFERED_CALLS = Short.MAX_VALUE / VERTICES_PER_BUFFER
@@ -32,9 +32,9 @@ class LightDiffusePointRenderer(private val projection: Projection) : Renderer {
     private val mesh: Mesh
     private val vertices: FloatArray
     private val indices: ShortArray
-    private var shaderProgram: ShaderProgram
-    private val shaderVertexPrefix = "light_point"
-    private var shaderFragmentPrefix = "light_point.diffuse"
+    private val shaderProgram: ShaderProgram
+    private val shaderVertexPrefix = "light_bump_point"
+    private val shaderFragmentPrefix = "light_bump_point"
     private lateinit var projectionMatrix: Matrix4
 
     init {
@@ -42,11 +42,8 @@ class LightDiffusePointRenderer(private val projection: Projection) : Renderer {
         val maxIndices = INDICES_PER_BUFFER * MAX_BUFFERED_CALLS
         val vertexAttributes = VertexAttributes(
                 VertexAttribute(VertexAttributes.Usage.Position, 2, ShaderProgram.POSITION_ATTRIBUTE),
-                VertexAttribute(VertexAttributes.Usage.Position, 2, "${ShaderProgram.POSITION_ATTRIBUTE}_size"),
-                VertexAttribute(VertexAttributes.Usage.Position, 2, "${ShaderProgram.POSITION_ATTRIBUTE}_relative"),
-                VertexAttribute(VertexAttributes.Usage.Generic, 1, "a_generic_radius"),
-                VertexAttribute(VertexAttributes.Usage.Generic, 1, "a_generic_intensity"),
-                VertexAttribute(VertexAttributes.Usage.ColorPacked, 4, ShaderProgram.COLOR_ATTRIBUTE)
+                VertexAttribute(VertexAttributes.Usage.Position, 2, "a_size"),
+                VertexAttribute(VertexAttributes.Usage.Position, 2, "${ShaderProgram.POSITION_ATTRIBUTE}_relative")
         )
 
         mesh = Mesh(false, maxVertices, maxIndices, vertexAttributes)
@@ -95,8 +92,9 @@ class LightDiffusePointRenderer(private val projection: Projection) : Renderer {
 
     private fun appendVertices(pointLight: PointLight) {
         val idx = bufferedCalls * BUFFER_SIZE
-        val sizeX = pointLight.sizeX * 32
-        val sizeY = pointLight.sizeY * 32
+        val size = projection.getVirtualWidth() / 5
+        val sizeX = size * pointLight.intensity * 8
+        val sizeY = size * pointLight.intensity * 8
 
         var x1 = 0 - (sizeX * .5f)
         var y1 = 0 - (sizeY * .5f)
@@ -141,39 +139,27 @@ class LightDiffusePointRenderer(private val projection: Projection) : Renderer {
         vertices[idx + 3] = sizeY * pointLight.scaleY
         vertices[idx + 4] = x1 - pointLight.x
         vertices[idx + 5] = y1 - pointLight.y
-        vertices[idx + 6] = pointLight.radius
-        vertices[idx + 7] = pointLight.intensity
-        vertices[idx + 8] = pointLight.getColor(Corner.BOTTOM_LEFT).toFloatBits()
 
-        vertices[idx + 9] = x2
-        vertices[idx + 10] = y2
-        vertices[idx + 11] = sizeX * pointLight.scaleX
-        vertices[idx + 12] = sizeY * pointLight.scaleY
-        vertices[idx + 13] = x2 - pointLight.x
-        vertices[idx + 14] = y2 - pointLight.y
-        vertices[idx + 15] = pointLight.radius
-        vertices[idx + 16] = pointLight.intensity
-        vertices[idx + 17] = pointLight.getColor(Corner.TOP_LEFT).toFloatBits()
+        vertices[idx + 6] = x2
+        vertices[idx + 7] = y2
+        vertices[idx + 8] = sizeX * pointLight.scaleX
+        vertices[idx + 9] = sizeY * pointLight.scaleY
+        vertices[idx + 10] = x2 - pointLight.x
+        vertices[idx + 11] = y2 - pointLight.y
 
-        vertices[idx + 18] = x3
-        vertices[idx + 19] = y3
+        vertices[idx + 12] = x3
+        vertices[idx + 13] = y3
+        vertices[idx + 14] = sizeX * pointLight.scaleX
+        vertices[idx + 15] = sizeY * pointLight.scaleY
+        vertices[idx + 16] = x3 - pointLight.x
+        vertices[idx + 17] = y3 - pointLight.y
+
+        vertices[idx + 18] = x4
+        vertices[idx + 19] = y4
         vertices[idx + 20] = sizeX * pointLight.scaleX
         vertices[idx + 21] = sizeY * pointLight.scaleY
-        vertices[idx + 22] = x3 - pointLight.x
-        vertices[idx + 23] = y3 - pointLight.y
-        vertices[idx + 24] = pointLight.radius
-        vertices[idx + 25] = pointLight.intensity
-        vertices[idx + 26] = pointLight.getColor(Corner.TOP_RIGHT).toFloatBits()
-
-        vertices[idx + 27] = x4
-        vertices[idx + 28] = y4
-        vertices[idx + 29] = sizeX * pointLight.scaleX
-        vertices[idx + 30] = sizeY * pointLight.scaleY
-        vertices[idx + 31] = x4 - pointLight.x
-        vertices[idx + 32] = y4 - pointLight.y
-        vertices[idx + 33] = pointLight.radius
-        vertices[idx + 34] = pointLight.intensity
-        vertices[idx + 35] = pointLight.getColor(Corner.BOTTOM_RIGHT).toFloatBits()
+        vertices[idx + 22] = x4 - pointLight.x
+        vertices[idx + 23] = y4 - pointLight.y
         bufferedCalls++
     }
 
@@ -190,8 +176,8 @@ class LightDiffusePointRenderer(private val projection: Projection) : Renderer {
         mesh.setIndices(indices, 0, indicesCount)
 
         Gdx.gl.glEnable(GL20.GL_BLEND)
+        Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA, GL20.GL_ONE)
         Gdx.gl.glEnable(GL20.GL_BLEND_EQUATION)
-        Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA , GL20.GL_ONE)
         Gdx.gl.glBlendEquation(GL20.GL_FUNC_ADD)
         mesh.render(shaderProgram, GL20.GL_TRIANGLES, 0, indicesCount)
 
