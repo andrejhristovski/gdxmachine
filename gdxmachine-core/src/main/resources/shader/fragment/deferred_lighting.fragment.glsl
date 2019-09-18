@@ -23,10 +23,10 @@ void main()
     vec4 lightColor = vec4(1, 0.8, 0.6, 1);
     float attenuation = lightAttenuationColor.a;
     vec3 normal = normalize(normalColor.rgb * 2.0 - 1.0);
-    vec3 lightNormal = lightBumpColor.rgb * 2.0 - 1.0;
+    vec3 lightNormal = normalize(lightBumpColor.rgb * 2.0 - 1.0);
 
     vec3 ambient = v_ambient.rgb * v_ambient.a;
-    vec3 diffuse = lightColor.rgb * max(dot(normal, lightNormal), 0.0);
+    vec3 diffuse = lightColor.rgb * lightColor.a * max(dot(normal, lightNormal), 0.0);
 
     vec3 intensity = ambient + diffuse * attenuation;
     vec3 final = diffuseColor.rgb * intensity * lightAttenuationColor.rgb;

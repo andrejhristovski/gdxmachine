@@ -77,7 +77,7 @@ class TestScene : Scene() {
         }
         context.graphics.getViewport().draw(player)
         for (light in lights) {
-            light.x += 10f * deltaTime
+//            light.x += 10f * deltaTime
             context.graphics.getViewport().draw(light)
         }
         context.graphics.getViewport("hud").draw(text)
