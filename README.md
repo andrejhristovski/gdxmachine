@@ -25,7 +25,7 @@ The main goal behind the development of this engine is to create feature reach, 
 - [x] Project structure
 - [x] Android library
 - [x] JVM library
-- [x] Engine module system
+- [x] Core module system
 - [x] ECS Module
 - [x] Scene Manager
 - [x] Resource Module
