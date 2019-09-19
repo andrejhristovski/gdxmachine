@@ -45,16 +45,20 @@ The main goal behind the development of this engine is to create feature reach, 
 - [ ] Network Components
 - [ ] Graphics 2D System
 - [ ] Graphics 2.5D System
+- [ ] Official website
+- [ ] Handwritten documentation
 ##### beta [v0.9.0]
 - [ ] Multiplayer server (NodeJS)
 - [ ] Multiplayer Components
 - [ ] Multiplayer server dashboard (ReactJS)
+- [ ] Append changes to the documentation
 ##### stable [v1.0.0]
-- [ ] Developer friendly API
+- [ ] Redesign the API to be developer friendly
 - [ ] Utilities for common game development problems
 - [ ] AI Module
 - [ ] AI Components
 - [ ] AI System
+- [ ] Append changes to the documentation
 - [ ] Maven central publishing
 
 ## Contributing
