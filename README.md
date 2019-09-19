@@ -57,7 +57,15 @@ The main goal behind the development of this engine is to create feature reach, 
 - [ ] AI System
 - [ ] Maven central publishing
 
-# License
+## Contributing
+
+1. Fork (and then `git clone https://github.com/<your-username-here>/gdxmachine.git`).
+2. Make your changes
+3. Commit your changes (`git commit -am "Description of contribution"`).
+4. Push to GitHub (`git push`).
+5. Open a Pull Request.
+
+## License
 The project is licensed under the Apache License Version 2.0
 
 However, some classes are based on LibGDX's code and are licensed under the Apache License Version 2.0 per LibGDX's license. Such classes are placed under com.badlogic.gdx packages.
