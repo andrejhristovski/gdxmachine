@@ -35,6 +35,9 @@ The main goal behind the development of this engine is to create feature reach, 
 - [ ] Physics Module (Box2D)
 - [ ] Audio Module
 - [ ] Network Module
+- [ ] Official website (ReactJS)
+- [ ] Handwritten documentation
+- [ ] Maven central publishing
 ##### alpha [v0.5.0]
 - [ ] Drawable Components
 - [ ] Lighting Components
@@ -45,8 +48,6 @@ The main goal behind the development of this engine is to create feature reach, 
 - [ ] Network Components
 - [ ] Graphics 2D System
 - [ ] Graphics 2.5D System
-- [ ] Official website
-- [ ] Handwritten documentation
 ##### beta [v0.9.0]
 - [ ] Multiplayer server (NodeJS)
 - [ ] Multiplayer Components
@@ -59,7 +60,6 @@ The main goal behind the development of this engine is to create feature reach, 
 - [ ] AI Components
 - [ ] AI System
 - [ ] Append changes to the documentation
-- [ ] Maven central publishing
 
 ## Contributing
 
