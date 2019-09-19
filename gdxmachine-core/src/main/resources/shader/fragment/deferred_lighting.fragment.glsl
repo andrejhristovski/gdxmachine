@@ -21,14 +21,14 @@ void main()
     vec4 lightAttenuationColor = texture2D(u_texture_light_attenuation, v_texCoords);
 
     vec4 lightColor = vec4(1, 0.8, 0.6, 1);
-    float attenuation = lightAttenuationColor.a;
+    float attenuation = lightAttenuationColor.r * lightAttenuationColor.g * lightAttenuationColor.b * lightAttenuationColor.a;
     vec3 normal = normalize(normalColor.rgb * 2.0 - 1.0);
-    vec3 lightNormal = normalize(lightBumpColor.rgb * 2.0 - 1.0);
+    vec3 lightNormal = lightBumpColor.rgb * 2.0 - 1.0;
 
     vec3 ambient = v_ambient.rgb * v_ambient.a;
     vec3 diffuse = lightColor.rgb * lightColor.a * max(dot(normal, lightNormal), 0.0);
 
     vec3 intensity = ambient + diffuse * attenuation;
     vec3 final = diffuseColor.rgb * intensity * lightAttenuationColor.rgb;
-    gl_FragColor = vec4(final, diffuseColor.a);
+    gl_FragColor = vec4(final , 1);
 }

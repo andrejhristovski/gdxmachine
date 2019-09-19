@@ -18,8 +18,8 @@ class DeferredLightingBatch(private val projection: Projection) : DrawableBatch 
 
     private val diffuseBuffer = FrameBuffer(projection)
     private val bumpBuffer = FrameBuffer(projection)
-    private val lightBumpBuffer = FrameBuffer(projection, Color(.5f, .5f, 1f, 1f))
-    private val lightAttenuationBuffer = FrameBuffer(projection, Color(0f, 0f, 0f, 0f))
+    private val lightBumpBuffer = FrameBuffer(projection)
+    private val lightAttenuationBuffer = FrameBuffer(projection)
 
     private val lightSceneBatch = DeferredLightingRenderer()
 

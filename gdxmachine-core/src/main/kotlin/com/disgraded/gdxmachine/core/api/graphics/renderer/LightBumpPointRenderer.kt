@@ -93,8 +93,8 @@ class LightBumpPointRenderer(private val projection: Projection) : Renderer {
     private fun appendVertices(pointLight: PointLight) {
         val idx = bufferedCalls * BUFFER_SIZE
         val size = projection.getVirtualWidth() / 5
-        val sizeX = size * pointLight.intensity * 8
-        val sizeY = size * pointLight.intensity * 8
+        val sizeX = size * pointLight.intensity * 2
+        val sizeY = size * pointLight.intensity * 2
 
         var x1 = 0 - (sizeX * .5f)
         var y1 = 0 - (sizeY * .5f)
@@ -176,7 +176,7 @@ class LightBumpPointRenderer(private val projection: Projection) : Renderer {
         mesh.setIndices(indices, 0, indicesCount)
 
         Gdx.gl.glEnable(GL20.GL_BLEND)
-        Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA, GL20.GL_ONE)
+        Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA, GL20.GL_ONE, GL20.GL_ONE_MINUS_SRC_ALPHA)
         Gdx.gl.glEnable(GL20.GL_BLEND_EQUATION)
         Gdx.gl.glBlendEquation(GL20.GL_FUNC_ADD)
         mesh.render(shaderProgram, GL20.GL_TRIANGLES, 0, indicesCount)
