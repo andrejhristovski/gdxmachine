@@ -50,7 +50,7 @@ The main goal behind the development of this engine is to create feature reach, 
 - [ ] Multiplayer Components
 - [ ] Multiplayer server dashboard (ReactJS)
 ##### stable
-- [ ] user friendly API
+- [ ] Developer friendly API
 - [ ] Utilities for common game development problems
 - [ ] AI Module
 - [ ] AI Components
@@ -68,4 +68,4 @@ The main goal behind the development of this engine is to create feature reach, 
 ## License
 The project is licensed under the Apache License Version 2.0
 
-However, some classes are based on LibGDX's code and are licensed under the Apache License Version 2.0 per LibGDX's license. Such classes are placed under com.badlogic.gdx packages.
+Some classes are based on LibGDX's code and are licensed under the Apache License Version 2.0 per LibGDX's license. Such classes are placed under com.badlogic.gdx packages.
