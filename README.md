@@ -21,7 +21,7 @@ engine can be exported as Desktop (JVM) Game or Android game.
 The main goal behind the development of this engine is to create feature reach, optimised & community driven engine. 
 
 ### Roadmap
-##### prototype
+##### prototype [v0.1.0]
 - [x] Project structure
 - [x] Android library
 - [x] JVM library
@@ -35,7 +35,7 @@ The main goal behind the development of this engine is to create feature reach, 
 - [ ] Physics Module (Box2D)
 - [ ] Audio Module
 - [ ] Network Module
-##### alpha
+##### alpha [v0.5.0]
 - [ ] Drawable Components
 - [ ] Lighting Components
 - [ ] Physics Components
@@ -45,11 +45,11 @@ The main goal behind the development of this engine is to create feature reach, 
 - [ ] Network Components
 - [ ] Graphics 2D System
 - [ ] Graphics 2.5D System
-##### beta
+##### beta [v0.9.0]
 - [ ] Multiplayer server (NodeJS)
 - [ ] Multiplayer Components
 - [ ] Multiplayer server dashboard (ReactJS)
-##### stable
+##### stable [v1.0.0]
 - [ ] Developer friendly API
 - [ ] Utilities for common game development problems
 - [ ] AI Module
