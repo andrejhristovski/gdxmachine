@@ -72,4 +72,4 @@ The main goal behind the development of this engine is to create feature reach, 
 ## License
 The project is licensed under the Apache License Version 2.0
 
-Some classes are based on LibGDX's code and are licensed under the Apache License Version 2.0 per LibGDX's license. Such classes are placed under com.badlogic.gdx packages.
+Some classes are based on LibGDX's code and are licensed under the Apache License Version 2.0 per LibGDX's license (compatible license). Such classes are placed under com.badlogic.gdx packages.
