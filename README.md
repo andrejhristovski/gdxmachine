@@ -1,3 +1,5 @@
+# GdxMachine - JVM based 2D Game Engine
+
 ![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)
 ![forthebadge](https://forthebadge.com/images/badges/no-ragrets.svg)
 ![forthebadge](https://forthebadge.com/images/badges/gluten-free.svg)
@@ -5,7 +7,7 @@
 [![GitLicense](https://gitlicense.com/badge/disgraded/gdxmachine)](https://gitlicense.com/license/disgraded/gdxmachine)
 [![Build Status](https://travis-ci.com/kalevski/gdxmachine.svg?branch=master)](https://travis-ci.com/kalevski/gdxmachine)
 
-# GdxMachine
+![github banner](https://user-images.githubusercontent.com/10467454/65364666-a6a79280-dc13-11e9-826e-c74f9950097d.png)
 
 Homepage: Coming soon
 
