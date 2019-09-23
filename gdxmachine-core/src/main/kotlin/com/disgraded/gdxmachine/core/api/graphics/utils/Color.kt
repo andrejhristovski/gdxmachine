@@ -40,8 +40,8 @@ class Color {
     var a : Float = 1f
 
 
-    constructor(r : Float, g : Float, b: Float, alpha : Float = 1f) {
-        set(r, g, b, alpha)
+    constructor(r : Float, g : Float, b: Float, a : Float = 1f) {
+        set(r, g, b, a)
     }
 
     constructor(hexColor : String, alpha : Float = 1f) {

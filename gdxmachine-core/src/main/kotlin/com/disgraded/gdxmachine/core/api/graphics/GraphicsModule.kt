@@ -41,8 +41,8 @@ class GraphicsModule : Core.Module {
     }
 
     override fun update(deltaTime: Float) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         Gdx.gl.glClearColor(0f, 0f ,0f, 1f)
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         var glCalls = 0
         viewports.toList().sortedBy { it.second.api.z }.forEach{
             it.second.render()
