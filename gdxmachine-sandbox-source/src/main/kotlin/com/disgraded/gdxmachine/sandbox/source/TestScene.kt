@@ -18,7 +18,7 @@ class TestScene : Scene() {
         context.graphics.createViewport()
         context.graphics.createViewport("hud")
         context.graphics.getViewport().enableLights()
-        context.graphics.getViewport().ambientColor = Color.BLACK
+        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
 //        context.graphics.getViewport().ambientColor = Color.BLUE_GREY
         val wallTexture = context.resources.get<Texture>("initial", "wall")
         val wallNormalTexture = context.resources.get<Texture>("initial", "wall_normal")
@@ -46,9 +46,11 @@ class TestScene : Scene() {
         player.setScale(.5f)
 
         var light = PointLight()
-        light.setColor(Color.YELLOW)
-        lights.add(light)
         light.intensity = 1f
+        light.color = Color.WARM_WHITE
+        light.x = 200f
+        light.y = -200f
+        lights.add(light)
 
 //        light = PointLight(2200f, 200f)
 //        light.y = 400f
@@ -56,12 +58,12 @@ class TestScene : Scene() {
 //        light.setColor(Corner.TOP_LEFT, Color.BLUE_GREY)
 //        lights.add(light)
 
-        light = PointLight()
-        light.intensity = .5f
-        light.x = 500f
-        light.y = -200f
-        light.setColor(Color.GREEN)
-        lights.add(light)
+//        light = PointLight()
+//        light.intensity = .5f
+//        light.x = -200f
+//        light.y = -300f
+//        light.color = Color.GREEN
+//        lights.add(light)
 
 
         text = Text(textBitmap)
@@ -78,7 +80,7 @@ class TestScene : Scene() {
         }
         context.graphics.getViewport().draw(player)
         for (light in lights) {
-//            light.x += 10f * deltaTime
+//            light.x += 100f * deltaTime
             context.graphics.getViewport().draw(light)
         }
         context.graphics.getViewport("hud").draw(text)

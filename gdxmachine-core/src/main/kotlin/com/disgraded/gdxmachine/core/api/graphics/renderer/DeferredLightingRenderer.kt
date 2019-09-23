@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.VertexAttributes
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.Matrix4
+import com.disgraded.gdxmachine.core.api.graphics.Projection
 import com.disgraded.gdxmachine.core.api.graphics.ShaderFactory
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Light
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 
 class DeferredLightingRenderer {
@@ -24,14 +26,18 @@ class DeferredLightingRenderer {
 
     private lateinit var diffuse: TextureRegion
     private lateinit var bump: TextureRegion
-    private lateinit var lightBump: TextureRegion
-    private lateinit var lightAttenuation: TextureRegion
 
     private lateinit var ambientLight: Color
+    private lateinit var lightList: ArrayList<Light>
     private lateinit var projectionMatrix: Matrix4
 
     private var x = 0f
     private var y = 0f
+
+    private var viewportX = 0f
+    private var viewportY = 0f
+    private var viewportWidth = 1280f
+    private var viewportHeight = 720f
 
     init {
         val vertexAttributes = VertexAttributes(
@@ -55,16 +61,17 @@ class DeferredLightingRenderer {
         shaderProgram = shaderFactory.get(shaderVertexPrefix, shaderFragmentPrefix)
     }
 
-    fun render(x: Float, y: Float, diffuse: TextureRegion, bump: TextureRegion, lightBump: TextureRegion,
-               lightAttenuation: TextureRegion, ambientLight: Color, projectionMatrix: Matrix4): Int {
+    fun render(projection: Projection, diffuse: TextureRegion, bump: TextureRegion, ambientLight: Color,
+               lightList: ArrayList<Light>, projectionMatrix: Matrix4): Int {
         this.diffuse = diffuse
         this.bump = bump
-        this.lightBump = lightBump
-        this.lightAttenuation = lightAttenuation
         this.ambientLight = ambientLight
         this.projectionMatrix = projectionMatrix
-        this.x = x
-        this.y = y
+        this.x = projection.camera.position.x
+        this.y = projection.camera.position.y
+        this.viewportWidth * projection.viewportSizeX
+        this.viewportHeight = projection.viewportSizeY
+        this.lightList = lightList
         appendVertices()
         flush()
         return 1
@@ -125,14 +132,21 @@ class DeferredLightingRenderer {
 
         diffuse.texture.bind(0)
         bump.texture.bind(1)
-        lightBump.texture.bind(2)
-        lightAttenuation.texture.bind(3)
 
         shaderProgram.setUniformMatrix("u_projectionTrans", projectionMatrix)
         shaderProgram.setUniformi("u_texture_diffuse", 0)
         shaderProgram.setUniformi("u_texture_bump", 1)
-        shaderProgram.setUniformi("u_texture_light_bump", 2)
-        shaderProgram.setUniformi("u_texture_light_attenuation", 3)
+        shaderProgram.setUniformf("ambient_light_color", ambientLight.r, ambientLight.g, ambientLight.b,
+                ambientLight.a)
+        shaderProgram.setUniformf("viewport", viewportX, viewportY, viewportWidth, viewportHeight)
+
+        for (i in 0 until lightList.size) {
+            val light = lightList[i]
+            val positionId = shaderProgram.getUniformLocation("light[$i].position")
+            val colorId = shaderProgram.getUniformLocation("light[$i].color")
+            shaderProgram.setUniformf(positionId, light.x, light.y, light.z)
+            shaderProgram.setUniformf(colorId, light.color.r, light.color.g, light.color.b, light.color.a)
+        }
 
         mesh.setVertices(vertices, 0, verticesCount)
         mesh.setIndices(indices, 0, indicesCount)

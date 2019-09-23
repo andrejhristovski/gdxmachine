@@ -6,13 +6,14 @@ import com.disgraded.gdxmachine.core.Config
 import com.disgraded.gdxmachine.core.api.graphics.batch.DeferredLightingBatch
 import com.disgraded.gdxmachine.core.api.graphics.batch.DiffuseBatch
 import com.disgraded.gdxmachine.core.api.graphics.drawable.Drawable
+import com.disgraded.gdxmachine.core.api.graphics.drawable.Light
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 
 class Viewport : Disposable {
 
     class Api(private val viewport: Viewport) {
 
-        var ambientColor = Color(0.6f, 0.6f, 1f, 0.1f)
+        var ambientColor = Color(.6f, .6f, 1f, .2f)
 
         val camera: OrthographicCamera = viewport.projection.camera
 
@@ -37,7 +38,7 @@ class Viewport : Disposable {
             when (drawable.type) {
                 Drawable.Type.SPRITE -> viewport.drawableList.add(drawable)
                 Drawable.Type.TEXT -> viewport.drawableList.add(drawable)
-                Drawable.Type.LIGHT -> viewport.lightList.add(drawable)
+                Drawable.Type.LIGHT -> viewport.lightList.add(drawable as Light)
             }
         }
 
@@ -55,7 +56,7 @@ class Viewport : Disposable {
     private val deferredLightBatch = DeferredLightingBatch(projection)
 
     private val drawableList = arrayListOf<Drawable>()
-    private val lightList = arrayListOf<Drawable>()
+    private val lightList = arrayListOf<Light>()
 
     val api = Api(this)
 

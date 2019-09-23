@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Disposable
 import com.disgraded.gdxmachine.core.api.graphics.Projection
 import com.badlogic.gdx.graphics.glutils.FrameBuffer as GdxFrameBuffer
 
-class FrameBuffer(private val projection: Projection, private var color: Color = Color(0f, 0f, 0f, 0f)): Disposable {
+class FrameBuffer(private val projection: Projection, private var color: Color = Color.BLACK): Disposable {
 
     private var virtualWidth = 0f
     private var virtualHeight = 0f
