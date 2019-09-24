@@ -5,8 +5,9 @@
 ![forthebadge](https://forthebadge.com/images/badges/no-ragrets.svg)
 ![forthebadge](https://forthebadge.com/images/badges/gluten-free.svg)
 
-[![GitLicense](https://gitlicense.com/badge/disgraded/gdxmachine)](https://gitlicense.com/license/disgraded/gdxmachine)
+![GitHub](https://img.shields.io/github/license/disgraded/gdxmachine?style=for-the-badge)
 [![Build Status](https://travis-ci.com/kalevski/gdxmachine.svg?branch=master)](https://travis-ci.com/kalevski/gdxmachine)
+[![Build Status](https://img.shields.io/travis/kalevski/gdxmachine/master.svg?logo=travis&style=for-the-badge)](https://travis-ci.com/kalevski/gdxmachine)
 
 
 
