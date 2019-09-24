@@ -6,7 +6,7 @@
 ![forthebadge](https://forthebadge.com/images/badges/gluten-free.svg)
 
 ![GitHub](https://img.shields.io/github/license/disgraded/gdxmachine?style=for-the-badge)
-[![Build Status](https://img.shields.io/travis/kalevski/gdxmachine/master.svg?logo=travis&style=for-the-badge)](https://travis-ci.com/kalevski/gdxmachine)
+[![Build Status](https://img.shields.io/travis/disgraded/gdxmachine/master.svg?logo=travis&style=for-the-badge)](https://travis-ci.com/disgraded/gdxmachine)
 
 
 
