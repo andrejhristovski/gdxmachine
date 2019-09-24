@@ -7,7 +7,7 @@
 
 ![GitHub](https://img.shields.io/github/license/disgraded/gdxmachine?style=for-the-badge)
 [![Build Status](https://img.shields.io/travis/com/disgraded/gdxmachine/master?logo=travis&style=for-the-badge)](https://travis-ci.com/disgraded/gdxmachine?branch=master)
-[![Discord](https://img.shields.io/discord/514192677831442453?style=for-the-badge)](https://discordapp.com/channels/514192677831442453/514192677831442455)
+[![Discord](https://img.shields.io/discord/514192677831442453?logo=discord&style=for-the-badge)](https://discordapp.com/channels/514192677831442453/514192677831442455)
 
 
 
