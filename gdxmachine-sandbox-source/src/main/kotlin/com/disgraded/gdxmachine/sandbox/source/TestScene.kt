@@ -18,7 +18,7 @@ class TestScene : Scene() {
         context.graphics.createViewport()
         context.graphics.createViewport("hud")
         context.graphics.getViewport().enableLights()
-        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
+//        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
 //        context.graphics.getViewport().ambientColor = Color.BLUE_GREY
         val wallTexture = context.resources.get<Texture>("initial", "wall")
         val wallNormalTexture = context.resources.get<Texture>("initial", "wall_normal")
@@ -49,7 +49,7 @@ class TestScene : Scene() {
         light.intensity = 1f
         light.color = Color.WARM_WHITE
         light.x = 200f
-        light.y = -200f
+        light.y = 200f
         lights.add(light)
 
         light = PointLight()
@@ -68,6 +68,7 @@ class TestScene : Scene() {
 
     override fun update(deltaTime: Float) {
         text.displayText = "FPS:${context.graphics.getFPS()} :: GPU CALLS:${context.graphics.getGPUCalls()}"
+//        context.graphics.getViewport().camera.position.x += 30f * deltaTime
 
         for (background in this.background) {
             context.graphics.getViewport().draw(background)

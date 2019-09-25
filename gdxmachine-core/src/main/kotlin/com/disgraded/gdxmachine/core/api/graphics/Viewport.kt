@@ -13,7 +13,7 @@ class Viewport : Disposable {
 
     class Api(private val viewport: Viewport) {
 
-        var ambientColor = Color(.6f, .6f, 1f, .2f)
+        var ambientColor = Color.BLUE_GREY
 
         val camera: OrthographicCamera = viewport.projection.camera
 
