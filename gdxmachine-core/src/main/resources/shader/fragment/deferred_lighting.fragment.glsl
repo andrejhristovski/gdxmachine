@@ -1,6 +1,6 @@
 #ifdef GL_ES
 #define LOWP lowp
-precision mediump float;
+precision highp float;
 #else
 #define LOWP
 #endif
@@ -21,7 +21,7 @@ uniform sampler2D u_texture_bump;
 uniform vec4 viewport;
 
 uniform vec4 ambient_light_color;
-uniform Light light[512];
+uniform Light light[64];
 uniform int light_list_size;
 
 
@@ -32,7 +32,7 @@ void main()
 {
     vec4 diffuseColor = texture2D(u_texture_diffuse, v_texCoords);
     vec3 bumpColor = texture2D(u_texture_bump, v_texCoords).rgb;
-    vec3 ambient = ambient_light_color.rgb * .2;
+    vec3 ambient = ambient_light_color.rgb;
     vec3 normal = normalize(bumpColor * 2.0 - 1.0);
     vec3 final = vec3(0);
 
@@ -51,11 +51,11 @@ void main()
         float distance = length(light_direction);
         vec3 light_normal = normalize(light_direction);
 
-        vec3 diffuse = (light_color.rgb * light_color.a) * max(dot(normal, light_normal), .0);
-        float attenuation = clamp( 100.0 / distance, 0.0, 1.0);
+        vec3 diffuse = (light_color.rgb) * max(dot(normal, light_normal), .0);
+        float attenuation = clamp( 70.0 / distance, 0.0, 1.0);
         vec3 intensity = ambient + diffuse * attenuation;
         final +=  diffuseColor.rgb * intensity;
     }
 
-    gl_FragColor = vec4(final, diffuseColor.a);
+    gl_FragColor = vec4(final, 1);
 }

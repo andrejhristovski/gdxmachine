@@ -34,7 +34,7 @@ The main goal behind the development of this engine is to create feature reach, 
 - [x] Scene Manager
 - [x] Resource Module
 - [x] Graphics Module
-- [ ] Graphics Module (Lighting)
+- [x] Graphics Module (Lighting)
 - [ ] Input Module
 - [ ] Physics Module (Box2D)
 - [ ] Audio Module
