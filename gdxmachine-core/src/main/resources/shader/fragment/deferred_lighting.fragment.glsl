@@ -21,7 +21,7 @@ uniform sampler2D u_texture_bump;
 uniform vec4 viewport;
 
 uniform vec4 ambient_light_color;
-uniform Light light[2];
+uniform Light light[512];
 
 
 
@@ -47,11 +47,11 @@ void main()
         vec4 light_color = light[i].color;
         vec3 light_direction = vec3(light_pos.xy - frag_world_position.xy, light[i].position.z);
 
-        float distance = normalize(length(light_direction));
+        float distance = length(light_direction);
         vec3 light_normal = normalize(light_direction);
 
         vec3 diffuse = (light_color.rgb * light_color.a) * max(dot(normal, light_normal), .0);
-        float attenuation = 1.0 / distance;
+        float attenuation = clamp( 100.0 / distance, 0.0, 1.0);
         vec3 intensity = ambient + diffuse * attenuation;
         final +=  diffuseColor.rgb * intensity;
     }
