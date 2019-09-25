@@ -22,11 +22,6 @@ class Projection {
     private var worldScaleX = 1f
     private var worldScaleY = 1f
 
-    var viewportX = 0f
-    var viewportY = 0f
-    var viewportSizeX = 0f
-    var viewportSizeY = 0f
-
     private var shouldUpdateViewport = false
 
     val camera = OrthographicCamera()
@@ -102,10 +97,6 @@ class Projection {
         }
         viewport.setWorldSize(previewWidth, previewHeight)
         viewport.setScreenBounds(viewportX, viewportY, viewportSizeX, viewportSizeY)
-        this.viewportX = viewportX.toFloat()
-        this.viewportY = viewportY.toFloat()
-        this.viewportSizeX = viewportSizeX.toFloat()
-        this.viewportSizeY = viewportSizeY.toFloat()
         viewport.apply()
     }
 
@@ -116,4 +107,12 @@ class Projection {
     fun getVirtualHeight(): Float {
         return viewport.worldHeight
     }
+
+    fun getViewportX(): Float = viewport.screenX.toFloat()
+
+    fun getViewportY(): Float = viewport.screenY.toFloat()
+
+    fun getViewportWidth(): Float = viewport.screenWidth.toFloat()
+
+    fun getViewportHeight(): Float = viewport.screenHeight.toFloat()
 }

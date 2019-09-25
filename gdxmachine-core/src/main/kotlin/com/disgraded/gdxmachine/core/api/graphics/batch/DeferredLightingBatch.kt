@@ -8,7 +8,7 @@ import com.disgraded.gdxmachine.core.api.graphics.renderer.DeferredLightingRende
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 import com.disgraded.gdxmachine.core.api.graphics.utils.FrameBuffer
 
-class DeferredLightingBatch(private val projection: Projection) : DrawableBatch {
+class DeferredLightingBatch(projection: Projection) : DrawableBatch {
 
     private lateinit var lightList: ArrayList<Light>
     private lateinit var ambientLight: Color

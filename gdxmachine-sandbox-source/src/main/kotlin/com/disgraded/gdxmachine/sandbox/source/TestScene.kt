@@ -18,7 +18,7 @@ class TestScene : Scene() {
         context.graphics.createViewport()
         context.graphics.createViewport("hud")
         context.graphics.getViewport().enableLights()
-//        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
+        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
 //        context.graphics.getViewport().ambientColor = Color.BLUE_GREY
         val wallTexture = context.resources.get<Texture>("initial", "wall")
         val wallNormalTexture = context.resources.get<Texture>("initial", "wall_normal")

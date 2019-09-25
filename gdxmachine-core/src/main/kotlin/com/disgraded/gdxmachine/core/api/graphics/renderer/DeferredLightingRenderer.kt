@@ -125,10 +125,13 @@ class DeferredLightingRenderer(private val projection: Projection) {
         bump.texture.bind(1)
 
         shaderProgram.setUniformMatrix("u_projectionTrans", projectionMatrix)
+        shaderProgram.setUniformMatrix("u_projectionTrans_inverse", projectionMatrix.cpy().inv())
         shaderProgram.setUniformi("u_texture_diffuse", 0)
         shaderProgram.setUniformi("u_texture_bump", 1)
         shaderProgram.setUniformf("ambient_light_color", ambientLight.r, ambientLight.g, ambientLight.b,
                 ambientLight.a)
+        shaderProgram.setUniformf("viewport", projection.getViewportX(), projection.getViewportY(),
+                projection.getViewportWidth(), projection.getViewportHeight())
         for (i in 0 until lightList.size) {
             val light = lightList[i]
             val positionId = shaderProgram.getUniformLocation("light[$i].position")
