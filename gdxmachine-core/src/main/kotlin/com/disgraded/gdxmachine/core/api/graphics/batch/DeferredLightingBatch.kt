@@ -18,7 +18,7 @@ class DeferredLightingBatch(private val projection: Projection) : DrawableBatch 
     private val diffuseBuffer = FrameBuffer(projection)
     private val bumpBuffer = FrameBuffer(projection)
 
-    private val lightSceneBatch = DeferredLightingRenderer()
+    private val lightSceneBatch = DeferredLightingRenderer(projection)
 
     fun apply(lightList: ArrayList<Light>, ambientLight: Color) {
         this.lightList = lightList
@@ -30,8 +30,7 @@ class DeferredLightingBatch(private val projection: Projection) : DrawableBatch 
 
         diffuseBuffer.use { gpuCalls += diffuseBatch.render(drawableList, projectionMatrix) + 1 }
         bumpBuffer.use { gpuCalls += bumpBatch.render(drawableList, projectionMatrix) + 1 }
-        lightSceneBatch.render(projection, diffuseBuffer.buffer, bumpBuffer.buffer, ambientLight,
-                lightList, projectionMatrix)
+        lightSceneBatch.render(diffuseBuffer.buffer, bumpBuffer.buffer, ambientLight, lightList, projectionMatrix)
         return gpuCalls + 1
     }
 

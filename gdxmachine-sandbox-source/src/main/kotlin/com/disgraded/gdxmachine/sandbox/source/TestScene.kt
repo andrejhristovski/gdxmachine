@@ -18,7 +18,7 @@ class TestScene : Scene() {
         context.graphics.createViewport()
         context.graphics.createViewport("hud")
         context.graphics.getViewport().enableLights()
-        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
+//        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
 //        context.graphics.getViewport().ambientColor = Color.BLUE_GREY
         val wallTexture = context.resources.get<Texture>("initial", "wall")
         val wallNormalTexture = context.resources.get<Texture>("initial", "wall_normal")
@@ -52,18 +52,12 @@ class TestScene : Scene() {
         light.y = -200f
         lights.add(light)
 
-//        light = PointLight(2200f, 200f)
-//        light.y = 400f
-//        light.setColor(Color.RED)
-//        light.setColor(Corner.TOP_LEFT, Color.BLUE_GREY)
-//        lights.add(light)
-
-//        light = PointLight()
-//        light.intensity = .5f
-//        light.x = -200f
-//        light.y = -300f
-//        light.color = Color.GREEN
-//        lights.add(light)
+        light = PointLight()
+        light.intensity = .5f
+        light.x = -200f
+        light.y = -300f
+        light.color = Color.GREEN
+        lights.add(light)
 
 
         text = Text(textBitmap)
