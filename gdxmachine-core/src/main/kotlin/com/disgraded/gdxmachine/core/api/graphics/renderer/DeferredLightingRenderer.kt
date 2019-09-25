@@ -139,6 +139,7 @@ class DeferredLightingRenderer(private val projection: Projection) {
             shaderProgram.setUniformf(positionId, light.x, light.y, light.z)
             shaderProgram.setUniformf(colorId, light.color.r, light.color.g, light.color.b, light.color.a)
         }
+        shaderProgram.setUniformi("light_list_size", lightList.size)
 
         mesh.setVertices(vertices, 0, verticesCount)
         mesh.setIndices(indices, 0, indicesCount)

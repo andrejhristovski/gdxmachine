@@ -22,6 +22,7 @@ uniform vec4 viewport;
 
 uniform vec4 ambient_light_color;
 uniform Light light[512];
+uniform int light_list_size;
 
 
 
@@ -42,7 +43,7 @@ void main()
     vec4 clip_position = ndc_position / gl_FragCoord.w;
     vec4 frag_world_position = u_projectionTrans_inverse * clip_position;
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < light_list_size; i++) {
         vec4 light_pos = vec4(light[i].position, 1);
         vec4 light_color = light[i].color;
         vec3 light_direction = vec3(light_pos.xy - frag_world_position.xy, light[i].position.z);

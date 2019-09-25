@@ -19,7 +19,7 @@ class TestScene : Scene() {
         context.graphics.createViewport("hud")
         context.graphics.getViewport().enableLights()
 //        context.graphics.getViewport().project(.5f, 0f, .5f, 1f)
-//        context.graphics.getViewport().ambientColor = Color.BLUE_GREY
+        context.graphics.getViewport().ambientColor = Color.BLACK
         val wallTexture = context.resources.get<Texture>("initial", "wall")
         val wallNormalTexture = context.resources.get<Texture>("initial", "wall_normal")
         val playerTexture = context.resources.get<Texture>("initial", "player")
@@ -53,10 +53,31 @@ class TestScene : Scene() {
         lights.add(light)
 
         light = PointLight()
-        light.intensity = .5f
+        light.intensity = 1f
         light.x = -200f
         light.y = -300f
         light.color = Color.GREEN
+        lights.add(light)
+
+        light = PointLight()
+        light.intensity = .5f
+        light.x = -200f
+        light.y = 300f
+        light.color = Color.RED
+        lights.add(light)
+
+        light = PointLight()
+        light.intensity = .5f
+        light.x = 200f
+        light.y = -300f
+        light.color = Color.CYAN
+        lights.add(light)
+
+        light = PointLight()
+        light.intensity = .5f
+        light.x = 700f
+        light.y = -300f
+        light.color = Color.DEEP_ORANGE
         lights.add(light)
 
 
