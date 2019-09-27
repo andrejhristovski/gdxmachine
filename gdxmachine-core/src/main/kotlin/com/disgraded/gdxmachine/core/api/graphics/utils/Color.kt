@@ -49,7 +49,8 @@ class Color {
     }
 
     fun set(hex: String, alpha: Float) {
-        if (hex.length != 7 || hex.first() != '#') {
+        val regex = "#[0-9A-F]{6}".toRegex()
+        if (!hex.toUpperCase().matches(regex)) {
             throw Exception("Hex code $hex isn't valid hex color code")
         }
         val r = Integer.valueOf(hex.substring(1, 3), 16).toFloat() / 255
