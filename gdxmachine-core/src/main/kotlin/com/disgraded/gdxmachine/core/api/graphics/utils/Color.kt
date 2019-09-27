@@ -49,13 +49,9 @@ class Color {
     }
 
     fun set(hex: String, alpha: Float) {
-        if (hex.first() != '#') {
-            throw Exception("Hex code $hex isn't valid hex color code")
-        }
-        try {
-           hex.substring(1).toLong(radix = 16) 
-        }
-        catch(error: NumberFormatException) {
+        var isHex = "(([a-fA-F]|[0-9]){2}){3}".toRegex()
+        
+        if(!isHex.matches(hex.substring(1))) {
             throw Exception("Hex code $hex isn't valid hex color code")
         }
 
