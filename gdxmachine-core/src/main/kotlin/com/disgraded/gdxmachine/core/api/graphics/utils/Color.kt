@@ -49,9 +49,16 @@ class Color {
     }
 
     fun set(hex: String, alpha: Float) {
-        if (hex.length != 7 || hex.first() != '#') {
+        if (hex.first() != '#') {
             throw Exception("Hex code $hex isn't valid hex color code")
         }
+        try {
+           hex.substring(1).toLong(radix = 16) 
+        }
+        catch(error: NumberFormatException) {
+            throw Exception("Hex code $hex isn't valid hex color code")
+        }
+
         val r = Integer.valueOf(hex.substring(1, 3), 16).toFloat() / 255
         val g = Integer.valueOf(hex.substring(3, 5), 16).toFloat() / 255
         val b = Integer.valueOf(hex.substring(5, 7), 16).toFloat() / 255
