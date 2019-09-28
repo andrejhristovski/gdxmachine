@@ -31,7 +31,7 @@ android {
 }
 
 dependencies {
-    api((kotlin("stdlib")))
-    api(project(":platform-android"))
-    api(project(":sandbox-source"))
+    implementation((kotlin("stdlib")))
+    implementation(project(":platform-android"))
+    implementation(project(":sandbox-source"))
 }

@@ -51,7 +51,7 @@ class ECSystem(private val context: Context) : Engine() {
         val list = arrayListOf<Entity>()
         for (entity in entities) {
             if ((entity as Entity).group == group) {
-                list.add(entity as Entity)
+                list.add(entity)
             }
         }
         return list

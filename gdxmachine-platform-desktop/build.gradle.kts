@@ -10,16 +10,16 @@ plugins {
 val gdxVersion: String by extra
 
 dependencies {
-    implementation(project(":core"))
+    runtime((kotlin("stdlib")))
+    runtime((kotlin("stdlib-jdk8")))
 
-    api((kotlin("stdlib")))
-    api((kotlin("stdlib-jdk8")))
+    runtime(project(":core"))
 
-    implementation("com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion")
-    implementation("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")
-    implementation("com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop")
-    implementation("com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop")
-    implementation("com.badlogicgames.gdx:gdx-tools:$gdxVersion")
+    api("com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion")
+    api("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")
+    api("com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop")
+    api("com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop")
+    api("com.badlogicgames.gdx:gdx-tools:$gdxVersion")
 }
 repositories {
     mavenCentral()
@@ -39,11 +39,12 @@ val sourcesJar by tasks.registering(Jar::class) {
     from(sourceSets.get("main").allSource)
 }
 
-val shadowJar: ShadowJar by tasks
-shadowJar.apply {
-    archiveBaseName.set(project.name)
-    archiveClassifier.set("")
-}
+//val shadowJar: ShadowJar by tasks
+//shadowJar.apply {
+//    archiveBaseName.set(project.name)
+//    archiveVersion.set(project.version.toString())
+//    archiveClassifier.set("")
+//}
 
 publishing {
     repositories {
@@ -53,11 +54,9 @@ publishing {
     }
 
     publications {
-        create<MavenPublication>("default") {
+        create<MavenPublication>("release") {
             from(components["java"])
             artifactId = project.name
-            artifact(shadowJar)
-            artifact(sourcesJar.get())
 
             pom {
                 name.set(project.name)
@@ -76,9 +75,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://github.com/kalevski/gdxmachine.git")
-                    developerConnection.set("scm:git:ssh://github.com:kalevski/gdxmachine.git")
-                    url.set("https://github.com/kalevski/gdxmachine")
+                    connection.set("scm:git:git://github.com/disgraded/gdxmachine.git")
+                    developerConnection.set("scm:git:ssh://github.com:disgraded/gdxmachine.git")
+                    url.set("https://github.com/disgraded/gdxmachine")
                 }
             }
         }

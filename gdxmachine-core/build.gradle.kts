@@ -8,8 +8,8 @@ plugins {
 }
 
 dependencies {
-    implementation((kotlin("stdlib")))
-    implementation((kotlin("reflect")))
+    runtime((kotlin("stdlib")))
+    runtime((kotlin("reflect")))
     api("com.badlogicgames.gdx:gdx:$gdxVersion")
     api("com.badlogicgames.ashley:ashley:$ashleyVersion")
     api("com.badlogicgames.gdx:gdx-box2d:$gdxVersion")
@@ -39,10 +39,9 @@ publishing {
     }
 
     publications {
-        create<MavenPublication>("default") {
+        create<MavenPublication>("release") {
             from(components["java"])
             artifactId = project.name
-            artifact(sourcesJar.get())
 
             pom {
                 name.set(project.name)
