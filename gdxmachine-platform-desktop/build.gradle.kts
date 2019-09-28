@@ -10,10 +10,10 @@ plugins {
 val gdxVersion: String by extra
 
 dependencies {
-    runtime((kotlin("stdlib")))
-    runtime((kotlin("stdlib-jdk8")))
+    implementation((kotlin("stdlib")))
+    implementation((kotlin("stdlib-jdk8")))
 
-    runtime(project(":core"))
+    implementation(project(":core"))
 
     api("com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion")
     api("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")

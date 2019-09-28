@@ -8,8 +8,8 @@ plugins {
 }
 
 dependencies {
-    runtime((kotlin("stdlib")))
-    runtime((kotlin("reflect")))
+    implementation((kotlin("stdlib")))
+    implementation((kotlin("reflect")))
     api("com.badlogicgames.gdx:gdx:$gdxVersion")
     api("com.badlogicgames.ashley:ashley:$ashleyVersion")
     api("com.badlogicgames.gdx:gdx-box2d:$gdxVersion")
