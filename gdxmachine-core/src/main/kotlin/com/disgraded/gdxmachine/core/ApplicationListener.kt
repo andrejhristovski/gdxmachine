@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ApplicationListener as GdxApplicationListener
 
 /** ApplicationListener class is implementation of libGDX Application Listener class and is used to trigger the
- * event cycle events provided by the libGDX */
+ * main lifecycle events provided by the libGDX */
 class ApplicationListener(private val core: Core) : GdxApplicationListener {
     override fun create() = core.load()
     override fun render() = core.update(Gdx.graphics.deltaTime)

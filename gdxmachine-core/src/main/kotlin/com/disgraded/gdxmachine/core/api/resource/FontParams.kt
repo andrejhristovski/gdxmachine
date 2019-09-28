@@ -2,6 +2,7 @@ package com.disgraded.gdxmachine.core.api.resource
 
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
 
+/** Class that contains all properties needed by the libGDX loader to generate Bitmap font texture from TrueType font */
 class FontParams {
     var size = 32
     var mono = true
