@@ -39,10 +39,9 @@ publishing {
     }
 
     publications {
-        create<MavenPublication>("default") {
+        create<MavenPublication>("release") {
             from(components["java"])
             artifactId = project.name
-            artifact(sourcesJar.get())
 
             pom {
                 name.set(project.name)

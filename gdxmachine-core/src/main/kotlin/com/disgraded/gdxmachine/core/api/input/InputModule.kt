@@ -8,7 +8,7 @@ import com.disgraded.gdxmachine.core.Core
 
 class InputModule : Core.Module {
 
-    class Api(inputModule: InputModule) : Core.Api {
+    class Api : Core.Api {
 
         val onTouchDown = Signal<Int>()
         val onTouchUp = Signal<Int>()
@@ -82,7 +82,7 @@ class InputModule : Core.Module {
         fun setCursorPosition(x: Int, y: Int) = Gdx.input.setCursorPosition(x, y)
     }
 
-    override val api: Core.Api = Api(this)
+    override val api: Core.Api = Api()
 
     private lateinit var inputProcessor : InputProcessor
 

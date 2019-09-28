@@ -5,26 +5,33 @@ import com.disgraded.gdxmachine.core.Core
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 
+/** ResourceModule is module for managing game assets. */
 class ResourceModule : Core.Module {
 
     class Api(private val resourceModule: ResourceModule) : Core.Api {
 
+        /** ResourceModule.Api#load() register provided AssetPackage for immediately or asynchronously loading of group of assets  */
         fun load(assetPackageClass: KClass<out AssetPackage>, sync: Boolean = false) {
             val assetPackage = assetPackageClass.createInstance()
             resourceModule.loadPackage(assetPackage.packageKey, assetPackage, sync)
         }
 
+        /** ResourceModule.Api#get() returns an already loaded asset  */
         fun <T> get(packageKey: String, resourceKey: String): T
                 = resourceModule.getAsset(packageKey, resourceKey)
 
+        /** ResourceModule.Api#unload unloads group of assets defined by some package key */
         fun unload(packageKey: String) = resourceModule.unloadPackage(packageKey)
 
+        /** ResourceModule.Api#clear clears all loaded assets */
         fun clear() = resourceModule.clear()
 
+        /** ResourceModule.Api#getPendingPackages returns number of pending packages  */
         fun getPendingPackages(): Int {
             return resourceModule.pendingPackages.size
         }
 
+        /** ResourceModule.Api#getCurrentProgress returns loading progress of current asset package */
         fun getCurrentProgress(): Float {
             if (resourceModule.current !== null) {
                 return resourceModule.current!!.second.getProgress()
@@ -32,6 +39,7 @@ class ResourceModule : Core.Module {
             return 0f
         }
 
+        /** ResourceModule.Api#isLoadingFinished returns true if all asset packages are loaded  */
         fun isLoadingFinished(): Boolean {
             return resourceModule.pendingPackages.size == 0 && resourceModule.current == null
         }
@@ -48,6 +56,8 @@ class ResourceModule : Core.Module {
 
     }
 
+    /** ResourceModule#update is invoked in main lifecycle of the engine and this method take care of async loading
+     * of the asset packages */
     override fun update(deltaTime: Float) {
         if (current != null) {
             if (current!!.second.update()) {

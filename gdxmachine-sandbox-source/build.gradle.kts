@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    api((kotlin("stdlib")))
-    api((kotlin("stdlib-jdk8")))
-    api(project(":core"))
+    implementation((kotlin("stdlib")))
+    implementation((kotlin("stdlib-jdk8")))
+    implementation(project(":core"))
 }
