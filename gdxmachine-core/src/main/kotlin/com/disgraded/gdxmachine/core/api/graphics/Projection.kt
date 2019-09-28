@@ -12,7 +12,7 @@ class Projection {
     private var screenHeight = Gdx.graphics.height
     private var viewportWidth = 0f
     private var viewportHeight = 0f
-    private var viewportScale = Config.Graphics.Scale.FIT
+    private var viewportScale = Config.Scale.FIT
 
     private var viewportRatioX = 0f
     private var viewportRatioY = 0f
@@ -48,7 +48,7 @@ class Projection {
         shouldUpdateViewport = true
     }
 
-    fun update(width: Float, height: Float, scale: Config.Graphics.Scale) {
+    fun update(width: Float, height: Float, scale: Config.Scale) {
         viewportWidth = width
         viewportHeight = height
         viewportScale = scale
@@ -68,7 +68,7 @@ class Projection {
         var viewportSizeX = 0
         var viewportSizeY = 0
         when(viewportScale) {
-            Config.Graphics.Scale.FIT -> {
+            Config.Scale.FIT -> {
                 val targetRatio: Float = screenHeight.toFloat() / screenWidth
                 val sourceRatio: Float = viewportHeight / viewportWidth
                 val scale = if (targetRatio > sourceRatio) screenWidth / viewportWidth else screenHeight / viewportHeight
@@ -83,7 +83,7 @@ class Projection {
                 previewWidth = viewportWidth * viewportScaleX * worldScaleX
                 previewHeight = viewportHeight * viewportScaleY * worldScaleY
             }
-            Config.Graphics.Scale.FILL -> {
+            Config.Scale.FILL -> {
                 val targetRatio: Float = screenHeight.toFloat() / screenWidth
                 val sourceRatio: Float = viewportHeight / viewportWidth
                 val scale = if (targetRatio > sourceRatio) screenWidth / viewportWidth else screenHeight / viewportHeight

@@ -24,7 +24,7 @@ class GraphicsModule : Core.Module {
 
         fun clear() = graphicsModule.clear()
 
-        fun resize(width: Float, height: Float, scale: Config.Graphics.Scale = Config.Graphics.Scale.FIT) {
+        fun resize(width: Float, height: Float, scale: Config.Scale = Config.Scale.FIT) {
             graphicsModule.viewports.forEach { it.value.updateViewport(width, height, scale) }
         }
     }
@@ -68,7 +68,7 @@ class GraphicsModule : Core.Module {
     private fun createViewport(name: String): Viewport.Api {
         if (viewports.containsKey(name)) throw RuntimeException("Viewport with the name \"$name\" it's already created!")
         viewports[name] = Viewport()
-        viewports[name]!!.updateViewport(config.graphics.width, config.graphics.height, config.graphics.scale)
+        viewports[name]!!.updateViewport(config.width, config.height, config.scale)
         return viewports[name]!!.api
     }
 

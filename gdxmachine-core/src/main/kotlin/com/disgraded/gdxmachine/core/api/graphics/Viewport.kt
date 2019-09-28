@@ -76,7 +76,7 @@ class Viewport : Disposable {
 
     fun resize(width: Int, height: Int) = projection.resize(width, height)
 
-    fun updateViewport(width: Float, height: Float, scale: Config.Graphics.Scale) {
+    fun updateViewport(width: Float, height: Float, scale: Config.Scale) {
         projection.update(width, height, scale)
     }
 
