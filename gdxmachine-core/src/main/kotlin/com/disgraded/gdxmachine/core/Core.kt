@@ -89,5 +89,6 @@ class Core private constructor(private val entryPoint: EntryPoint) {
     fun reset() {
         engineModule.reset()
         graphicsModule.clear()
+        inputModule.clear()
     }
 }

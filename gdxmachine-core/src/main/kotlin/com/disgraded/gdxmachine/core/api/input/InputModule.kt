@@ -95,7 +95,19 @@ class InputModule : Core.Module {
 
     }
 
-    override fun unload() {
+    override fun unload() = clear()
 
+    fun clear() {
+        val api = api as Api
+        api.onTouchDown.removeAllListeners()
+        api.onTouchUp.removeAllListeners()
+        api.onTouchDragged.removeAllListeners()
+        api.onMouseClickDown.removeAllListeners()
+        api.onMouseClickUp.removeAllListeners()
+        api.onMouseMove.removeAllListeners()
+        api.onMouseScroll.removeAllListeners()
+        api.onKeyDown.removeAllListeners()
+        api.onKeyUp.removeAllListeners()
+        api.onKeyTyped.removeAllListeners()
     }
 }
