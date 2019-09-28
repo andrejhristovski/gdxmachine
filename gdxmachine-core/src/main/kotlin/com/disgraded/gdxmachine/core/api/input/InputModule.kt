@@ -14,7 +14,8 @@ class InputModule : Core.Module {
         val onTouchUp = Signal<Int>()
         val onTouchDragged = Signal<Int>()
 
-        val onMouseClick = Signal<String>()
+        val onMouseClickDown = Signal<String>()
+        val onMouseClickUp = Signal<String>()
         val onMouseScroll = Signal<Int>()
         val onMouseMove = Signal<Vector2>()
 
@@ -87,10 +88,11 @@ class InputModule : Core.Module {
 
     override fun load(core: Core, config: Config) {
         inputProcessor  = InputProcessor(api as Api)
+        Gdx.input.inputProcessor = inputProcessor
     }
 
     override fun update(deltaTime: Float) {
-        inputProcessor.update()
+
     }
 
     override fun unload() {
