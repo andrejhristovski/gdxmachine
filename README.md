@@ -55,7 +55,6 @@ dependencies {
 - [x] Physics Module (Box2D)
 - [x] Code documentation
 - [x] Getting started guide
-- [ ] Maven central
 
 ## Contributing
 
