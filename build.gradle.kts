@@ -36,8 +36,8 @@ buildscript {
 allprojects {
 
     group = "com.disgraded.gdxmachine"
-    version = "0.0.0-prototype"
-    extra["versionNumber"] = 1
+    version = "0.0.5-prototype"
+    extra["versionNumber"] = 2
 
     extra["gdxVersion"] = "1.9.10"
     extra["ashleyVersion"] = "1.7.3"
