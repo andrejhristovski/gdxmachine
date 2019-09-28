@@ -49,11 +49,7 @@ class EngineModule : Core.Module {
         ecs.update(deltaTime)
     }
 
-    override fun unload() {
-        ecs.clear()
-    }
+    override fun unload() = clear()
 
-    fun reset() {
-        ecs.clear()
-    }
+    fun clear() = ecs.clear()
 }
