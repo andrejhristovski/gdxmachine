@@ -53,6 +53,7 @@ class Color {
         if (!hex.toUpperCase().matches(regex)) {
             throw Exception("Hex code $hex isn't valid hex color code")
         }
+
         val r = Integer.valueOf(hex.substring(1, 3), 16).toFloat() / 255
         val g = Integer.valueOf(hex.substring(3, 5), 16).toFloat() / 255
         val b = Integer.valueOf(hex.substring(5, 7), 16).toFloat() / 255
