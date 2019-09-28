@@ -7,11 +7,10 @@
 
 ![GitHub](https://img.shields.io/github/license/disgraded/gdxmachine?style=for-the-badge)
 [![Build Status](https://img.shields.io/travis/com/disgraded/gdxmachine/master?logo=travis&style=for-the-badge)](https://travis-ci.com/disgraded/gdxmachine?branch=master)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/disgraded/gdxmachine?label=VERSION&color=important&style=for-the-badge)
 [![Discord](https://img.shields.io/discord/514192677831442453?logo=discord&style=for-the-badge)](https://discord.gg/kTKzkB5)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/disgraded/gdxmachine?style=for-the-badge)
 
-
-Homepage: Coming soon
+Homepage: Coming soon!
 
 API Documentation: Coming soon
 
