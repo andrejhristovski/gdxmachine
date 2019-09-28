@@ -1,6 +1,5 @@
 package com.disgraded.gdxmachine.core
 
-import com.badlogic.ashley.signals.Signal
 import com.disgraded.gdxmachine.core.api.engine.EngineModule
 import com.disgraded.gdxmachine.core.api.graphics.GraphicsModule
 import com.disgraded.gdxmachine.core.api.input.InputModule

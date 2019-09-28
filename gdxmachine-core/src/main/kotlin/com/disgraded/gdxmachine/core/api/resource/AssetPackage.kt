@@ -1,6 +1,5 @@
 package com.disgraded.gdxmachine.core.api.resource
 
-import com.badlogic.gdx.assets.loaders.BitmapFontLoader
 import com.badlogic.gdx.assets.loaders.TextureAtlasLoader
 import com.badlogic.gdx.assets.loaders.TextureLoader
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver

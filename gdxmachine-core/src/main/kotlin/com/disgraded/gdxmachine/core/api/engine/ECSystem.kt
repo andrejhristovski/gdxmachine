@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.EntityListener
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.ashley.core.Family
 import com.disgraded.gdxmachine.core.Context
-import com.disgraded.gdxmachine.core.Core
 
 class ECSystem(private val context: Context) : Engine() {
 
