@@ -44,39 +44,11 @@ class TestScene : Scene() {
         player.y = -100f
         player.setScale(.5f)
 
-        var light = PointLight()
+        val light = PointLight()
         light.intensity = 1f
         light.color = Color.WARM_WHITE
         light.x = 200f
         light.y = 200f
-        lights.add(light)
-
-        light = PointLight()
-        light.intensity = 1f
-        light.x = -200f
-        light.y = -300f
-        light.color = Color.GREEN
-        lights.add(light)
-
-        light = PointLight()
-        light.intensity = .5f
-        light.x = -200f
-        light.y = 300f
-        light.color = Color.RED
-        lights.add(light)
-
-        light = PointLight()
-        light.intensity = .5f
-        light.x = 200f
-        light.y = -300f
-        light.color = Color.CYAN
-        lights.add(light)
-
-        light = PointLight()
-        light.intensity = .5f
-        light.x = 700f
-        light.y = -300f
-        light.color = Color.DEEP_ORANGE
         lights.add(light)
 
 

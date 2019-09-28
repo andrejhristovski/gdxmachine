@@ -24,15 +24,11 @@ uniform vec4 ambient_light_color;
 uniform Light light[64];
 uniform int light_list_size;
 
-
-
-
-
 void main()
 {
     vec4 diffuseColor = texture2D(u_texture_diffuse, v_texCoords);
     vec3 bumpColor = texture2D(u_texture_bump, v_texCoords).rgb;
-    vec3 ambient = ambient_light_color.rgb;
+    vec3 ambient = ambient_light_color.rgb * .2;
     vec3 normal = normalize(bumpColor * 2.0 - 1.0);
     vec3 final = vec3(0);
 

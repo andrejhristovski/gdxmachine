@@ -49,9 +49,8 @@ class Color {
     }
 
     fun set(hex: String, alpha: Float) {
-        var isHex = "(([a-fA-F]|[0-9]){2}){3}".toRegex()
-        
-        if(!isHex.matches(hex.substring(1))) {
+        val regex = "#[0-9A-F]{6}".toRegex()
+        if (!hex.toUpperCase().matches(regex)) {
             throw Exception("Hex code $hex isn't valid hex color code")
         }
 

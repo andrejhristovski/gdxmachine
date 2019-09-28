@@ -7,11 +7,10 @@
 
 ![GitHub](https://img.shields.io/github/license/disgraded/gdxmachine?style=for-the-badge)
 [![Build Status](https://img.shields.io/travis/com/disgraded/gdxmachine/master?logo=travis&style=for-the-badge)](https://travis-ci.com/disgraded/gdxmachine?branch=master)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/disgraded/gdxmachine?label=VERSION&color=important&style=for-the-badge)
 [![Discord](https://img.shields.io/discord/514192677831442453?logo=discord&style=for-the-badge)](https://discord.gg/kTKzkB5)
 
-
-
-Homepage: Coming soon
+Homepage: Coming soon!
 
 API Documentation: Coming soon
 
@@ -27,7 +26,7 @@ The main goal behind the development of this engine is to create feature reach, 
 ## Showcase
 ![showcase](https://user-images.githubusercontent.com/10467454/65643507-2fe30e80-dff2-11e9-9c2a-86b02c5b6311.png)
 
-### Roadmap
+### Current milestone ([ROAD MAP](ROADMAP.md))
 ##### prototype [v0.1.0]
 - [x] Project structure
 - [x] Android library
@@ -38,35 +37,12 @@ The main goal behind the development of this engine is to create feature reach, 
 - [x] Resource Module
 - [x] Graphics Module
 - [x] Graphics Module (Lighting)
-- [ ] Input Module
-- [ ] Physics Module (Box2D)
+- [x] Input Module
+- [x] Physics Module (Box2D)
 - [ ] Audio Module
-- [ ] Network Module
-- [ ] Official website (ReactJS)
-- [ ] Handwritten documentation
-- [ ] Maven central publishing
-##### alpha [v0.5.0]
-- [ ] Drawable Components
-- [ ] Lighting Components
-- [ ] Physics Components
-- [ ] Input Components
-- [ ] UI Components
-- [ ] Audio Components
-- [ ] Network Components
-- [ ] Graphics 2D System
-- [ ] Graphics 2.5D System
-##### beta [v0.9.0]
-- [ ] Multiplayer server (NodeJS)
-- [ ] Multiplayer Components
-- [ ] Multiplayer server dashboard (ReactJS)
-- [ ] Append changes to the documentation
-##### stable [v1.0.0]
-- [ ] Redesign the API to be developer friendly
-- [ ] Utilities for common game development problems
-- [ ] AI Module
-- [ ] AI Components
-- [ ] AI System
-- [ ] Append changes to the documentation
+- [ ] Code documentation
+- [ ] Getting started guide
+- [ ] Maven central
 
 ## Contributing
 
