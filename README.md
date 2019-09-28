@@ -18,6 +18,23 @@ The main goal is to reach maximum performance on Desktop & Android without imple
 Also to provide beginner friendly API for rapid game development.
 
 ## Getting started
+- Create gradle project using Intellij IDEA
+- Add it in your root build.gradle at the end of repositories:
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+- add the dependencies
+```
+dependencies {
+    implementation 'com.github.disgraded.gdxmachine:platform-desktop:0.0.6-prototype'
+    implementation 'com.github.disgraded.gdxmachine:core:0.0.6-prototype'
+}
+```
 
 
 ## Showcase
@@ -37,7 +54,7 @@ Also to provide beginner friendly API for rapid game development.
 - [x] Input Module
 - [x] Physics Module (Box2D)
 - [x] Code documentation
-- [ ] Getting started guide
+- [x] Getting started guide
 - [ ] Maven central
 
 ## Contributing
