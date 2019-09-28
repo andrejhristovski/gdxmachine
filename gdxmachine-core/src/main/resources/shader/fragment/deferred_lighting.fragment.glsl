@@ -24,10 +24,6 @@ uniform vec4 ambient_light_color;
 uniform Light light[64];
 uniform int light_list_size;
 
-
-
-
-
 void main()
 {
     vec4 diffuseColor = texture2D(u_texture_diffuse, v_texCoords);
