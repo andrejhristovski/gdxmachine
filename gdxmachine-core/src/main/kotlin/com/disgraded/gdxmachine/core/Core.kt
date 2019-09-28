@@ -52,7 +52,7 @@ class Core private constructor(private val entryPoint: EntryPoint) {
 
     /** Core.load() is invoked from ApplicationListener.create() method and is used to boot the engine,
      *  create the context, invoking the load methods of every module by specific order
-     *  and invoke EntryPoint.initialize() */
+     *  and invoke EntryPoint.initialize() This method is invoked after OpenGL initialization */
     fun load() {
         context.resources = resourceModule.api as ResourceModule.Api
         context.engine = engineModule.api as EngineModule.Api
@@ -74,7 +74,8 @@ class Core private constructor(private val entryPoint: EntryPoint) {
         entryPoint.initialize(context)
     }
 
-    /** Core.unload() method is the same as load but here are invoked unload methods of the modules in reverseed order */
+    /** Core.unload() is invoked from ApplicationListener.dispose() method and is used to unload the modules and
+     * dispose the data, also in this method is defined the order of disposing and unloading. */
     fun unload() {
         engineModule.unload()
         sceneModule.destroy()
@@ -112,7 +113,7 @@ class Core private constructor(private val entryPoint: EntryPoint) {
         graphicsModule.resize(width, height)
     }
 
-    /** Core.reset() is invoked from engine module when the scene is changed. The reset method is used to reset the
+    /** Core.reset() is invoked from the engine module when the scene is changed. The reset method is used to reset the
      * state of other modules and dispose the data used in the previous scene */
     fun reset() {
         engineModule.clear()

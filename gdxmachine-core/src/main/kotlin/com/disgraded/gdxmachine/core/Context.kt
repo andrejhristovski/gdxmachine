@@ -7,6 +7,7 @@ import com.disgraded.gdxmachine.core.api.physics.PhysicsModule
 import com.disgraded.gdxmachine.core.api.resource.ResourceModule
 import com.disgraded.gdxmachine.core.api.scene.SceneModule
 
+/** Context object holds instances of APIs of the modules and is used as main interface to the engine features. */
 object Context {
     lateinit var resources: ResourceModule.Api
     lateinit var engine: EngineModule.Api
