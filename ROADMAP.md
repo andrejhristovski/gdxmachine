@@ -2,4 +2,45 @@
 
 ##### alpha [v0.5.0]
 
-Coming soon...
+- Resource module
+    - loader for JSON
+    - loader for PlainText 
+    - loader for INI
+    - I18N handler
+    - loader for bitmap
+    - HTTP handler
+    - LOCAL handler
+    - CLASSPATH handler
+- Graphics module
+    - draw geometry shapes
+    - better attenuation
+    - lighting without normals
+    - lighting without normals with ray casters/shadows
+    - attenuation shapes
+    - light decoration overlay
+- Sound module
+    - Recording feature
+    - Noise generator feature
+- Engine module
+    - better handling system target
+    - stress test
+- Worker module
+    - task handler
+    - multi thread execution
+    - sync & consistency
+ - Components
+    - Transform Component
+    - Texture Component
+    - Sprite Set Component
+    - Sound Effect Component
+    - Sound Source Component
+    - Sprite Animation Component
+    - Physics Body Component
+    - Physics Joint Component
+    - Light Component
+- Systems
+    - 2D Render System
+    - 2.5D Render System
+    - Sound System
+    - Physics System
+    - Lighting System
