@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val gdxVersion: String by extra
 val ashleyVersion: String by extra
+val junit5Version: String by extra
 
 plugins {
     kotlin("jvm")
@@ -14,6 +15,8 @@ dependencies {
     api("com.badlogicgames.ashley:ashley:$ashleyVersion")
     api("com.badlogicgames.gdx:gdx-box2d:$gdxVersion")
     api("com.badlogicgames.gdx:gdx-freetype:$gdxVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
 }
 
 val compileKotlin: KotlinCompile by tasks
@@ -29,6 +32,10 @@ compileTestKotlin.kotlinOptions {
 val sourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
     from(sourceSets.get("main").allSource)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 publishing {
