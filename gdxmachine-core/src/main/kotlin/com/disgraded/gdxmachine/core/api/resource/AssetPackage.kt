@@ -15,6 +15,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
 import com.badlogic.gdx.assets.AssetManager as GdxAssetManager
 import com.badlogic.gdx.utils.Disposable
+import com.disgraded.gdxmachine.core.api.resource.asset.PlainText
+import com.disgraded.gdxmachine.core.api.resource.asset.PlainTextLoader
+import com.disgraded.gdxmachine.core.api.resource.asset.PlainTextLoaderParams
 
 open class AssetPackage(val packageKey: String) : Disposable {
 
@@ -26,6 +29,8 @@ open class AssetPackage(val packageKey: String) : Disposable {
                 FreeTypeFontGeneratorLoader(gdxAssetManager.fileHandleResolver))
         gdxAssetManager.setLoader(BitmapFont::class.java, ".ttf",
                 FreetypeFontLoader(gdxAssetManager.fileHandleResolver))
+        gdxAssetManager.setLoader(PlainText::class.java,
+                PlainTextLoader(gdxAssetManager.fileHandleResolver))
     }
 
     protected fun loadTexture(key: String, path: String, format: Pixmap.Format? = null, genMipMaps: Boolean = false,
@@ -100,6 +105,12 @@ open class AssetPackage(val packageKey: String) : Disposable {
 
     protected fun loadSound(key: String, path: String) {
         gdxAssetManager.load(path, Sound::class.java)
+        assetKeys[key] = path
+    }
+
+    protected fun loadText(key: String, path: String) {
+        val params = PlainTextLoaderParams(path)
+        gdxAssetManager.load(path, PlainText::class.java, params)
         assetKeys[key] = path
     }
 

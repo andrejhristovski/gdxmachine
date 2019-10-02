@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.disgraded.gdxmachine.core.api.graphics.drawable.*
 import com.disgraded.gdxmachine.core.api.graphics.utils.Color
+import com.disgraded.gdxmachine.core.api.resource.asset.PlainText
 import com.disgraded.gdxmachine.core.api.scene.Scene
 
 
@@ -13,6 +14,7 @@ class TestScene : Scene() {
     private lateinit var player: Sprite
     private var lights = arrayListOf<Light>()
     private lateinit var text: Text
+    private lateinit var desc: Text
 
     override fun initialize() {
         context.graphics.createViewport()
@@ -24,6 +26,7 @@ class TestScene : Scene() {
         val playerTexture = context.resources.get<Texture>("initial", "player")
         val playerNormalTexture = context.resources.get<Texture>("initial", "player_normal")
         val textBitmap = context.resources.get<BitmapFont>("initial", "text")
+        val description = context.resources.get<PlainText>("initial", "desc")
 
         val startX = -800
         val startY = -500
@@ -51,11 +54,16 @@ class TestScene : Scene() {
         light.y = 200f
         lights.add(light)
 
-
         text = Text(textBitmap)
         text.x = -600f
         text.y = 320f
         text.anchorX = 0f
+
+        desc = Text(textBitmap)
+        desc.x = -600f
+        desc.y = 220f
+        desc.anchorX = 0f
+        desc.displayText = description.text
     }
 
     override fun update(deltaTime: Float) {
@@ -70,7 +78,10 @@ class TestScene : Scene() {
 //            light.x += 100f * deltaTime
             context.graphics.getViewport().draw(light)
         }
-        context.graphics.getViewport("hud").draw(text)
+
+        val hud = context.graphics.getViewport("hud")
+        hud.draw(desc)
+        hud.draw(text)
     }
 
     override fun pause() {
