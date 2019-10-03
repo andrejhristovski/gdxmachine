@@ -42,6 +42,7 @@ allprojects {
     extra["gdxVersion"] = "1.9.10"
     extra["ashleyVersion"] = "1.7.3"
     extra["kotlinVersion"] = "1.3.41"
+    extra["junit5Version"] = "5.5.2"
 
     repositories {
         mavenCentral()
