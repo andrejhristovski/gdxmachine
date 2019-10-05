@@ -11,7 +11,6 @@ plugins {
     `java-library`
     `maven-publish`
     kotlin("jvm") version "1.3.41" apply false
-    id("com.github.johnrengelman.shadow") version "5.1.0" apply false
     id("digital.wup.android-maven-publish") version "3.6.2" apply false
 }
 

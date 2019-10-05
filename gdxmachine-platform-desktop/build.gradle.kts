@@ -1,10 +1,8 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
     id("maven-publish")
-    id("com.github.johnrengelman.shadow")
 }
 
 val gdxVersion: String by extra
@@ -38,13 +36,6 @@ val sourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
     from(sourceSets.get("main").allSource)
 }
-
-//val shadowJar: ShadowJar by tasks
-//shadowJar.apply {
-//    archiveBaseName.set(project.name)
-//    archiveVersion.set(project.version.toString())
-//    archiveClassifier.set("")
-//}
 
 publishing {
     repositories {
