@@ -4,6 +4,7 @@ include(
         "gdxmachine-core",
         "gdxmachine-platform-desktop",
         "gdxmachine-platform-android",
+        "gdxmachine-platform-headless",
         "gdxmachine-sandbox-desktop",
         "gdxmachine-sandbox-android",
         "gdxmachine-sandbox-source"
@@ -12,6 +13,7 @@ include(
 project(":gdxmachine-core").name = "core"
 project(":gdxmachine-platform-desktop").name = "platform-desktop"
 project(":gdxmachine-platform-android").name = "platform-android"
+project(":gdxmachine-platform-headless").name = "platform-headless"
 project(":gdxmachine-sandbox-desktop").name = "sandbox-desktop"
 project(":gdxmachine-sandbox-android").name = "sandbox-android"
 project(":gdxmachine-sandbox-source").name = "sandbox-source"
