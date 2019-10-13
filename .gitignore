@@ -20,7 +20,7 @@ com_crashlytics_export_strings.xml
 .project
 .metadata/
 /gdxmachine-platform-android/bin/
-/gdxmachine-core/bin/
+/gdxmachine-framework/bin/
 /gdxmachine-platform-desktop/bin/
 *.tmp
 *.bak
@@ -33,22 +33,22 @@ com_crashlytics_export_strings.xml
 
 /build/
 /gdxmachine-platform-android/build/
-/gdxmachine-core/build/
+/gdxmachine-framework/build/
 /gdxmachine-platform-desktop/build/
 
 /nbbuild/
 /gdxmachine-platform-android/nbbuild/
-/gdxmachine-core/nbbuild/
+/gdxmachine-framework/nbbuild/
 /gdxmachine-platform-desktop/nbbuild/
 
 /dist/
 /gdxmachine-platform-android/dist/
-/gdxmachine-core/dist/
+/gdxmachine-framework/dist/
 /gdxmachine-platform-desktop/dist/
 
 /nbdist/
 /gdxmachine-platform-android/nbdist/
-/gdxmachine-core/nbdist/
+/gdxmachine-framework/nbdist/
 /gdxmachine-platform-desktop/nbdist/
 
 nbactions.xml
