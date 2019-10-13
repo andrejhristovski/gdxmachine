@@ -1,4 +1,4 @@
-package com.disgraded.gdxmachine.framework.inputs
+package com.disgraded.gdxmachine.framework.input
 
 import com.badlogic.gdx.Gdx
 import com.disgraded.gdxmachine.framework.Module

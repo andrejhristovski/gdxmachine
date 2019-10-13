@@ -1,8 +1,7 @@
-package com.disgraded.gdxmachine.framework.inputs
+package com.disgraded.gdxmachine.framework.input
 
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.math.Vector2
 
 class InputApi {
 

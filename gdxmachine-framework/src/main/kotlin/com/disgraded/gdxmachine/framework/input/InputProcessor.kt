@@ -1,9 +1,8 @@
-package com.disgraded.gdxmachine.framework.inputs
+package com.disgraded.gdxmachine.framework.input
 
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input as GdxInput
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.InputProcessor as GdxInputProcessor
 
 class InputProcessor(private val api: InputApi) : GdxInputProcessor {
