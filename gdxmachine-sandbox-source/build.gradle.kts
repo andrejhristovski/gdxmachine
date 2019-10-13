@@ -5,5 +5,5 @@ plugins {
 dependencies {
     implementation((kotlin("stdlib")))
     implementation((kotlin("stdlib-jdk8")))
-    implementation(project(":core"))
+    implementation(project(":framework"))
 }

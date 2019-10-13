@@ -14,6 +14,6 @@ dependencies {
     implementation((kotlin("stdlib")))
     implementation((kotlin("stdlib-jdk8")))
     implementation(project(":platform-desktop"))
-    implementation(project(":core"))
+    implementation(project(":framework"))
     implementation(project(":sandbox-source"))
 }

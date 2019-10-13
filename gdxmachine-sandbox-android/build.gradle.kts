@@ -33,6 +33,6 @@ android {
 dependencies {
     implementation((kotlin("stdlib")))
     implementation(project(":platform-android"))
-    implementation(project(":core"))
+    implementation(project(":framework"))
     implementation(project(":sandbox-source"))
 }

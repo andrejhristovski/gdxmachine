@@ -11,7 +11,7 @@ dependencies {
     implementation((kotlin("stdlib")))
     implementation((kotlin("stdlib-jdk8")))
 
-    implementation(project(":core"))
+    implementation(project(":framework"))
 
     api("com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion")
     api("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")

@@ -62,7 +62,7 @@ val library = configurations.create("library")
 dependencies {
 
     implementation(kotlin("stdlib"))
-    implementation(project(":core"))
+    implementation(project(":framework"))
     api("com.badlogicgames.gdx:gdx-backend-android:$gdxVersion")
     natives("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi")
     natives("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a")

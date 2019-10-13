@@ -6,18 +6,20 @@ plugins {
 }
 
 val gdxVersion: String by extra
+val junit5Version: String by extra
+val mockitoVersion: String by extra
 
 dependencies {
     implementation((kotlin("stdlib")))
     implementation((kotlin("stdlib-jdk8")))
 
-    implementation(project(":core"))
+    implementation(project(":framework"))
 
-    api("com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion")
-    api("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")
-    api("com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop")
-    api("com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop")
-    api("com.badlogicgames.gdx:gdx-tools:$gdxVersion")
+    api("com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion")
+    api("org.junit.jupiter:junit-jupiter-api:$junit5Version")
+    api("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
+
+    api("org.mockito:mockito-core:$mockitoVersion")
 }
 repositories {
     mavenCentral()

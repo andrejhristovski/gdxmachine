@@ -1,19 +1,17 @@
 rootProject.name = "gdxmachine-root"
 
 include(
-        "gdxmachine-core",
+        "gdxmachine-framework",
         "gdxmachine-platform-desktop",
         "gdxmachine-platform-android",
-        "gdxmachine-platform-headless",
         "gdxmachine-sandbox-desktop",
         "gdxmachine-sandbox-android",
         "gdxmachine-sandbox-source"
 )
 
-project(":gdxmachine-core").name = "core"
+project(":gdxmachine-framework").name = "framework"
 project(":gdxmachine-platform-desktop").name = "platform-desktop"
 project(":gdxmachine-platform-android").name = "platform-android"
-project(":gdxmachine-platform-headless").name = "platform-headless"
 project(":gdxmachine-sandbox-desktop").name = "sandbox-desktop"
 project(":gdxmachine-sandbox-android").name = "sandbox-android"
 project(":gdxmachine-sandbox-source").name = "sandbox-source"
