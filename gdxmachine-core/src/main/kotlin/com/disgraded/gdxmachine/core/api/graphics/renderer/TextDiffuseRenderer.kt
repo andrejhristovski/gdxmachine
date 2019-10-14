@@ -29,8 +29,8 @@ class TextDiffuseRenderer : SpriteBatch(8191), Renderer {
 
     override fun draw(drawable: Drawable) {
         val text = drawable as Text
-        val oldProjectionMatrix = projectionMatrix
-        val projection = projectionMatrix.cpy()
+        val oldProjectionMatrix = projectionMatrix.cpy()
+        val projection = projectionMatrix
         projection.translate(text.x, text.y, 0f)
         projection.scale(text.scaleX, text.scaleY, 0f)
         projection.rotate(Vector3(0f, 0f, 1f), text.angle)
