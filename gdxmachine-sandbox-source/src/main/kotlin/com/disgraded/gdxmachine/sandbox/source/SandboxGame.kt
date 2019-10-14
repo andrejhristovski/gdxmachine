@@ -5,7 +5,7 @@ import com.disgraded.gdxmachine.framework.EntryPoint
 class SandboxGame : EntryPoint {
 
     override fun initialize() {
-        println(Api.example)
+
     }
 
     override fun update() {

@@ -10,6 +10,8 @@ class GdxMachineLauncher {
     fun run(entryPoint: EntryPoint, cfg: Lwjgl3ApplicationConfiguration? = null) {
         var configuration = Lwjgl3ApplicationConfiguration()
         configuration.setTitle("GdxMachine Desktop Game")
+        configuration.setWindowedMode(1280, 720)
+        configuration.setDecorated(false)
         if (cfg !== null) {
             configuration = cfg
         }
