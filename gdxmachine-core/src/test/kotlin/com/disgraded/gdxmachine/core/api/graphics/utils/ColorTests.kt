@@ -19,7 +19,7 @@ class ColorTests {
     @Test
     fun `initialisation with an incorrect hex value and correct alpha throws an exception`() {
         assertThrows(Exception::class.java) {
-            Color("001ghK", 1.0f)
+            Color("#001ghK", 1.0f)
         }
     }
 
