@@ -1,4 +1,4 @@
-package com.disgraded.gdxmachine.core.api.graphics.utils
+package com.disgraded.gdxmachine.framework.graphics.utils
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals

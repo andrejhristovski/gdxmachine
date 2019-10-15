@@ -9,7 +9,9 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
 import com.badlogic.gdx.utils.Disposable
 import com.disgraded.gdxmachine.framework.resources.assets.PlainText
+import com.disgraded.gdxmachine.framework.resources.assets.Shader
 import com.disgraded.gdxmachine.framework.resources.loaders.PlainTextLoader
+import com.disgraded.gdxmachine.framework.resources.loaders.ShaderLoader
 import kotlin.reflect.KClass
 
 class AssetPackage(val key: String): Disposable {
@@ -40,6 +42,7 @@ class AssetPackage(val key: String): Disposable {
         assetManager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(fileHandleResolver))
         assetManager.setLoader(BitmapFont::class.java, ".ttf", FreetypeFontLoader(fileHandleResolver))
         assetManager.setLoader(PlainText::class.java, PlainTextLoader(fileHandleResolver))
+        assetManager.setLoader(Shader::class.java, ShaderLoader(fileHandleResolver))
     }
 
     fun <T: Any> get(key: String): Any {
@@ -68,7 +71,7 @@ class AssetPackage(val key: String): Disposable {
     }
 
     fun <T: Any> load(key: String, path: String, type: KClass<T>, parameter: AssetLoaderParameters<T>? = null) {
-        if (keyMap.containsKey(key)) throw RuntimeException("TODO: MESSAGE HERE")
+        if (keyMap.containsKey(key)) throw RuntimeException("") // TODO: MESSAGE HERE
         if (parameter !== null) {
             assetManager.load(path, type.java, parameter)
         } else {
@@ -78,7 +81,7 @@ class AssetPackage(val key: String): Disposable {
     }
 
     fun unload(key: String) {
-        if (!keyMap.containsKey(key)) throw RuntimeException("TODO: MESSAGE HERE")
+        if (!keyMap.containsKey(key)) throw RuntimeException("")  // TODO: MESSAGE HERE
         assetManager.unload(keyMap[key])
     }
 

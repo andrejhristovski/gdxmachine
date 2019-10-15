@@ -11,31 +11,32 @@ class ResourceModule : Module {
     override fun load() {}
 
     override fun unload() {
-        for ((key, assetPackage) in packages) {
+        for ((_, assetPackage) in packages) {
             assetPackage.dispose()
         }
         packages.clear()
     }
 
-    fun update(deltaTime: Float) {
-        for ((key, assetPackage) in packages) {
+    fun update() {
+        for ((_, assetPackage) in packages) {
             if (assetPackage.done) continue
             assetPackage.proceed()
         }
     }
 
     fun loadPackage(assetPackage: AssetPackage, sync: Boolean) {
-        if (packages.containsKey(assetPackage.key)) throw RuntimeException("")
+        if (packages.containsKey(assetPackage.key)) throw RuntimeException("")  // TODO: MESSAGE HERE
         packages[assetPackage.key] = assetPackage
+        if (sync) assetPackage.sync()
     }
 
     fun getPackage(key: String): AssetPackage {
-        if (!packages.containsKey(key)) throw RuntimeException("")
+        if (!packages.containsKey(key)) throw RuntimeException("")  // TODO: MESSAGE HERE
         return packages[key]!!
     }
 
     fun unloadPackage(key: String) {
-        if (!packages.containsKey(key)) throw RuntimeException("")
+        if (!packages.containsKey(key)) throw RuntimeException("")  // TODO: MESSAGE HERE
         packages[key]!!.dispose()
         packages.remove(key)
     }

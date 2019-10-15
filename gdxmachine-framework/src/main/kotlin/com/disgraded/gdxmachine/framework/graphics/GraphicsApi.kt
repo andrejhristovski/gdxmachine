@@ -1,12 +1,13 @@
 package com.disgraded.gdxmachine.framework.graphics
 
-import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.glutils.GLVersion
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.utils.Scaling
 
 class GraphicsApi(private val graphicsModule: GraphicsModule) {
 
-    val onResize = Signal<Any>()
+    var virtualViewport = Vector2(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
 
     fun getWidth() = Gdx.graphics.width
 
@@ -43,4 +44,12 @@ class GraphicsApi(private val graphicsModule: GraphicsModule) {
     fun setDecoration(enable: Boolean) = Gdx.graphics.setUndecorated(!enable)
 
     fun setResizable(enable: Boolean) = Gdx.graphics.setResizable(enable)
+
+    fun createViewport(key: String = "default", width: Float = virtualViewport.x, height: Float = virtualViewport.y,
+                       scaling: Scaling = Scaling.fill): Viewport
+            = graphicsModule.createViewport(key, width, height, scaling)
+
+    fun getViewport(key: String = "default"): Viewport = graphicsModule.getViewport(key)
+
+    fun removeViewport(key: String = "default") = graphicsModule.removeViewport(key)
 }

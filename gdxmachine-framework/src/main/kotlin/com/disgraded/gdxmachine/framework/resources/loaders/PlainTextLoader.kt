@@ -9,22 +9,23 @@ import com.badlogic.gdx.utils.Array
 import com.disgraded.gdxmachine.framework.resources.assets.PlainText
 import java.io.BufferedReader
 
-class PlainTextLoader(resolver: FileHandleResolver) : AsynchronousAssetLoader<PlainText, PlainText.Parameters>(resolver) {
+class PlainTextLoader(resolver: FileHandleResolver)
+    : AsynchronousAssetLoader<PlainText, PlainText.Parameters>(resolver) {
 
-    data class TextData(val text: String)
+    private lateinit var text: String
 
-    var data: TextData = TextData("")
-
-    override fun loadAsync(manager: AssetManager, fileName: String, file: FileHandle, parameter: PlainText.Parameters) {
-        val text = file.reader(parameter.encoding).buffered().use(BufferedReader::readText)
-        data = TextData(text)
+    override fun loadAsync(manager: AssetManager, fileName: String, file: FileHandle,
+                           parameter: PlainText.Parameters) {
+        text = file.reader(parameter.encoding).buffered().use(BufferedReader::readText)
     }
 
-    override fun loadSync(manager: AssetManager, fileName: String, file: FileHandle, parameter: PlainText.Parameters): PlainText {
-        return PlainText(data.text)
+    override fun loadSync(manager: AssetManager, fileName: String, file: FileHandle,
+                          parameter: PlainText.Parameters): PlainText {
+        return PlainText(text)
     }
 
-    override fun getDependencies(fileName: String, file: FileHandle, parameter: PlainText.Parameters): Array<AssetDescriptor<Any>>? {
+    override fun getDependencies(fileName: String, file: FileHandle,
+                          parameter: PlainText.Parameters): Array<AssetDescriptor<Any>>? {
         return null
     }
 }
