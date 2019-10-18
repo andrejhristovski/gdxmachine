@@ -20,7 +20,9 @@ class ShaderLoader(resolver: FileHandleResolver) : AsynchronousAssetLoader<Shade
     }
 
     override fun loadSync(manager: AssetManager, fileName: String, file: FileHandle, parameter: Shader.Parameters): Shader {
-        return Shader(vertex, fragment)
+        val shader = Shader(vertex, fragment)
+        shader.isCompiled
+        return shader
     }
 
     override fun getDependencies(fileName: String, file: FileHandle, parameter: Shader.Parameters): Array<AssetDescriptor<Any>>? {

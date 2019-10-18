@@ -11,7 +11,7 @@ class GraphicsModule : Module {
 
     val api = GraphicsApi(this)
 
-    private val viewportMap = hashMapOf<String, Viewport>()
+    private val viewportMap = hashMapOf<String, Display>()
 
     override fun load() { }
 
@@ -34,13 +34,13 @@ class GraphicsModule : Module {
         viewportMap.clear()
     }
 
-    fun createViewport(key: String, width: Float, height: Float, scaling: Scaling): Viewport {
+    fun createViewport(key: String, width: Float, height: Float, scaling: Scaling): Display {
         if (viewportMap.containsKey(key)) throw RuntimeException("") // TODO: message
-        viewportMap[key] = Viewport(key, width, height, scaling)
+        viewportMap[key] = Display(key, width, height, scaling)
         return viewportMap[key]!!
     }
 
-    fun getViewport(key: String): Viewport {
+    fun getViewport(key: String): Display {
         if (!viewportMap.containsKey(key)) throw RuntimeException("") // TODO: message
         return viewportMap[key]!!
     }

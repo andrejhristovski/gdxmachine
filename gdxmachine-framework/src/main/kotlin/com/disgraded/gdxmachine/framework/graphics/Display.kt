@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 
-class Viewport(val key: String, private var width: Float, private var height: Float, scaling: Scaling):
+class Display(val key: String, private var width: Float, private var height: Float, scaling: Scaling):
         ScalingViewport(scaling, width, height), Disposable {
 
     private var gpuCalls = 0
