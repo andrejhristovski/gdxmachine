@@ -2,17 +2,16 @@ package com.disgraded.gdxmachine.sandbox.source
 
 import com.disgraded.gdxmachine.framework.Context
 import com.disgraded.gdxmachine.framework.EntryPoint
-import com.disgraded.gdxmachine.framework.graphics.Display
+import com.disgraded.gdxmachine.framework.graphics.Layer
 
 class SandboxGame : EntryPoint {
 
-    private lateinit var display: Display
+    private lateinit var display: Layer
     private val sprite = Sprite()
-    private val sprite2 = Sprite2()
 
     override fun initialize() {
-        display = Context.graphics.createViewport()
-        display.renderer = Renderer2D()
+        display = Context.graphics.createLayer()
+        display.setRenderer(Renderer2D())
     }
 
     override fun update() {

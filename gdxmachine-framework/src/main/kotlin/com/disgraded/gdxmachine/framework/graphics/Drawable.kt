@@ -1,3 +1,5 @@
 package com.disgraded.gdxmachine.framework.graphics
 
-interface Drawable
+interface Drawable {
+    fun getOrder(): Long
+}

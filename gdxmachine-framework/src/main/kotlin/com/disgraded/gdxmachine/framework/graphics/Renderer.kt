@@ -4,8 +4,6 @@ import com.badlogic.gdx.utils.Disposable
 
 interface Renderer: Disposable {
 
-    val gpuCalls: Int
-
-    fun render(drawableList: ArrayList<Drawable>)
+    fun render(drawableList: ArrayList<Drawable>, layer: Layer): Int
 
 }

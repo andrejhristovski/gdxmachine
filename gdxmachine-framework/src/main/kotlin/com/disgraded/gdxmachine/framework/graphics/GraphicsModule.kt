@@ -7,11 +7,11 @@ import com.disgraded.gdxmachine.framework.Module
 
 class GraphicsModule : Module {
 
-    val gpuCalls: Int = 0 //TODO: implement this
+    var gpuCalls: Int = 0
 
     val api = GraphicsApi(this)
 
-    private val viewportMap = hashMapOf<String, Display>()
+    private val layerMap = hashMapOf<String, Layer>()
 
     override fun load() { }
 
@@ -20,33 +20,36 @@ class GraphicsModule : Module {
     fun update() {
         Gdx.gl.glClearColor(0f, 0f ,0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-        for ((_, viewport) in viewportMap.toList().sortedBy { it.second.priority }) {
-            viewport.render()
+        var gpuCalls = 0
+        for ((_, viewport) in layerMap.toList().sortedBy { it.second.priority }) {
+            gpuCalls += viewport.render()
         }
+        this.gpuCalls = gpuCalls
     }
 
     fun resize(width: Int, height: Int) {
-        for ((_, viewport) in viewportMap) viewport.update(width, height)
+        for ((_, viewport) in layerMap) viewport.update(width, height)
     }
 
     fun clear() {
-        for ((_, viewport) in viewportMap) viewport.dispose()
-        viewportMap.clear()
+        for ((_, viewport) in layerMap) viewport.dispose()
+        layerMap.clear()
     }
 
-    fun createViewport(key: String, width: Float, height: Float, scaling: Scaling): Display {
-        if (viewportMap.containsKey(key)) throw RuntimeException("") // TODO: message
-        viewportMap[key] = Display(key, width, height, scaling)
-        return viewportMap[key]!!
+    fun createLayer(key: String, width: Float, height: Float, scaling: Scaling): Layer {
+        if (layerMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        layerMap[key] = Layer(key, width, height, scaling)
+        return layerMap[key]!!
     }
 
-    fun getViewport(key: String): Display {
-        if (!viewportMap.containsKey(key)) throw RuntimeException("") // TODO: message
-        return viewportMap[key]!!
+    fun getLayer(key: String): Layer {
+        if (!layerMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        return layerMap[key]!!
     }
 
-    fun removeViewport(key: String) {
-        if (!viewportMap.containsKey(key)) throw RuntimeException("") // TODO: message
-        viewportMap.remove(key)
+    fun removeLayer(key: String) {
+        if (!layerMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        layerMap[key]!!.dispose()
+        layerMap.remove(key)
     }
 }

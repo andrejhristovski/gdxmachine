@@ -45,11 +45,11 @@ class GraphicsApi(private val graphicsModule: GraphicsModule) {
 
     fun setResizable(enable: Boolean) = Gdx.graphics.setResizable(enable)
 
-    fun createViewport(key: String = "default", width: Float = virtualViewport.x, height: Float = virtualViewport.y,
-                       scaling: Scaling = Scaling.fill): Display
-            = graphicsModule.createViewport(key, width, height, scaling)
+    fun createLayer(key: String = "default", width: Float = virtualViewport.x, height: Float = virtualViewport.y,
+                       scaling: Scaling = Scaling.fill): Layer
+            = graphicsModule.createLayer(key, width, height, scaling)
 
-    fun getViewport(key: String = "default"): Display = graphicsModule.getViewport(key)
+    fun getLayer(key: String = "default"): Layer = graphicsModule.getLayer(key)
 
-    fun removeViewport(key: String = "default") = graphicsModule.removeViewport(key)
+    fun removeLayer(key: String = "default") = graphicsModule.removeLayer(key)
 }

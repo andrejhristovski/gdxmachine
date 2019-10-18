@@ -2,7 +2,7 @@ package com.disgraded.gdxmachine.framework.graphics
 
 import com.badlogic.gdx.utils.Disposable
 
-interface DrawableHandler: Disposable {
+interface Batch: Disposable {
 
     fun begin()
 

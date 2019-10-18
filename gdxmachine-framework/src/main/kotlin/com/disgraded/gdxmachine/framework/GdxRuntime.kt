@@ -39,7 +39,7 @@ class GdxRuntime(private val entryPoint: EntryPoint) : ApplicationListener {
     }
 
     override fun resize(width: Int, height: Int) {
-
+        graphicsModule.resize(width, height)
     }
 
     override fun dispose() {

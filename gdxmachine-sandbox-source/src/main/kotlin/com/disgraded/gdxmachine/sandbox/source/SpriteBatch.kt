@@ -1,9 +1,9 @@
 package com.disgraded.gdxmachine.sandbox.source
 
 import com.disgraded.gdxmachine.framework.graphics.Drawable
-import com.disgraded.gdxmachine.framework.graphics.DrawableHandler
+import com.disgraded.gdxmachine.framework.graphics.Batch
 
-class SpriteDrawableHandler : DrawableHandler {
+class SpriteBatch : Batch {
 
     override fun begin() {
 
