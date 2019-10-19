@@ -87,6 +87,15 @@ class InputApi {
     fun setCursorPosition(x: Int, y: Int) = Gdx.input.setCursorPosition(x, y)
 
     fun clear() {
-
+        onTouchDown.removeAllListeners()
+        onTouchUp.removeAllListeners()
+        onTouchDragged.removeAllListeners()
+        onMouseClickDown.removeAllListeners()
+        onMouseClickUp.removeAllListeners()
+        onMouseScroll.removeAllListeners()
+        onMouseMove.removeAllListeners()
+        onKeyTyped.removeAllListeners()
+        onKeyDown.removeAllListeners()
+        onKeyUp.removeAllListeners()
     }
 }

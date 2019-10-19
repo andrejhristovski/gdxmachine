@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
 import com.badlogic.gdx.utils.Disposable
 import com.disgraded.gdxmachine.framework.resources.assets.PlainText
-import com.disgraded.gdxmachine.framework.resources.assets.Shader
+import com.disgraded.gdxmachine.framework.resources.assets.ShaderData
 import com.disgraded.gdxmachine.framework.resources.loaders.PlainTextLoader
 import com.disgraded.gdxmachine.framework.resources.loaders.ShaderLoader
 import kotlin.reflect.KClass
@@ -42,10 +42,10 @@ class AssetPackage(val key: String): Disposable {
         assetManager.setLoader(FreeTypeFontGenerator::class.java, FreeTypeFontGeneratorLoader(fileHandleResolver))
         assetManager.setLoader(BitmapFont::class.java, ".ttf", FreetypeFontLoader(fileHandleResolver))
         assetManager.setLoader(PlainText::class.java, PlainTextLoader(fileHandleResolver))
-        assetManager.setLoader(Shader::class.java, ShaderLoader(fileHandleResolver))
+        assetManager.setLoader(ShaderData::class.java, ShaderLoader(fileHandleResolver))
     }
 
-    fun <T: Any> get(key: String): Any {
+    fun <T: Any> get(key: String): T {
         if (!keyMap.containsKey(key)) throw RuntimeException("")
         return assetManager.get<T>(keyMap[key])
     }

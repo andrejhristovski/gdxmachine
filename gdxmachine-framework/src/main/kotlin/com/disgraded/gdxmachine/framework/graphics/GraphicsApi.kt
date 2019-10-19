@@ -52,4 +52,6 @@ class GraphicsApi(private val graphicsModule: GraphicsModule) {
     fun getLayer(key: String = "default"): Layer = graphicsModule.getLayer(key)
 
     fun removeLayer(key: String = "default") = graphicsModule.removeLayer(key)
+
+    fun existLayer(key: String = "default"): Boolean = graphicsModule.existLayer(key)
 }

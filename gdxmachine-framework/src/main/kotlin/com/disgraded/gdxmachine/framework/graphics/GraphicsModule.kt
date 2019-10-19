@@ -39,6 +39,7 @@ class GraphicsModule : Module {
     fun createLayer(key: String, width: Float, height: Float, scaling: Scaling): Layer {
         if (layerMap.containsKey(key)) throw RuntimeException("") // TODO: message
         layerMap[key] = Layer(key, width, height, scaling)
+        layerMap[key]!!.update(Gdx.graphics.width, Gdx.graphics.height)
         return layerMap[key]!!
     }
 
@@ -52,4 +53,6 @@ class GraphicsModule : Module {
         layerMap[key]!!.dispose()
         layerMap.remove(key)
     }
+
+    fun existLayer(key: String): Boolean = layerMap.containsKey(key)
 }

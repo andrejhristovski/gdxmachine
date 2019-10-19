@@ -1,6 +1,7 @@
 package com.disgraded.gdxmachine.framework
 
 import com.badlogic.gdx.ApplicationListener
+import com.badlogic.gdx.Gdx
 import com.disgraded.gdxmachine.framework.graphics.GraphicsModule
 import com.disgraded.gdxmachine.framework.input.InputModule
 import com.disgraded.gdxmachine.framework.resources.ResourceModule
@@ -29,7 +30,7 @@ class GdxRuntime(private val entryPoint: EntryPoint) : ApplicationListener {
     override fun render() {
         resourceModule.update()
         graphicsModule.update()
-        entryPoint.update()
+        entryPoint.update(Gdx.graphics.deltaTime)
     }
 
     override fun pause() {

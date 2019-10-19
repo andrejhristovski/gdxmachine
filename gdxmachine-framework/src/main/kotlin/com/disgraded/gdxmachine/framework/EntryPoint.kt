@@ -4,7 +4,7 @@ interface EntryPoint {
 
     fun initialize()
 
-    fun update()
+    fun update(deltaTime: Float)
 
     fun destroy()
 

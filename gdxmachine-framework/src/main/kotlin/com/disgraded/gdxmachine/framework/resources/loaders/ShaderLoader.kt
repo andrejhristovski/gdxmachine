@@ -6,26 +6,22 @@ import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader
 import com.badlogic.gdx.assets.loaders.FileHandleResolver
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.utils.Array
-import com.disgraded.gdxmachine.framework.resources.assets.Shader
+import com.disgraded.gdxmachine.framework.resources.assets.ShaderData
 import java.io.BufferedReader
 
-class ShaderLoader(resolver: FileHandleResolver) : AsynchronousAssetLoader<Shader, Shader.Parameters>(resolver) {
+class ShaderLoader(resolver: FileHandleResolver) : AsynchronousAssetLoader<ShaderData, ShaderData.Parameters>(resolver) {
 
-    private lateinit var vertex: String
-    private lateinit var fragment: String
+    private lateinit var content: String
 
-    override fun loadAsync(manager: AssetManager, fileName: String, file: FileHandle, parameter: Shader.Parameters) {
-        vertex = resolve(parameter.vertexPath).reader(parameter.encoding).buffered().use(BufferedReader::readText)
-        fragment = resolve(parameter.fragmentPath).reader(parameter.encoding).buffered().use(BufferedReader::readText)
+    override fun loadAsync(manager: AssetManager, fileName: String, file: FileHandle, parameter: ShaderData.Parameters) {
+        content = file.reader(parameter.encoding).buffered().use(BufferedReader::readText)
     }
 
-    override fun loadSync(manager: AssetManager, fileName: String, file: FileHandle, parameter: Shader.Parameters): Shader {
-        val shader = Shader(vertex, fragment)
-        shader.isCompiled
-        return shader
+    override fun loadSync(manager: AssetManager, fileName: String, file: FileHandle, parameter: ShaderData.Parameters): ShaderData {
+        return ShaderData(content)
     }
 
-    override fun getDependencies(fileName: String, file: FileHandle, parameter: Shader.Parameters): Array<AssetDescriptor<Any>>? {
+    override fun getDependencies(fileName: String, file: FileHandle, parameter: ShaderData.Parameters): Array<AssetDescriptor<Any>>? {
         return null
     }
 }

@@ -1,11 +1,12 @@
 package com.disgraded.gdxmachine.framework.graphics
 
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 
 class Layer(val key: String, private var width: Float, private var height: Float, scaling: Scaling):
-        ScalingViewport(scaling, width, height), Disposable {
+        ScalingViewport(scaling, width, height, OrthographicCamera()), Disposable {
 
     private val drawableList = arrayListOf<Drawable>()
 
