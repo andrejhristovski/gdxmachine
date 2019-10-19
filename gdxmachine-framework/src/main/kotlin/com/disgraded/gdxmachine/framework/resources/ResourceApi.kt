@@ -10,8 +10,8 @@ class ResourceApi(private val resourceModule: ResourceModule) {
 
     fun unload(assetPackage: AssetPackage) = resourceModule.unloadPackage(assetPackage.key)
 
-    fun contains(key: String): Boolean = resourceModule.containsPackage(key)
+    fun exist(key: String): Boolean = resourceModule.existPackage(key)
 
-    fun contains(assetPackage: AssetPackage): Boolean = resourceModule.containsPackage(assetPackage.key)
+    fun contains(assetPackage: AssetPackage): Boolean = resourceModule.existPackage(assetPackage.key)
 
 }

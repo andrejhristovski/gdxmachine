@@ -1,6 +1,6 @@
 package com.disgraded.gdxmachine.sandbox.source
 
-import com.disgraded.gdxmachine.framework.Context
+import com.disgraded.gdxmachine.framework.Api
 import com.disgraded.gdxmachine.framework.graphics.Drawable
 import com.disgraded.gdxmachine.framework.graphics.BatchManager
 import com.disgraded.gdxmachine.framework.graphics.Layer
@@ -13,8 +13,8 @@ class Renderer2D: Renderer {
     private val spriteBatch = BatchManager()
 
     init {
-        val vertexShader = Context.resources.get("default").get<ShaderData>("sprite.vertex")
-        val fragmentShader = Context.resources.get("default").get<ShaderData>("sprite.fragment")
+        val vertexShader = Api.resources.get("default").get<ShaderData>("sprite.vertex")
+        val fragmentShader = Api.resources.get("default").get<ShaderData>("sprite.fragment")
         spriteBatch.addRenderer(Sprite::class, SpriteBatch(Shader(vertexShader, fragmentShader)))
     }
 

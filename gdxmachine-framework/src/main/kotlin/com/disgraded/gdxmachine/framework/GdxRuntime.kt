@@ -21,9 +21,9 @@ class GdxRuntime(private val entryPoint: EntryPoint) : ApplicationListener {
         resourceModule.load()
         graphicsModule.load()
 
-        Context.input = inputModule.api
-        Context.resources = resourceModule.api
-        Context.graphics = graphicsModule.api
+        Api.input = inputModule.api
+        Api.resources = resourceModule.api
+        Api.graphics = graphicsModule.api
         entryPoint.initialize()
     }
 

@@ -2,7 +2,7 @@ package com.disgraded.gdxmachine.sandbox.source
 
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.disgraded.gdxmachine.framework.Context
+import com.disgraded.gdxmachine.framework.Api
 import com.disgraded.gdxmachine.framework.EntryPoint
 import com.disgraded.gdxmachine.framework.graphics.Layer
 import com.disgraded.gdxmachine.framework.resources.AssetPackage
@@ -18,15 +18,15 @@ class SandboxGame : EntryPoint {
         assetPackage.load("sprite.vertex", "sprite.vertex.glsl", ShaderData::class, ShaderData.Parameters())
         assetPackage.load("sprite.fragment", "sprite.fragment.glsl", ShaderData::class, ShaderData.Parameters())
         assetPackage.load("texture", "wall.png", Texture::class)
-        Context.resources.load(assetPackage, true)
+        Api.resources.load(assetPackage, true)
 
-        layer = Context.graphics.createLayer()
+        layer = Api.graphics.createLayer()
         layer.setRenderer(Renderer2D())
         sprite.texture = TextureRegion(assetPackage.get<Texture>("texture"))
     }
 
     override fun update(deltaTime: Float) {
-        println(Context.graphics.getFPS())
+        println(Api.graphics.getFPS())
         sprite.x += 100f * deltaTime
         layer.draw(sprite)
     }

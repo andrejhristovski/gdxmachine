@@ -41,7 +41,7 @@ class ResourceModule : Module {
         packages.remove(key)
     }
 
-    fun containsPackage(key: String): Boolean {
+    fun existPackage(key: String): Boolean {
         return packages.containsKey(key)
     }
 }
