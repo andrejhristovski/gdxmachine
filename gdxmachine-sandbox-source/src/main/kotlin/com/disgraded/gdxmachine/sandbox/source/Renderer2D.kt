@@ -8,14 +8,12 @@ import com.disgraded.gdxmachine.framework.core.graphics.Renderer
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
 import com.disgraded.gdxmachine.framework.core.resources.assets.ShaderData
 
-class Renderer2D(core: Core): Renderer {
+class Renderer2D: Renderer {
 
     private val spriteBatch = BatchManager()
 
     init {
-        val vertexShader = core.resources.get("default").get<ShaderData>("sprite.vertex")
-        val fragmentShader = core.resources.get("default").get<ShaderData>("sprite.fragment")
-        spriteBatch.addRenderer(Sprite::class, SpriteBatch(Shader(vertexShader, fragmentShader)))
+        spriteBatch.addRenderer(Sprite::class, SpriteBatch())
     }
 
     override fun render(drawableList: ArrayList<Drawable>, layer: Layer): Int {

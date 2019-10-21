@@ -13,20 +13,18 @@ class SandboxGame : EntryPoint {
     private lateinit var layer: Layer
     private val sprite = Sprite()
 
-    override fun initialize(core: Core) {
+    override fun initialize() {
         val assetPackage = AssetPackage("default")
         assetPackage.load("sprite.vertex", "sprite.vertex.glsl", ShaderData::class, ShaderData.Parameters())
         assetPackage.load("sprite.fragment", "sprite.fragment.glsl", ShaderData::class, ShaderData.Parameters())
         assetPackage.load("texture", "wall.png", Texture::class)
-        core.resources.load(assetPackage, true)
+        Core.resources.load(assetPackage, true)
 
-        layer = core.graphics.createLayer()
-        layer.setRenderer(Renderer2D(core))
+        Core.graphics.compileShader("sprite_default", assetPackage.get("sprite.vertex"),  assetPackage.get("sprite.fragment"))
+
+        layer = Core.graphics.createLayer()
+        layer.setRenderer(Renderer2D())
         sprite.texture = TextureRegion(assetPackage.get<Texture>("texture"))
-
-        val world = core.physics.createWorld()
-        core.device.clipboard.contents
-
     }
 
     override fun update(deltaTime: Float) {

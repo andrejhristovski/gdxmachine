@@ -2,8 +2,11 @@ package com.disgraded.gdxmachine.sandbox.source
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.disgraded.gdxmachine.framework.core.graphics.Drawable
+import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
 
 class Sprite: Drawable {
+
+    override var shader: Shader? = null
 
     var scaleX = 1f
     var scaleY = 1f
@@ -20,5 +23,4 @@ class Sprite: Drawable {
     var texture: TextureRegion? = null
 
     override fun getOrder(): Long = z.toLong()
-
 }

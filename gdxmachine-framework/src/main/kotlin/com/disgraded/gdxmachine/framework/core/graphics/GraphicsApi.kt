@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.glutils.GLVersion
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.Scaling
+import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
+import com.disgraded.gdxmachine.framework.core.resources.assets.ShaderData
 
 class GraphicsApi(private val graphicsModule: GraphicsModule) {
 
@@ -54,4 +56,13 @@ class GraphicsApi(private val graphicsModule: GraphicsModule) {
     fun removeLayer(key: String = "default") = graphicsModule.removeLayer(key)
 
     fun existLayer(key: String = "default"): Boolean = graphicsModule.existLayer(key)
+
+    fun compileShader(key: String, vertex: ShaderData, fragment: ShaderData): Shader
+            = graphicsModule.compileShader(key, vertex, fragment)
+
+    fun getShader(key: String): Shader = graphicsModule.getShader(key)
+
+    fun removeShader(key: String) = graphicsModule.removeShader(key)
+
+    fun existShader(key: String): Boolean = graphicsModule.existShader(key)
 }

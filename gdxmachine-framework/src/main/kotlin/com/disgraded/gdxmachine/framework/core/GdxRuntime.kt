@@ -3,6 +3,8 @@ package com.disgraded.gdxmachine.framework.core
 import com.badlogic.gdx.ApplicationListener
 import com.badlogic.gdx.Gdx
 import com.disgraded.gdxmachine.framework.core.application.ApplicationModule
+import com.disgraded.gdxmachine.framework.core.audio.AudioModule
+import com.disgraded.gdxmachine.framework.core.engine.EngineModule
 import com.disgraded.gdxmachine.framework.core.graphics.GraphicsModule
 import com.disgraded.gdxmachine.framework.core.input.InputModule
 import com.disgraded.gdxmachine.framework.core.network.NetworkModule
@@ -11,14 +13,14 @@ import com.disgraded.gdxmachine.framework.core.resources.ResourceModule
 
 class GdxRuntime(private val entryPoint: EntryPoint) : ApplicationListener {
 
-    private val core = Core()
-
     private lateinit var inputModule: InputModule
     private lateinit var  resourceModule: ResourceModule
     private lateinit var  graphicsModule: GraphicsModule
     private lateinit var physicsModule: PhysicsModule
     private lateinit var networkModule: NetworkModule
     private lateinit var applicationModule: ApplicationModule
+    private lateinit var audioModule: AudioModule
+    private lateinit var engineModule: EngineModule
 
     override fun create() {
         inputModule = InputModule()
@@ -27,6 +29,8 @@ class GdxRuntime(private val entryPoint: EntryPoint) : ApplicationListener {
         physicsModule = PhysicsModule()
         networkModule = NetworkModule()
         applicationModule = ApplicationModule()
+        audioModule = AudioModule()
+        engineModule = EngineModule()
 
         inputModule.load()
         resourceModule.load()
@@ -34,13 +38,16 @@ class GdxRuntime(private val entryPoint: EntryPoint) : ApplicationListener {
         physicsModule.load()
         networkModule.load()
         applicationModule.load()
+        audioModule.load()
+        engineModule.load()
         initializeCore()
-        entryPoint.initialize(core)
+        entryPoint.initialize()
     }
 
     override fun render() {
         resourceModule.update()
         graphicsModule.update()
+        engineModule.update()
         entryPoint.update(Gdx.graphics.deltaTime)
     }
 
@@ -62,14 +69,18 @@ class GdxRuntime(private val entryPoint: EntryPoint) : ApplicationListener {
         physicsModule.unload()
         networkModule.unload()
         applicationModule.unload()
+        audioModule.unload()
+        engineModule.unload()
     }
 
     private fun initializeCore() {
-        core.input = inputModule.api
-        core.resources = resourceModule.api
-        core.graphics = graphicsModule.api
-        core.physics = physicsModule.api
-        core.network = networkModule.api
-        core.app = applicationModule.api
+        Core.input = inputModule.api
+        Core.resources = resourceModule.api
+        Core.graphics = graphicsModule.api
+        Core.physics = physicsModule.api
+        Core.network = networkModule.api
+        Core.app = applicationModule.api
+        Core.audio = audioModule.api
+        Core.engine = engineModule.api
     }
 }

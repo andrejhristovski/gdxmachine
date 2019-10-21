@@ -2,7 +2,7 @@ package com.disgraded.gdxmachine.framework.core
 
 interface EntryPoint {
 
-    fun initialize(core: Core)
+    fun initialize()
 
     fun update(deltaTime: Float)
 

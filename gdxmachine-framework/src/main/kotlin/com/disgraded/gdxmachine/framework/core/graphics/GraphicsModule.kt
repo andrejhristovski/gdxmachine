@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.utils.Scaling
 import com.disgraded.gdxmachine.framework.core.Module
+import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
+import com.disgraded.gdxmachine.framework.core.resources.assets.ShaderData
 
 class GraphicsModule : Module {
 
@@ -12,6 +14,8 @@ class GraphicsModule : Module {
     val api = GraphicsApi(this)
 
     private val layerMap = hashMapOf<String, Layer>()
+
+    private val shaderMap = hashMapOf<String, Shader>()
 
     override fun load() { }
 
@@ -34,6 +38,8 @@ class GraphicsModule : Module {
     fun clear() {
         for ((_, viewport) in layerMap) viewport.dispose()
         layerMap.clear()
+        for ((_, shader) in shaderMap) shader.dispose()
+        shaderMap.clear()
     }
 
     fun createLayer(key: String, width: Float, height: Float, scaling: Scaling): Layer {
@@ -55,4 +61,23 @@ class GraphicsModule : Module {
     }
 
     fun existLayer(key: String): Boolean = layerMap.containsKey(key)
+
+    fun compileShader(key: String, vertex: ShaderData, fragment: ShaderData): Shader {
+        if (shaderMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        shaderMap[key] = Shader(vertex, fragment)
+        return shaderMap[key]!!
+    }
+
+    fun getShader(key: String): Shader {
+        if (!shaderMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        return shaderMap[key]!!
+    }
+
+    fun removeShader(key: String) {
+        if (!shaderMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        shaderMap[key]!!.dispose()
+        shaderMap.remove(key)
+    }
+
+    fun existShader(key: String): Boolean = shaderMap.containsKey(key)
 }

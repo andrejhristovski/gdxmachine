@@ -6,12 +6,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Matrix4
+import com.disgraded.gdxmachine.framework.core.Core
 import com.disgraded.gdxmachine.framework.core.graphics.Drawable
 import com.disgraded.gdxmachine.framework.core.graphics.Batch
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
 
-class SpriteBatch(private val defaultShader: Shader) : Batch {
+class SpriteBatch : Batch {
+
+    val defaultShader: Shader
 
     companion object {
         private const val BUFFER_SIZE = 20
@@ -51,6 +54,9 @@ class SpriteBatch(private val defaultShader: Shader) : Batch {
             if (module == 2 || module == 3) indices[i] = (idx + 2).toShort()
             if (module == 4) indices[i] = (idx + 3).toShort()
         }
+
+        defaultShader = Core.graphics.getShader("sprite_default")
+
     }
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4) {
