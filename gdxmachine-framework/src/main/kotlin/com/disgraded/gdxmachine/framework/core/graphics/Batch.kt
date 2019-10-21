@@ -7,8 +7,6 @@ interface Batch: Disposable {
 
     fun setProjectionMatrix(projectionMatrix: Matrix4)
 
-    fun begin()
-
     fun draw(drawable: Drawable)
 
     fun end(): Int

@@ -9,7 +9,7 @@ class BatchManager: Disposable {
     private val batchMap = hashMapOf<KClass<out Drawable>, Batch>()
     private var currentBatch: Batch? = null
 
-    fun addRenderer(drawableType: KClass<out Drawable>, batch: Batch) {
+    fun addBatch(drawableType: KClass<out Drawable>, batch: Batch) {
         if (batchMap.containsKey(drawableType)) throw RuntimeException("") // TODO: message
         batchMap[drawableType] = batch
     }
@@ -20,13 +20,11 @@ class BatchManager: Disposable {
             batch.setProjectionMatrix(projectionMatrix)
         }
 
-        if (currentBatch != null) currentBatch!!.begin()
         for (drawable in drawableList) {
             val batch = batchMap[drawable::class] ?: continue
             if (batch != currentBatch) {
                 if (currentBatch != null) gpuCalls += currentBatch!!.end()
                 currentBatch = batch
-                currentBatch!!.begin()
             }
             currentBatch!!.draw(drawable)
         }

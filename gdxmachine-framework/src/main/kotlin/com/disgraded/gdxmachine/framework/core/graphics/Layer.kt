@@ -16,7 +16,9 @@ class Layer(val key: String, private var width: Float, private var height: Float
     var visible = true
     var priority = 0
 
-    fun draw(drawable: Drawable) = drawableList.add(drawable)
+    fun draw(drawable: Drawable) {
+        if (drawable.isExecutable()) drawableList.add(drawable)
+    }
 
     fun render(): Int {
         if (renderer == null) throw RuntimeException("") // TODO: message

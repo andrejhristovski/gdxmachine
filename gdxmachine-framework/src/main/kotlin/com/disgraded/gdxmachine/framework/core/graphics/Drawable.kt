@@ -8,4 +8,6 @@ interface Drawable {
 
     fun getOrder(): Long
 
+    fun isExecutable(): Boolean
+
 }

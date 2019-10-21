@@ -2,6 +2,7 @@ package com.disgraded.gdxmachine.framework.core.resources
 
 import com.badlogic.gdx.assets.AssetLoaderParameters
 import com.badlogic.gdx.assets.AssetManager
+import com.badlogic.gdx.assets.loaders.FileHandleResolver
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
@@ -14,9 +15,12 @@ import com.disgraded.gdxmachine.framework.core.resources.loaders.PlainTextLoader
 import com.disgraded.gdxmachine.framework.core.resources.loaders.ShaderLoader
 import kotlin.reflect.KClass
 
-class AssetPackage(val key: String): Disposable {
+class AssetPackage(val key: String, fileHandleResolver: FileHandleResolver = defaultResolver): Disposable {
 
-    private val fileHandleResolver = InternalFileHandleResolver()
+    companion object {
+        private val defaultResolver = InternalFileHandleResolver()
+    }
+
     private val assetManager = AssetManager(fileHandleResolver)
     private val keyMap = hashMapOf<String, String>()
 
