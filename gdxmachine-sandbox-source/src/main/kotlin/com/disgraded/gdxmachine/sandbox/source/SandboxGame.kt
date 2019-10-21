@@ -25,6 +25,7 @@ class SandboxGame : EntryPoint {
         sprite.texture = TextureRegion(assetPackage.get<Texture>("texture"))
 
         val world = core.physics.createWorld()
+        core.device.clipboard.contents
 
     }
 
