@@ -1,7 +1,7 @@
 package com.disgraded.gdxmachine.sandbox.source
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.disgraded.gdxmachine.framework.graphics.Drawable
+import com.disgraded.gdxmachine.framework.core.graphics.Drawable
 
 class Sprite: Drawable {
 

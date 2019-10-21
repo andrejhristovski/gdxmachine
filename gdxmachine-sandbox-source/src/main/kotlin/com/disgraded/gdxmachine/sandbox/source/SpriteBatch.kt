@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShaderProgram
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Matrix4
-import com.disgraded.gdxmachine.framework.graphics.Drawable
-import com.disgraded.gdxmachine.framework.graphics.Batch
-import com.disgraded.gdxmachine.framework.graphics.utils.Color
-import com.disgraded.gdxmachine.framework.graphics.utils.Shader
+import com.disgraded.gdxmachine.framework.core.graphics.Drawable
+import com.disgraded.gdxmachine.framework.core.graphics.Batch
+import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
+import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
 
 class SpriteBatch(private val defaultShader: Shader) : Batch {
 
@@ -60,11 +60,9 @@ class SpriteBatch(private val defaultShader: Shader) : Batch {
     override fun begin() {
         gpuCalls = 0
         defaultShader.begin()
-        println("begin")
     }
 
     override fun draw(drawable: Drawable) {
-        println("draw")
         val sprite = drawable as Sprite
         validateTexture(sprite.texture)
         if (bufferedCalls == MAX_BUFFERED_CALLS) flush()
@@ -72,7 +70,6 @@ class SpriteBatch(private val defaultShader: Shader) : Batch {
     }
 
     override fun end(): Int {
-        println("end")
         if (bufferedCalls > 0) flush()
         cachedTexture = null
         defaultShader.end()

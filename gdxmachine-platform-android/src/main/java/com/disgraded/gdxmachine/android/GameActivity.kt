@@ -3,8 +3,8 @@ import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
-import com.disgraded.gdxmachine.framework.EntryPoint
-import com.disgraded.gdxmachine.framework.GdxRuntime
+import com.disgraded.gdxmachine.framework.core.EntryPoint
+import com.disgraded.gdxmachine.framework.core.GdxRuntime
 import com.badlogic.gdx.backends.android.AndroidApplication as LibGDXAndroidActivity
 
 abstract class GameActivity :  LibGDXAndroidActivity() {

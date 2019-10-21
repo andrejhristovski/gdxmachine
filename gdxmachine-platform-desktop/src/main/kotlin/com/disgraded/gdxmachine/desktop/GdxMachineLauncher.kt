@@ -2,8 +2,8 @@ package com.disgraded.gdxmachine.desktop
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
-import com.disgraded.gdxmachine.framework.EntryPoint
-import com.disgraded.gdxmachine.framework.GdxRuntime
+import com.disgraded.gdxmachine.framework.core.EntryPoint
+import com.disgraded.gdxmachine.framework.core.GdxRuntime
 
 class GdxMachineLauncher {
 

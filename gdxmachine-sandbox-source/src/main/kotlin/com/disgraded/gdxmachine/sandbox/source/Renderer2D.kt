@@ -1,20 +1,20 @@
 package com.disgraded.gdxmachine.sandbox.source
 
-import com.disgraded.gdxmachine.framework.Api
-import com.disgraded.gdxmachine.framework.graphics.Drawable
-import com.disgraded.gdxmachine.framework.graphics.BatchManager
-import com.disgraded.gdxmachine.framework.graphics.Layer
-import com.disgraded.gdxmachine.framework.graphics.Renderer
-import com.disgraded.gdxmachine.framework.graphics.utils.Shader
-import com.disgraded.gdxmachine.framework.resources.assets.ShaderData
+import com.disgraded.gdxmachine.framework.core.Core
+import com.disgraded.gdxmachine.framework.core.graphics.Drawable
+import com.disgraded.gdxmachine.framework.core.graphics.BatchManager
+import com.disgraded.gdxmachine.framework.core.graphics.Layer
+import com.disgraded.gdxmachine.framework.core.graphics.Renderer
+import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
+import com.disgraded.gdxmachine.framework.core.resources.assets.ShaderData
 
-class Renderer2D: Renderer {
+class Renderer2D(core: Core): Renderer {
 
     private val spriteBatch = BatchManager()
 
     init {
-        val vertexShader = Api.resources.get("default").get<ShaderData>("sprite.vertex")
-        val fragmentShader = Api.resources.get("default").get<ShaderData>("sprite.fragment")
+        val vertexShader = core.resources.get("default").get<ShaderData>("sprite.vertex")
+        val fragmentShader = core.resources.get("default").get<ShaderData>("sprite.fragment")
         spriteBatch.addRenderer(Sprite::class, SpriteBatch(Shader(vertexShader, fragmentShader)))
     }
 
