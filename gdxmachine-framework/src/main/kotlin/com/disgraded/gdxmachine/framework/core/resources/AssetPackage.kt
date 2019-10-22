@@ -9,20 +9,24 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
 import com.badlogic.gdx.utils.Disposable
+import com.disgraded.gdxmachine.framework.core.Core
 import com.disgraded.gdxmachine.framework.core.resources.assets.PlainText
 import com.disgraded.gdxmachine.framework.core.resources.assets.ShaderData
 import com.disgraded.gdxmachine.framework.core.resources.loaders.PlainTextLoader
 import com.disgraded.gdxmachine.framework.core.resources.loaders.ShaderLoader
 import kotlin.reflect.KClass
 
-class AssetPackage(val key: String, fileHandleResolver: FileHandleResolver = defaultResolver): Disposable {
+abstract class AssetPackage(val key: String, fileHandleResolver: FileHandleResolver = defaultResolver): Disposable {
 
     companion object {
         private val defaultResolver = InternalFileHandleResolver()
     }
 
+    protected val core = Core
+
     private val assetManager = AssetManager(fileHandleResolver)
     private val keyMap = hashMapOf<String, String>()
+    private var markedAsDone = false
 
     val diagnostics: String
         get() = assetManager.diagnostics
@@ -48,6 +52,8 @@ class AssetPackage(val key: String, fileHandleResolver: FileHandleResolver = def
         assetManager.setLoader(PlainText::class.java, PlainTextLoader(fileHandleResolver))
         assetManager.setLoader(ShaderData::class.java, ShaderLoader(fileHandleResolver))
     }
+
+    open fun onComplete() {}
 
     fun <T: Any> get(key: String): T {
         if (!keyMap.containsKey(key)) throw RuntimeException("")
@@ -94,7 +100,15 @@ class AssetPackage(val key: String, fileHandleResolver: FileHandleResolver = def
         else assetManager.update(ms)
     }
 
-    fun sync() = assetManager.finishLoading()
+    fun sync(markOnly: Boolean = false) {
+        if (!done && !markOnly) {
+            assetManager.finishLoading()
+        }
+        if (!markedAsDone) {
+            markedAsDone = true
+            onComplete()
+        }
+    }
 
     fun clear() = assetManager.clear()
 

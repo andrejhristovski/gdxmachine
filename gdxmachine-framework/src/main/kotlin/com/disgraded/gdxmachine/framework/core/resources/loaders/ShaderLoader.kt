@@ -13,15 +13,15 @@ class ShaderLoader(resolver: FileHandleResolver) : AsynchronousAssetLoader<Shade
 
     private lateinit var content: String
 
-    override fun loadAsync(manager: AssetManager, fileName: String, file: FileHandle, parameter: ShaderData.Parameters) {
-        content = file.reader(parameter.encoding).buffered().use(BufferedReader::readText)
+    override fun loadAsync(manager: AssetManager, fileName: String, file: FileHandle, parameter: ShaderData.Parameters?) {
+        content = file.reader("utf-8").buffered().use(BufferedReader::readText)
     }
 
-    override fun loadSync(manager: AssetManager, fileName: String, file: FileHandle, parameter: ShaderData.Parameters): ShaderData {
+    override fun loadSync(manager: AssetManager, fileName: String, file: FileHandle, parameter: ShaderData.Parameters?): ShaderData {
         return ShaderData(content)
     }
 
-    override fun getDependencies(fileName: String, file: FileHandle, parameter: ShaderData.Parameters): Array<AssetDescriptor<Any>>? {
+    override fun getDependencies(fileName: String, file: FileHandle, parameter: ShaderData.Parameters?): Array<AssetDescriptor<Any>>? {
         return null
     }
 }

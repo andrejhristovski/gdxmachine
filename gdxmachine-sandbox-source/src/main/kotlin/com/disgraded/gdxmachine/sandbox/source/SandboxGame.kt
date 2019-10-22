@@ -8,11 +8,12 @@ import com.disgraded.gdxmachine.framework.core.EntryPoint
 import com.disgraded.gdxmachine.framework.core.graphics.Layer
 import com.disgraded.gdxmachine.framework.core.resources.AssetPackage
 import com.disgraded.gdxmachine.framework.core.resources.assets.ShaderData
+import com.disgraded.gdxmachine.sandbox.source.scenes.FirstScene
 
 class SandboxGame : Game() {
 
-    override fun start() {
-
+    override fun run() {
+        setScene(FirstScene::class)
     }
 
     override fun shutdown() {

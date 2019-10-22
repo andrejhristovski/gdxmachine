@@ -38,8 +38,6 @@ class GraphicsModule : Module {
     fun clear() {
         for ((_, viewport) in layerMap) viewport.dispose()
         layerMap.clear()
-        for ((_, shader) in shaderMap) shader.dispose()
-        shaderMap.clear()
     }
 
     fun createLayer(key: String, width: Float, height: Float, scaling: Scaling): Layer {
@@ -65,6 +63,9 @@ class GraphicsModule : Module {
     fun compileShader(key: String, vertex: ShaderData, fragment: ShaderData): Shader {
         if (shaderMap.containsKey(key)) throw RuntimeException("") // TODO: message
         shaderMap[key] = Shader(vertex, fragment)
+        if (shaderMap[key]!!.isCompiled) {
+            println("FUCK YOUU")
+        }
         return shaderMap[key]!!
     }
 

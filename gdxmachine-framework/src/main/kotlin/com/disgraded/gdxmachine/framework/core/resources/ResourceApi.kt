@@ -1,8 +1,15 @@
 package com.disgraded.gdxmachine.framework.core.resources
 
+import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
+
 class ResourceApi(private val resourceModule: ResourceModule) {
 
-    fun load(assetPackage: AssetPackage, sync: Boolean = false) = resourceModule.loadPackage(assetPackage, sync)
+    fun load(assetPackageClass: KClass<out AssetPackage>, sync: Boolean = false): AssetPackage {
+        val assetPackage = assetPackageClass.createInstance()
+        resourceModule.loadPackage(assetPackage, sync)
+        return assetPackage
+    }
 
     fun get(key: String): AssetPackage = resourceModule.getPackage(key)
 

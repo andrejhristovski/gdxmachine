@@ -7,7 +7,7 @@ import com.disgraded.gdxmachine.framework.core.graphics.Layer
 import com.disgraded.gdxmachine.framework.core.graphics.Renderer
 import com.disgraded.gdxmachine.framework.drawables.Sprite
 
-class StandardRenderer : Renderer {
+class Standard2DRenderer : Renderer {
 
     private val batchManager = BatchManager()
 
@@ -20,6 +20,6 @@ class StandardRenderer : Renderer {
     }
 
     override fun dispose() {
-
+        batchManager.dispose()
     }
 }

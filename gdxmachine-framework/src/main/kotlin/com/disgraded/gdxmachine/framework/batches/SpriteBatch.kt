@@ -33,8 +33,7 @@ class SpriteBatch : Batch {
     private lateinit var projectionMatrix: Matrix4
     private val defaultShader: Shader
     private var shader: Shader
-    private lateinit var cachedTexture: Texture
-
+    private var cachedTexture: Texture? = null
     init {
         val maxVertices = verticesPerBuffer * maxCalls
         val maxIndices = indicesPerBuffer * maxCalls
@@ -46,6 +45,14 @@ class SpriteBatch : Batch {
         mesh = Mesh(false, maxVertices, maxIndices, vertexAttributes)
         vertices = FloatArray(maxCalls * bufferSize)
         indices = ShortArray(maxCalls * indicesPerBuffer)
+        for (i in indices.indices) {
+            val module = i % 6
+            val idx = (i / 6) * 4
+            if (module == 0 || module == 5) indices[i] = idx.toShort()
+            if (module == 1) indices[i] = (idx + 1).toShort()
+            if (module == 2 || module == 3) indices[i] = (idx + 2).toShort()
+            if (module == 4) indices[i] = (idx + 3).toShort()
+        }
         defaultShader = getDefaultShader()
         shader = defaultShader
     }
@@ -168,11 +175,11 @@ class SpriteBatch : Batch {
     private fun flush() {
         if (bufferedCalls == 0) return
         gpuCalls++
+        val verticesCount = bufferedCalls * bufferSize
         val indicesCount = bufferedCalls * indicesPerBuffer
-        val verticesCount = bufferedCalls * verticesPerBuffer
 
         shader.begin()
-        cachedTexture.bind(0)
+        cachedTexture!!.bind(0)
         shader.setUniformMatrix("u_projectionTrans", projectionMatrix)
         shader.setUniformi("u_texture", 0)
 

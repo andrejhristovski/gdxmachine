@@ -19,7 +19,7 @@ class ResourceModule : Module {
 
     fun update() {
         for ((_, assetPackage) in packages) {
-            if (assetPackage.done) continue
+            if (assetPackage.done) assetPackage.sync(true)
             assetPackage.proceed()
         }
     }
