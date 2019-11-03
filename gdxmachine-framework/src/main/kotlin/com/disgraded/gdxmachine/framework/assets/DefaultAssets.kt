@@ -15,6 +15,11 @@ class DefaultAssets: AssetPackage("_default", ClasspathFileHandleResolver()) {
         load("sprite.mask.fragment", "_default/shaders/sprite.mask.fragment.glsl", ShaderData::class)
 
         load("no_image", "_default/images/no_image.png", Texture::class)
+
+        loadFont("sans", "_default/fonts/sans.ttf")
+        loadFont("mono", "_default/fonts/mono.ttf")
+        loadFont("display", "_default/fonts/display.ttf")
+        loadFont("handwriting", "_default/fonts/handwriting.ttf")
     }
 
     override fun onComplete() {

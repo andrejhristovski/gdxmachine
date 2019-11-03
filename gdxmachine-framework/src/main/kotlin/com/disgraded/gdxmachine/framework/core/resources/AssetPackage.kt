@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetLoaderParameters
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.assets.loaders.FileHandleResolver
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader
@@ -88,6 +89,37 @@ abstract class AssetPackage(val key: String, fileHandleResolver: FileHandleResol
             assetManager.load(path, type.java)
         }
         keyMap[key] = path
+    }
+
+    fun loadFont(key: String, path: String, fontParams: FontParams = FontParams()) {
+        val fontParameters = FreeTypeFontGenerator.FreeTypeFontParameter().apply {
+            size = fontParams.size
+            mono = fontParams.mono
+            color = Color(fontParams.color.r, fontParams.color.g, fontParams.color.b, fontParams.color.a)
+            gamma = fontParams.gamma
+            borderWidth = fontParams.borderSize
+            borderStraight = fontParams.borderStraight
+            borderColor = Color(fontParams.borderColor.r, fontParams.borderColor.g, fontParams.borderColor.b,
+                    fontParams.borderColor.a)
+            borderGamma = fontParams.borderGamma
+            shadowOffsetX = fontParams.shadowOffsetX
+            shadowOffsetY = fontParams.shadowOffsetY
+            shadowColor = Color(fontParams.shadowColor.r, fontParams.shadowColor.g, fontParams.shadowColor.b,
+                    fontParams.shadowColor.a)
+            spaceX = fontParams.spaceX
+            spaceY = fontParams.spaceY
+            padTop = fontParams.padTop
+            padLeft = fontParams.padLeft
+            padBottom = fontParams.padBottom
+            padRight = fontParams.padRight
+            kerning = fontParams.kerning
+            flip = fontParams.flip
+        }
+        val params = FreetypeFontLoader.FreeTypeFontLoaderParameter()
+        params.fontFileName = path
+        params.fontParameters = fontParameters
+        load(key, path, BitmapFont::class, params)
+
     }
 
     fun unload(key: String) {
