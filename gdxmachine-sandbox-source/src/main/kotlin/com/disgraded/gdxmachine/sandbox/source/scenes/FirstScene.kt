@@ -1,9 +1,7 @@
 package com.disgraded.gdxmachine.sandbox.source.scenes
 
 import com.badlogic.gdx.graphics.Texture
-import com.disgraded.gdxmachine.framework.core.graphics.Layer
 import com.disgraded.gdxmachine.framework.drawables.Sprite
-import com.disgraded.gdxmachine.framework.renderers.Standard2DRenderer
 import com.disgraded.gdxmachine.framework.scenes.Scene
 
 class FirstScene : Scene() {

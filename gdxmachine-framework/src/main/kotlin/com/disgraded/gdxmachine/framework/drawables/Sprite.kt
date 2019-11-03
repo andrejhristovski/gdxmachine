@@ -15,7 +15,6 @@ open class Sprite : Drawable2D() {
         }
 
     private var textureRegion: TextureRegion? = null
-    private var normalTextureRegion: TextureRegion? = null
     private val colorMap = hashMapOf<Corner, Color>()
 
     init {
@@ -36,18 +35,6 @@ open class Sprite : Drawable2D() {
     fun getTexture(): TextureRegion {
         if (textureRegion == null) throw RuntimeException("") // TODO: message
         return textureRegion!!
-    }
-
-    fun setNormal(normalTexture: Texture) {
-        setNormal(TextureRegion(normalTexture))
-    }
-
-    fun setNormal(normalTextureRegion: TextureRegion) {
-        this.normalTextureRegion = normalTextureRegion
-    }
-
-    fun getNormal(): TextureRegion? {
-        return normalTextureRegion
     }
 
     fun setColor(color: Color) {

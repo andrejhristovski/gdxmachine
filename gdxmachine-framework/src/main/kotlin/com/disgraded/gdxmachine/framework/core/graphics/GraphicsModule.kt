@@ -63,8 +63,8 @@ class GraphicsModule : Module {
     fun compileShader(key: String, vertex: ShaderData, fragment: ShaderData): Shader {
         if (shaderMap.containsKey(key)) throw RuntimeException("") // TODO: message
         shaderMap[key] = Shader(vertex, fragment)
-        if (shaderMap[key]!!.isCompiled) {
-            println("FUCK YOUU")
+        if (!shaderMap[key]!!.isCompiled) {
+            throw RuntimeException("") // TODO: message
         }
         return shaderMap[key]!!
     }

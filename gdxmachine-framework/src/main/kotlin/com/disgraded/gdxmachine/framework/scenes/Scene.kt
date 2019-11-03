@@ -2,7 +2,7 @@ package com.disgraded.gdxmachine.framework.scenes
 
 import com.disgraded.gdxmachine.framework.core.Core
 import com.disgraded.gdxmachine.framework.core.graphics.Layer
-import com.disgraded.gdxmachine.framework.renderers.Standard2DRenderer
+import com.disgraded.gdxmachine.framework.renderers.Renderer2D
 import kotlin.reflect.KClass
 
 abstract class Scene {
@@ -14,7 +14,7 @@ abstract class Scene {
 
     fun prepare() {
         mainLayer = core.graphics.createLayer()
-        mainLayer.setRenderer(Standard2DRenderer())
+        mainLayer.setRenderer(Renderer2D())
     }
 
     abstract fun initialize()

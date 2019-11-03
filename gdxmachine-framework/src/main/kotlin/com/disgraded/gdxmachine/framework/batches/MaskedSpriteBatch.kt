@@ -12,14 +12,15 @@ import com.disgraded.gdxmachine.framework.core.Core
 import com.disgraded.gdxmachine.framework.core.graphics.Batch
 import com.disgraded.gdxmachine.framework.core.graphics.Drawable
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
+import com.disgraded.gdxmachine.framework.drawables.MaskedSprite
 import com.disgraded.gdxmachine.framework.drawables.Sprite
 import com.disgraded.gdxmachine.framework.utils.Corner
 
-class SpriteBatch : Batch {
+class MaskedSpriteBatch : Batch {
 
     private val core = Core
 
-    private val bufferSize = 20
+    private val bufferSize = 28
     private val verticesPerBuffer = 4
     private val indicesPerBuffer = 6
     private val maxCalls = Short.MAX_VALUE / verticesPerBuffer
@@ -34,13 +35,16 @@ class SpriteBatch : Batch {
     private val defaultShader: Shader
     private var shader: Shader
     private var cachedTexture: Texture? = null
+    private var cachedMaskTexture: Texture? = null
     init {
         val maxVertices = verticesPerBuffer * maxCalls
         val maxIndices = indicesPerBuffer * maxCalls
         val vertexAttributes = Attributes(
                 Attribute(Attributes.Usage.Position, 2, Shader.POSITION(0)),
                 Attribute(Attributes.Usage.ColorPacked, 4, Shader.COLOR(0)),
-                Attribute(Attributes.Usage.TextureCoordinates, 2, Shader.TEXCOORD(0))
+                Attribute(Attributes.Usage.TextureCoordinates, 2, Shader.TEXCOORD(0)),
+                Attribute(Attributes.Usage.TextureCoordinates, 2, Shader.TEXCOORD(1))
+
         )
         mesh = Mesh(false, maxVertices, maxIndices, vertexAttributes)
         vertices = FloatArray(maxCalls * bufferSize)
@@ -53,7 +57,7 @@ class SpriteBatch : Batch {
             if (module == 2 || module == 3) indices[i] = (idx + 2).toShort()
             if (module == 4) indices[i] = (idx + 3).toShort()
         }
-        defaultShader = core.graphics.getShader("sprite")
+        defaultShader = core.graphics.getShader("sprite.mask")
         shader = defaultShader
     }
 
@@ -62,11 +66,12 @@ class SpriteBatch : Batch {
     }
 
     override fun draw(drawable: Drawable) {
-        val sprite = drawable as Sprite
-        checkShader(sprite.shader)
-        checkTexture(sprite.getTexture().texture)
+        val maskedSprite = drawable as MaskedSprite
+        checkShader(maskedSprite.shader)
+        checkTexture(maskedSprite.getTexture().texture)
+        checkMaskTexture(maskedSprite.getMask().texture)
         if (bufferedCalls >= maxCalls) flush()
-        append(sprite)
+        append(maskedSprite)
     }
 
     override fun end(): Int {
@@ -99,7 +104,14 @@ class SpriteBatch : Batch {
         }
     }
 
-    private fun append(sprite: Sprite) {
+    private fun checkMaskTexture(texture: Texture) {
+        if (this.cachedMaskTexture !== texture) {
+            flush()
+            cachedMaskTexture = texture
+        }
+    }
+
+    private fun append(sprite: MaskedSprite) {
         val idx = bufferedCalls * bufferSize
 
         val sizeX = sprite.getTexture().regionWidth * sprite.scaleX
@@ -147,24 +159,32 @@ class SpriteBatch : Batch {
         vertices[idx + 2] = sprite.getColor(Corner.BOTTOM_LEFT).toFloatBits()
         vertices[idx + 3] = sprite.getTexture().u
         vertices[idx + 4] = sprite.getTexture().v2
+        vertices[idx + 5] = sprite.getMask().u
+        vertices[idx + 6] = sprite.getMask().v2
 
-        vertices[idx + 5] = x2
-        vertices[idx + 6] = y2
-        vertices[idx + 7] = sprite.getColor(Corner.TOP_LEFT).toFloatBits()
-        vertices[idx + 8] = sprite.getTexture().u
-        vertices[idx + 9] = sprite.getTexture().v
+        vertices[idx + 7] = x2
+        vertices[idx + 8] = y2
+        vertices[idx + 9] = sprite.getColor(Corner.TOP_LEFT).toFloatBits()
+        vertices[idx + 10] = sprite.getTexture().u
+        vertices[idx + 11] = sprite.getTexture().v
+        vertices[idx + 12] = sprite.getMask().u
+        vertices[idx + 13] = sprite.getMask().v
 
-        vertices[idx + 10] = x3
-        vertices[idx + 11] = y3
-        vertices[idx + 12] = sprite.getColor(Corner.TOP_RIGHT).toFloatBits()
-        vertices[idx + 13] = sprite.getTexture().u2
-        vertices[idx + 14] = sprite.getTexture().v
+        vertices[idx + 14] = x3
+        vertices[idx + 15] = y3
+        vertices[idx + 16] = sprite.getColor(Corner.TOP_RIGHT).toFloatBits()
+        vertices[idx + 17] = sprite.getTexture().u2
+        vertices[idx + 18] = sprite.getTexture().v
+        vertices[idx + 19] = sprite.getMask().u2
+        vertices[idx + 20] = sprite.getMask().v
 
-        vertices[idx + 15] = x4
-        vertices[idx + 16] = y4
-        vertices[idx + 17] = sprite.getColor(Corner.BOTTOM_RIGHT).toFloatBits()
-        vertices[idx + 18] = sprite.getTexture().u2
-        vertices[idx + 19] = sprite.getTexture().v2
+        vertices[idx + 21] = x4
+        vertices[idx + 22] = y4
+        vertices[idx + 23] = sprite.getColor(Corner.BOTTOM_RIGHT).toFloatBits()
+        vertices[idx + 24] = sprite.getTexture().u2
+        vertices[idx + 25] = sprite.getTexture().v2
+        vertices[idx + 26] = sprite.getMask().u2
+        vertices[idx + 27] = sprite.getMask().v2
         bufferedCalls++
     }
 
@@ -176,8 +196,10 @@ class SpriteBatch : Batch {
 
         shader.begin()
         cachedTexture!!.bind(0)
+        cachedMaskTexture!!.bind(1)
         shader.setUniformMatrix("u_projectionTrans", projectionMatrix)
         shader.setUniformi("u_texture", 0)
+        shader.setUniformi("u_texture_mask", 1)
 
         mesh.setVertices(vertices, 0, verticesCount)
         mesh.setIndices(indices, 0, indicesCount)
