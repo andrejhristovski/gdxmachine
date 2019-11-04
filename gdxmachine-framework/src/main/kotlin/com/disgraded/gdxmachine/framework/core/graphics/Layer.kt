@@ -11,7 +11,7 @@ class Layer(val key: String, private var width: Float, private var height: Float
     private val drawableList = arrayListOf<Drawable>()
 
     private var renderer: Renderer? = null
-    var scaleAdapter: ScaleAdapter? = null
+    var layerScale: LayerScale? = null
 
     var visible = true
     var priority = 0
@@ -31,11 +31,11 @@ class Layer(val key: String, private var width: Float, private var height: Float
     }
 
     override fun update(screenWidth: Int, screenHeight: Int, centerCamera: Boolean) {
-        if (scaleAdapter == null) {
+        if (layerScale == null) {
             super.update(screenWidth, screenHeight, centerCamera)
         }
         else {
-            scaleAdapter!!.apply(this, screenWidth, screenHeight)
+            layerScale!!.apply(this, screenWidth, screenHeight)
         }
     }
 

@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
-import com.badlogic.gdx.math.Vector3
 import com.disgraded.gdxmachine.framework.core.graphics.Batch
 import com.disgraded.gdxmachine.framework.core.graphics.Drawable
 import com.disgraded.gdxmachine.framework.drawables.Text
@@ -14,15 +13,13 @@ class TextBatch : Batch {
     private val textBatch = SpriteBatch(1)
     private lateinit var projectionMatrix: Matrix4
     private var textMatrix = Matrix4()
-    private var active = false
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4) {
         this.projectionMatrix = projectionMatrix
     }
 
     override fun draw(drawable: Drawable) {
-        if (!active) {
-            active = true
+        if (!textBatch.isDrawing) {
             Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0)
             textBatch.begin()
         }
@@ -43,8 +40,7 @@ class TextBatch : Batch {
     }
 
     override fun end(): Int {
-        if (active) {
-            active = false
+        if (textBatch.isDrawing) {
             textBatch.end()
         }
         return textBatch.renderCalls

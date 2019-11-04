@@ -2,7 +2,7 @@ package com.disgraded.gdxmachine.framework
 
 import com.disgraded.gdxmachine.framework.core.Core
 import com.disgraded.gdxmachine.framework.core.EntryPoint
-import com.disgraded.gdxmachine.framework.assets.DefaultAssets
+import com.disgraded.gdxmachine.framework.utils.CoreAssets
 import com.disgraded.gdxmachine.framework.scenes.Scene
 import com.disgraded.gdxmachine.framework.scenes.SceneManager
 import kotlin.reflect.KClass
@@ -13,7 +13,7 @@ abstract class Game: EntryPoint {
     private val sceneManager = SceneManager.getInstance()
 
     override fun initialize() {
-        core.resources.load(DefaultAssets::class, true)
+        core.resources.load(CoreAssets::class, true)
         run()
     }
 

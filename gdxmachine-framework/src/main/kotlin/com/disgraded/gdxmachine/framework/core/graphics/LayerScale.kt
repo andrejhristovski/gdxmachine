@@ -1,6 +1,6 @@
 package com.disgraded.gdxmachine.framework.core.graphics
 
-interface ScaleAdapter {
+interface LayerScale {
 
     fun apply(layer: Layer, screenWidth: Int, screenHeight: Int)
 

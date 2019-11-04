@@ -12,11 +12,12 @@ import com.disgraded.gdxmachine.framework.core.Core
 import com.disgraded.gdxmachine.framework.core.graphics.Batch
 import com.disgraded.gdxmachine.framework.core.graphics.Drawable
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
-import com.disgraded.gdxmachine.framework.drawables.MaskedSprite
-import com.disgraded.gdxmachine.framework.drawables.Sprite
+import com.disgraded.gdxmachine.framework.drawables.Mask
 import com.disgraded.gdxmachine.framework.utils.Corner
 
-class MaskedSpriteBatch : Batch {
+// TODO: implement opacity feature
+
+class MaskBatch : Batch {
 
     private val core = Core
 
@@ -66,7 +67,7 @@ class MaskedSpriteBatch : Batch {
     }
 
     override fun draw(drawable: Drawable) {
-        val maskedSprite = drawable as MaskedSprite
+        val maskedSprite = drawable as Mask
         checkShader(maskedSprite.shader)
         checkTexture(maskedSprite.getTexture().texture)
         checkMaskTexture(maskedSprite.getMask().texture)
@@ -111,7 +112,7 @@ class MaskedSpriteBatch : Batch {
         }
     }
 
-    private fun append(sprite: MaskedSprite) {
+    private fun append(sprite: Mask) {
         val idx = bufferedCalls * bufferSize
 
         val sizeX = sprite.getTexture().regionWidth * sprite.scaleX
