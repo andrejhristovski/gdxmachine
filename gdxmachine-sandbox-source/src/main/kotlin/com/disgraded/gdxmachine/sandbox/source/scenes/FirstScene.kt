@@ -17,13 +17,16 @@ class FirstScene : Scene() {
         sprite.setTexture(assets.get<Texture>("no_image"))
 
         text = Text(assets.get("mono"))
+
+        sprite.y = 100f
+        text.y = 100f
+        text.scaleX = 2f
     }
 
     override fun update(deltaTime: Float) {
         mainLayer.draw(sprite)
         mainLayer.draw(text)
         text.angle += 100f * deltaTime
-        text.x += 100f * deltaTime
 
     }
 

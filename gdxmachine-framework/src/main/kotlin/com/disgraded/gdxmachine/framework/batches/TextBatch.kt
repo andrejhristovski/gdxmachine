@@ -13,6 +13,7 @@ class TextBatch : Batch {
 
     private val textBatch = SpriteBatch(1)
     private lateinit var projectionMatrix: Matrix4
+    private var textMatrix = Matrix4()
     private var active = false
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4) {
@@ -28,19 +29,17 @@ class TextBatch : Batch {
 
         val text = drawable as Text
 
-        val localProjection = Matrix4()
-        localProjection.translate(-text.x, -text.y, 0f)
-        localProjection.rotate(0f, 0f, 1f, text.angle)
-        localProjection.translate(text.x, text.y, 0f)
+        textMatrix.idt()
+        val additionalX = text.getGlyph().width * text.anchorX * text.scaleX
+        val additionalY = text.getGlyph().height * text.anchorY * text.scaleY
 
-        textBatch.projectionMatrix = Matrix4(projectionMatrix).mul(localProjection)
+        textMatrix.setToTranslation(text.x, text.y, 0f)
+        textMatrix.rotate(0f, 0f, 1f, text.angle)
+        textMatrix.translate(-additionalX, additionalY, 0f)
+        textMatrix.scale(text.scaleX, text.scaleY, 1f)
+        textBatch.projectionMatrix = textMatrix.mulLeft(projectionMatrix)
 
-//        val x = text.x - text.getGlyph().width * text.anchorX
-//        val y = text.y + text.getGlyph().height * text.anchorY
         text.getBitmapFont().draw(textBatch, text.getGlyph(), 0f, 0f)
-
-//        text.getGlyph().
-
     }
 
     override fun end(): Int {
