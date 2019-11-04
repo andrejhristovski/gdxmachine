@@ -1,21 +1,23 @@
 package com.disgraded.gdxmachine.sandbox.source
 
-import com.disgraded.gdxmachine.core.Config
-import com.disgraded.gdxmachine.core.EntryPoint
-import com.disgraded.gdxmachine.core.Context
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureRegion
+import com.disgraded.gdxmachine.framework.Game
+import com.disgraded.gdxmachine.framework.core.Core
+import com.disgraded.gdxmachine.framework.core.EntryPoint
+import com.disgraded.gdxmachine.framework.core.graphics.Layer
+import com.disgraded.gdxmachine.framework.core.resources.AssetPackage
+import com.disgraded.gdxmachine.framework.core.resources.assets.ShaderData
+import com.disgraded.gdxmachine.sandbox.source.scenes.FirstScene
 
-class SandboxGame : EntryPoint {
+class SandboxGame : Game() {
 
-    override fun configure(): Config? {
-        return null
+    override fun run() {
+        setScene(FirstScene::class)
     }
 
-    override fun initialize(context: Context) {
-        context.resources.load(InitialAssets::class, true)
-        context.scene.set(TestScene::class)
-    }
-
-    override fun destroy() {
+    override fun shutdown() {
 
     }
+
 }

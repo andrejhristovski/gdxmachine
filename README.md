@@ -71,3 +71,5 @@ dependencies {
 The project is licensed under the Apache License Version 2.0
 
 Some classes are based on LibGDX's code and are licensed under the Apache License Version 2.0 per LibGDX's license (compatible license). Such classes are placed under com.badlogic.gdx packages.
+
+If you make something successful with GdxMachine we will be happy if you remember us, and tell others about it

@@ -1,10 +1,6 @@
 language: android
 jdk: oraclejdk8
 
-cache:
-  directories:
-    - $HOME/.gradle
-
 branches:
   only:
     - master
@@ -49,7 +45,7 @@ install:
   - echo y | $HOME/android-sdk/tools/bin/sdkmanager 'extras;android;m2repository' > /dev/null
 
 before_install:
-  - chmod -R +x gdxmachine-core/src
+  - chmod -R +x gdxmachine-framework/src
   - chmod -R +x gdxmachine-platform-desktop/src
   - chmod -R +x gdxmachine-platform-android/src
   - chmod -R +x gdxmachine-sandbox-desktop/src

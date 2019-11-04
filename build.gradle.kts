@@ -11,7 +11,6 @@ plugins {
     `java-library`
     `maven-publish`
     kotlin("jvm") version "1.3.41" apply false
-    id("com.github.johnrengelman.shadow") version "5.1.0" apply false
     id("digital.wup.android-maven-publish") version "3.6.2" apply false
 }
 
@@ -29,7 +28,7 @@ buildscript {
 
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        classpath("com.android.tools.build:gradle:3.5.0")
+        classpath("com.android.tools.build:gradle:3.5.1")
     }
 }
 
@@ -43,6 +42,7 @@ allprojects {
     extra["ashleyVersion"] = "1.7.3"
     extra["kotlinVersion"] = "1.3.41"
     extra["junit5Version"] = "5.5.2"
+    extra["mockitoVersion"] = "3.0.0"
 
     repositories {
         mavenCentral()
