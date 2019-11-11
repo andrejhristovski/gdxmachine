@@ -1,6 +1,7 @@
 package com.disgraded.gdxmachine.framework.batches
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color as GdxColor
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
@@ -13,6 +14,7 @@ class TextBatch : Batch {
     private val textBatch = SpriteBatch(1)
     private lateinit var projectionMatrix: Matrix4
     private var textMatrix = Matrix4()
+    private var color = GdxColor()
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4) {
         this.projectionMatrix = projectionMatrix
@@ -35,7 +37,8 @@ class TextBatch : Batch {
         textMatrix.translate(-additionalX, additionalY, 0f)
         textMatrix.scale(text.scaleX, text.scaleY, 1f)
         textBatch.projectionMatrix = textMatrix.mulLeft(projectionMatrix)
-
+        color.set(text.color.r, text.color.g, text.color.b, text.color.a)
+        textBatch.color = color
         text.getBitmapFont().draw(textBatch, text.getGlyph(), 0f, 0f)
     }
 

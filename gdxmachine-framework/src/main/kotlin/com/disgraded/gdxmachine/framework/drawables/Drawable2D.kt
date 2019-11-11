@@ -18,12 +18,6 @@ abstract class Drawable2D : Drawable {
     var angle: Float = 0f
         set(value) { field = value % 360 }
 
-    fun setPosition(x: Float, y: Float, z: Float) {
-        this.x = x
-        this.y = y
-        this.z = z
-    }
-
     fun setPosition(x: Float, y: Float) {
         this.x = x
         this.y = y

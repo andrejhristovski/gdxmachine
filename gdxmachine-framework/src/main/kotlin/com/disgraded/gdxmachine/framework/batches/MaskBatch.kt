@@ -15,8 +15,6 @@ import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
 import com.disgraded.gdxmachine.framework.drawables.Mask
 import com.disgraded.gdxmachine.framework.utils.Corner
 
-// TODO: implement opacity feature
-
 class MaskBatch : Batch {
 
     private val core = Core
@@ -90,9 +88,7 @@ class MaskBatch : Batch {
                 flush()
                 this.shader = defaultShader
             }
-            return
-        }
-        if (shader !== this.shader) {
+        } else {
             flush()
             this.shader = shader
         }

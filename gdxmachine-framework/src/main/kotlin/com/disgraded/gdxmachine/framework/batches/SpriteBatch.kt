@@ -15,8 +15,6 @@ import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
 import com.disgraded.gdxmachine.framework.drawables.Sprite
 import com.disgraded.gdxmachine.framework.utils.Corner
 
-// TODO: implement opacity feature
-
 class SpriteBatch : Batch {
 
     private val core = Core
@@ -86,9 +84,7 @@ class SpriteBatch : Batch {
                 flush()
                 this.shader = defaultShader
             }
-            return
-        }
-        if (shader !== this.shader) {
+        } else {
             flush()
             this.shader = shader
         }
