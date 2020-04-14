@@ -5,7 +5,10 @@ import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.assets.loaders.FileHandleResolver
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Pixmap
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.PixmapPacker
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader
@@ -57,7 +60,7 @@ abstract class AssetPackage(val key: String, fileHandleResolver: FileHandleResol
     open fun onComplete() {}
 
     fun <T: Any> get(key: String): T {
-        if (!keyMap.containsKey(key)) throw RuntimeException("")
+        if (!keyMap.containsKey(key)) throw RuntimeException("Asset [$key] doesn't exist!")
         return assetManager.get<T>(keyMap[key])
     }
 
@@ -82,7 +85,7 @@ abstract class AssetPackage(val key: String, fileHandleResolver: FileHandleResol
     }
 
     fun <T: Any> load(key: String, path: String, type: KClass<T>, parameter: AssetLoaderParameters<T>? = null) {
-        if (keyMap.containsKey(key)) throw RuntimeException("") // TODO: MESSAGE HERE
+        if (keyMap.containsKey(key)) throw RuntimeException("Asset [$key] already exist!")
         if (parameter !== null) {
             assetManager.load(path, type.java, parameter)
         } else {
@@ -114,6 +117,10 @@ abstract class AssetPackage(val key: String, fileHandleResolver: FileHandleResol
             padRight = fontParams.padRight
             kerning = fontParams.kerning
             flip = fontParams.flip
+            renderCount = fontParams.renderCount
+            genMipMaps = true
+            magFilter = Texture.TextureFilter.MipMapLinearNearest
+            minFilter = Texture.TextureFilter.MipMapLinearNearest
         }
         val params = FreetypeFontLoader.FreeTypeFontLoaderParameter()
         params.fontFileName = path
@@ -123,7 +130,7 @@ abstract class AssetPackage(val key: String, fileHandleResolver: FileHandleResol
     }
 
     fun unload(key: String) {
-        if (!keyMap.containsKey(key)) throw RuntimeException("")  // TODO: MESSAGE HERE
+        if (!keyMap.containsKey(key)) throw RuntimeException("Asset [$key] is not loaded!")
         assetManager.unload(keyMap[key])
     }
 

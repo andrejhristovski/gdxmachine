@@ -29,7 +29,7 @@ class PhysicsModule : Module {
     private fun updateWorld(key: String, world: World) {
         val deltaTime = Gdx.graphics.deltaTime
         var accumulator = worldAccumulatorMap[key]!!
-        val frameTime = Math.min(deltaTime, .25f)
+        val frameTime = deltaTime.coerceAtMost(.25f)
         val worldTimestamp = 1 / 300f * api.worldSpeed
         accumulator += frameTime
         while (accumulator >= worldTimestamp) {
@@ -40,19 +40,19 @@ class PhysicsModule : Module {
     }
 
     fun createWorld(key: String, doSleep: Boolean): World {
-        if (worldMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        if (worldMap.containsKey(key)) throw RuntimeException("Physics world assigned as $key already exist!")
         worldMap[key] = World(Vector2(0f, 0f), doSleep)
         worldAccumulatorMap[key] = 0f
         return worldMap[key]!!
     }
 
     fun getWorld(key: String): World {
-        if (!worldMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        if (!worldMap.containsKey(key)) throw RuntimeException("World [$key] doesn't exist!")
         return worldMap[key]!!
     }
 
     fun destroyWorld(key: String) {
-        if (!worldMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        if (!worldMap.containsKey(key)) throw RuntimeException("World [$key] doesn't exist!")
         worldMap[key]!!.dispose()
         worldMap.remove(key)
         worldAccumulatorMap.remove(key)

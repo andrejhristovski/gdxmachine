@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.Clipboard
 
 class ApplicationApi(private val applicationModule: ApplicationModule) {
 
-    fun getLogger(scope: String = "global"): Logger = applicationModule.getLogger(scope)
+    fun getLogger(scope: Any): Logger = applicationModule.getLogger(scope.javaClass.toString())
 
     fun terminate() = Gdx.app.exit()
 

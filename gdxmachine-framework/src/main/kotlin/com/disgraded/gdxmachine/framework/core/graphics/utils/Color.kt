@@ -1,7 +1,9 @@
 package com.disgraded.gdxmachine.framework.core.graphics.utils
 import com.badlogic.gdx.utils.NumberUtils
+import com.disgraded.gdxmachine.framework.core.Prototype
+import java.util.*
 
-class Color {
+class Color : Prototype<Color> {
 
     companion object {
         val WHITE: Color = Color("#ffffff")
@@ -38,6 +40,9 @@ class Color {
     var b : Float = 0f
     var a : Float = 1f
 
+    constructor(color: Color) {
+        set(color)
+    }
 
     constructor(r : Float, g : Float, b: Float, a : Float = 1f) {
         set(r, g, b, a)
@@ -47,9 +52,17 @@ class Color {
         set(hexColor, alpha)
     }
 
-    fun set(hex: String, alpha: Float) {
+    fun set(color: Color): Color {
+        r = color.r
+        g = color.g
+        b = color.b
+        a = color.a
+        return this
+    }
+
+    fun set(hex: String, alpha: Float = 1f): Color {
         val regex = "#[0-9A-F]{6}".toRegex()
-        if (!hex.toUpperCase().matches(regex)) {
+        if (!hex.toUpperCase(Locale.ROOT).matches(regex)) {
             throw Exception("Hex code $hex isn't valid hex color code")
         }
 
@@ -57,9 +70,10 @@ class Color {
         val g = Integer.valueOf(hex.substring(3, 5), 16).toFloat() / 255
         val b = Integer.valueOf(hex.substring(5, 7), 16).toFloat() / 255
         set(r, g, b, alpha)
+        return this
     }
 
-    fun set(r : Float, g : Float, b: Float, a : Float) {
+    fun set(r : Float, g : Float, b: Float, a : Float = 1f): Color {
         if (r > 1f || g > 1f || b > 1f || a > 1f || r < 0f || g < 0f || b < 0f || a < 0f) {
             throw RuntimeException("Invalid color values")
         }
@@ -67,14 +81,49 @@ class Color {
         this.g = g
         this.b = b
         this.a = a
+        return this
     }
 
-    fun toFloatBits(): Float {
+    fun setRed(r: Float): Color {
+        this.r = r
+        return this
+    }
+
+    fun setGreen(g: Float): Color {
+        this.g = g
+        return this
+    }
+
+    fun setBlue(b: Float): Color {
+        this.b = b
+        return this
+    }
+
+    fun setAlpha(a: Float): Color {
+        this.a = a
+        return this
+    }
+
+    fun setOpacity(opacity: Float): Color {
+        this.a = opacity * this.a
+        return this
+    }
+
+    fun getBits(): Float {
         val color = (255 * a).toInt() shl 24 or ((255 * b).toInt() shl 16) or ((255 * g).toInt() shl 8) or (255 * r).toInt()
         return NumberUtils.intToFloatColor(color)
     }
 
-    fun copy(): Color {
+    fun getHex(): String = String.format("#%02x%02x%02x", r, g, b)
+
+    override fun copy(): Color {
         return Color(r, g, b, a)
+    }
+
+    override fun inherit(obj: Color) {
+        r = obj.r
+        g = obj.g
+        b = obj.b
+        a = obj.a
     }
 }

@@ -25,18 +25,18 @@ class ResourceModule : Module {
     }
 
     fun loadPackage(assetPackage: AssetPackage, sync: Boolean) {
-        if (packages.containsKey(assetPackage.key)) throw RuntimeException("")  // TODO: MESSAGE HERE
+        if (packages.containsKey(assetPackage.key)) throw RuntimeException("Asset Package ${assetPackage.key} is already loaded")
         packages[assetPackage.key] = assetPackage
         if (sync) assetPackage.sync()
     }
 
     fun getPackage(key: String): AssetPackage {
-        if (!packages.containsKey(key)) throw RuntimeException("")  // TODO: MESSAGE HERE
+        if (!packages.containsKey(key)) throw RuntimeException("Asset Package [$key] doesn't exist!")
         return packages[key]!!
     }
 
     fun unloadPackage(key: String) {
-        if (!packages.containsKey(key)) throw RuntimeException("")  // TODO: MESSAGE HERE
+        if (!packages.containsKey(key)) throw RuntimeException("Asset package [$key] is not loaded")
         packages[key]!!.dispose()
         packages.remove(key)
     }

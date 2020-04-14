@@ -25,7 +25,6 @@ class CoreAssets: AssetPackage("core", ClasspathFileHandleResolver()) {
 
     override fun onComplete() {
         core.graphics.compileShader("sprite", get("sprite.vertex"), get("sprite.fragment"))
-
         core.graphics.compileShader("sprite.mask", get("sprite.mask.vertex"), get("sprite.mask.fragment"))
     }
 }

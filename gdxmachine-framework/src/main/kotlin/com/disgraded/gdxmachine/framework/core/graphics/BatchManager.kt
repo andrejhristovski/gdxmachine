@@ -10,7 +10,7 @@ class BatchManager: Disposable {
     private var currentBatch: Batch? = null
 
     fun addBatch(drawableType: KClass<out Drawable>, batch: Batch) {
-        if (batchMap.containsKey(drawableType)) throw RuntimeException("") // TODO: message
+        if (batchMap.containsKey(drawableType)) throw RuntimeException("batch for $drawableType already exist!")
         batchMap[drawableType] = batch
     }
 

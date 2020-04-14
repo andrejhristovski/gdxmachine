@@ -41,19 +41,19 @@ class GraphicsModule : Module {
     }
 
     fun createLayer(key: String, width: Float, height: Float, scaling: Scaling): Layer {
-        if (layerMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        if (layerMap.containsKey(key)) throw RuntimeException("Layer [$key] already exist!")
         layerMap[key] = Layer(key, width, height, scaling)
         layerMap[key]!!.update(Gdx.graphics.width, Gdx.graphics.height)
         return layerMap[key]!!
     }
 
     fun getLayer(key: String): Layer {
-        if (!layerMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        if (!layerMap.containsKey(key)) throw RuntimeException("There is no layer assigned as $key")
         return layerMap[key]!!
     }
 
     fun removeLayer(key: String) {
-        if (!layerMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        if (!layerMap.containsKey(key)) throw RuntimeException("There is no layer assigned as $key")
         layerMap[key]!!.dispose()
         layerMap.remove(key)
     }
@@ -61,21 +61,21 @@ class GraphicsModule : Module {
     fun existLayer(key: String): Boolean = layerMap.containsKey(key)
 
     fun compileShader(key: String, vertex: ShaderData, fragment: ShaderData): Shader {
-        if (shaderMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        if (shaderMap.containsKey(key)) throw RuntimeException("Shader [$key] already exist!")
         shaderMap[key] = Shader(vertex, fragment)
         if (!shaderMap[key]!!.isCompiled) {
-            throw RuntimeException("") // TODO: message
+            throw RuntimeException("Shader $key failed on compiling")
         }
         return shaderMap[key]!!
     }
 
     fun getShader(key: String): Shader {
-        if (!shaderMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        if (!shaderMap.containsKey(key)) throw RuntimeException("Shader [$key] doesn't exist!")
         return shaderMap[key]!!
     }
 
     fun removeShader(key: String) {
-        if (!shaderMap.containsKey(key)) throw RuntimeException("") // TODO: message
+        if (!shaderMap.containsKey(key)) throw RuntimeException("Shader [$key] doesn't exist!")
         shaderMap[key]!!.dispose()
         shaderMap.remove(key)
     }

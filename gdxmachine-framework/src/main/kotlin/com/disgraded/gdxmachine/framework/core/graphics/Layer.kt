@@ -21,7 +21,7 @@ class Layer(val key: String, private var width: Float, private var height: Float
     }
 
     fun render(): Int {
-        if (renderer == null) throw RuntimeException("") // TODO: message
+        if (renderer == null) throw RuntimeException("Layer [$key] doesn't contain renderer")
         if (!visible) return 0
         apply()
         drawableList.sortBy { it.getOrder() }

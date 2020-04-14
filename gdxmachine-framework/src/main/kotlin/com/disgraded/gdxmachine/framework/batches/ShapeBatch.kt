@@ -1,5 +1,7 @@
 package com.disgraded.gdxmachine.framework.batches
 
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.*
 import com.disgraded.gdxmachine.framework.core.graphics.Batch
@@ -24,14 +26,16 @@ class ShapeBatch : Batch {
             Shape.Style.POINT -> ShapeRenderer.ShapeType.Point
         }
 
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.begin(shapeType)
-        shapeRenderer.color.set(shape.color.r, shape.color.g, shape.color.b, shape.color.a)
+        shapeRenderer.color.set(shape.color.r, shape.color.g, shape.color.b, shape.color.a * shape.opacity)
         when(shape.getType()) {
-            Circle::class -> drawCircle(shape, shape.shape2D as Circle)
-            Ellipse::class -> drawEllipse(shape, shape.shape2D as Ellipse)
-            Polygon::class -> drawPolygon(shape, shape.shape2D as Polygon)
-            Rectangle::class -> drawRectangle(shape, shape.shape2D as Rectangle)
-            else -> throw RuntimeException("") // TODO: message here
+            Circle::class -> drawCircle(shape, shape.shape as Circle)
+            Ellipse::class -> drawEllipse(shape, shape.shape as Ellipse)
+            Polygon::class -> drawPolygon(shape, shape.shape as Polygon)
+            Rectangle::class -> drawRectangle(shape, shape.shape as Rectangle)
+            else -> throw RuntimeException("Unsupported shape type ${shape.getType()}")
         }
         calls++
         shapeRenderer.end()
@@ -45,6 +49,10 @@ class ShapeBatch : Batch {
 
     override fun dispose() = shapeRenderer.dispose()
 
+    private fun drawRectangle(shape: Shape<*>, rectangle: Rectangle) {
+        shapeRenderer.rect(shape.x, shape.y, rectangle.width, rectangle.height)
+    }
+
     private fun drawCircle(shape: Shape<*>, circle: Circle) {
         shapeRenderer.circle(shape.x, shape.y, circle.radius)
     }
@@ -54,10 +62,9 @@ class ShapeBatch : Batch {
     }
 
     private fun drawPolygon(shape: Shape<*>, polygon: Polygon) {
-        shapeRenderer.polygon(polygon.vertices)
-    }
-
-    private fun drawRectangle(shape: Shape<*>, rectangle: Rectangle) {
-        shapeRenderer.rect(shape.x, shape.y, rectangle.width, rectangle.height)
+        polygon.setPosition(shape.x, shape.y)
+        polygon.rotation = shape.angle
+        polygon.setScale(shape.scaleX, shape.scaleY)
+        shapeRenderer.polygon(polygon.transformedVertices)
     }
 }

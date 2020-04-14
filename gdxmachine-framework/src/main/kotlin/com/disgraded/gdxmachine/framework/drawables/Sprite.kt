@@ -4,15 +4,9 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import com.disgraded.gdxmachine.framework.utils.Corner
+import com.disgraded.gdxmachine.framework.core.Prototype
 
-open class Sprite : Drawable2D() {
-
-    var opacity = 1f
-        set(value) {
-            if (value > 1f) field = 1f
-            else if (value < 0f) field = 0f
-            else field = value
-        }
+open class Sprite : Drawable2D(), Prototype<Sprite> {
 
     private var textureRegion: TextureRegion? = null
     private val colorMap = hashMapOf<Corner, Color>()
@@ -33,7 +27,7 @@ open class Sprite : Drawable2D() {
     }
 
     fun getTexture(): TextureRegion {
-        if (textureRegion == null) throw RuntimeException("") // TODO: message
+        if (textureRegion == null) throw RuntimeException("Texture doesn't exist!")
         return textureRegion!!
     }
 
@@ -64,5 +58,20 @@ open class Sprite : Drawable2D() {
             Corner.BOTTOM_LEFT -> colorMap[Corner.BOTTOM_LEFT]!!
             Corner.BOTTOM_RIGHT -> colorMap[Corner.BOTTOM_RIGHT]!!
         }
+    }
+
+    override fun copy(): Sprite {
+        val sprite = Sprite()
+        sprite.inherit(this)
+        return sprite
+    }
+
+    override fun inherit(obj: Sprite) {
+        setTexture(obj.getTexture())
+        setColor(obj.getColor(Corner.TOP_LEFT))
+        setColor(obj.getColor(Corner.TOP_RIGHT))
+        setColor(obj.getColor(Corner.BOTTOM_LEFT))
+        setColor(obj.getColor(Corner.BOTTOM_RIGHT))
+        super.inherit(obj)
     }
 }
