@@ -1,3 +1,5 @@
+import java.net.URI
+
 val versionNumber: Int by extra
 
 val gdxVersion: String by extra
@@ -47,6 +49,18 @@ android {
 }
 
 publishing {
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = URI("https://maven.pkg.github.com/disgraded/gdxmachine")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+
     (publications) {
         register("release", MavenPublication::class) {
             from(components["android"])
