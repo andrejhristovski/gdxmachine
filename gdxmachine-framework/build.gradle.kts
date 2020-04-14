@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.net.URI
+
 val gdxVersion: String by extra
 val ashleyVersion: String by extra
 val junit5Version: String by extra
@@ -42,6 +44,15 @@ publishing {
     repositories {
         maven {
             url = uri("$buildDir/release")
+        }
+
+        maven {
+            name = "GitHubPackages"
+            url = URI("https://maven.pkg.github.com/disgraded/gdxmachine")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
         }
     }
 
