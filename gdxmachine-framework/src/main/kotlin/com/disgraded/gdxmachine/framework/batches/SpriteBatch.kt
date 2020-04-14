@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.framework.core.Core
 import com.disgraded.gdxmachine.framework.core.graphics.Batch
 import com.disgraded.gdxmachine.framework.core.graphics.Drawable
+import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
 import com.disgraded.gdxmachine.framework.drawables.Sprite
 import com.disgraded.gdxmachine.framework.utils.Corner
@@ -34,6 +35,9 @@ class SpriteBatch : Batch {
     private val defaultShader: Shader
     private var shader: Shader
     private var cachedTexture: Texture? = null
+
+    private val tempColor = Color("#ffffff")
+
     init {
         val maxVertices = verticesPerBuffer * maxCalls
         val maxIndices = indicesPerBuffer * maxCalls
@@ -142,25 +146,25 @@ class SpriteBatch : Batch {
 
         vertices[idx] = x1
         vertices[idx + 1] = y1
-        vertices[idx + 2] = sprite.getColor(Corner.BOTTOM_LEFT).toFloatBits()
+        vertices[idx + 2] = tempColor.set(sprite.getColor(Corner.BOTTOM_LEFT)).setOpacity(sprite.opacity).getBits()
         vertices[idx + 3] = sprite.getTexture().u
         vertices[idx + 4] = sprite.getTexture().v2
 
         vertices[idx + 5] = x2
         vertices[idx + 6] = y2
-        vertices[idx + 7] = sprite.getColor(Corner.TOP_LEFT).toFloatBits()
+        vertices[idx + 7] = tempColor.set(sprite.getColor(Corner.TOP_LEFT)).setOpacity(sprite.opacity).getBits()
         vertices[idx + 8] = sprite.getTexture().u
         vertices[idx + 9] = sprite.getTexture().v
 
         vertices[idx + 10] = x3
         vertices[idx + 11] = y3
-        vertices[idx + 12] = sprite.getColor(Corner.TOP_RIGHT).toFloatBits()
+        vertices[idx + 12] = tempColor.set(sprite.getColor(Corner.TOP_RIGHT)).setOpacity(sprite.opacity).getBits()
         vertices[idx + 13] = sprite.getTexture().u2
         vertices[idx + 14] = sprite.getTexture().v
 
         vertices[idx + 15] = x4
         vertices[idx + 16] = y4
-        vertices[idx + 17] = sprite.getColor(Corner.BOTTOM_RIGHT).toFloatBits()
+        vertices[idx + 17] = tempColor.set(sprite.getColor(Corner.BOTTOM_RIGHT)).setOpacity(sprite.opacity).getBits()
         vertices[idx + 18] = sprite.getTexture().u2
         vertices[idx + 19] = sprite.getTexture().v2
         bufferedCalls++

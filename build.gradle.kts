@@ -10,13 +10,13 @@ plugins {
     java
     `java-library`
     `maven-publish`
-    kotlin("jvm") version "1.3.41" apply false
+    kotlin("jvm") version "1.3.71" apply false
     id("digital.wup.android-maven-publish") version "3.6.2" apply false
 }
 
 buildscript {
 
-    extra["kotlinVersion"] = "1.3.41"
+    extra["kotlinVersion"] = "1.3.71"
     val kotlinVersion: String by extra
 
     repositories {
@@ -35,8 +35,8 @@ buildscript {
 allprojects {
 
     group = "com.disgraded.gdxmachine"
-    version = "0.0.6-prototype"
-    extra["versionNumber"] = 2
+    version = "0.1.0-prototype"
+    extra["versionNumber"] = 3
 
     extra["gdxVersion"] = "1.9.10"
     extra["ashleyVersion"] = "1.7.3"

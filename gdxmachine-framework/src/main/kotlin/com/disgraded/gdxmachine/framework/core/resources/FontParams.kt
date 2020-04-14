@@ -22,4 +22,5 @@ class FontParams {
     var padRight = 0
     var kerning = true
     var flip = false
+    var renderCount = 2
 }

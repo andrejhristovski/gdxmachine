@@ -8,6 +8,15 @@ abstract class Drawable2D : Drawable {
     override var shader: Shader? = null
 
     var visible: Boolean = true
+    open var opacity = 1f
+        set(value) {
+            field = when {
+                value > 1f -> 1f
+                value < 0f -> 0f
+                else -> value
+            }
+        }
+
     var x: Float = 0f
     var y: Float = 0f
     var z: Float = 0f
@@ -41,6 +50,19 @@ abstract class Drawable2D : Drawable {
     fun setAnchor(x: Float, y: Float) {
         anchorX = x
         anchorY = y
+    }
+
+    fun inherit(obj: Drawable2D) {
+        shader = obj.shader
+        visible = obj.visible
+        x = obj.x
+        y = obj.y
+        z = obj.z
+        scaleX = obj.scaleX
+        scaleY = obj.scaleY
+        anchorX = obj.anchorX
+        anchorY = obj.anchorY
+        angle = obj.angle
     }
 
     override fun getOrder(): Long = z.toLong()

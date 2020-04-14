@@ -12,6 +12,7 @@ class GdxMachineLauncher {
         configuration.setTitle("GdxMachine Desktop Game")
         configuration.setWindowedMode(1280, 720)
         configuration.setDecorated(false)
+        configuration.useVsync(true)
         if (cfg !== null) {
             configuration = cfg
         }

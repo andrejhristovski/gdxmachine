@@ -9,30 +9,30 @@ class Logger(private val scope: String, var level: LoggerLevel = LoggerLevel.INF
         Gdx.app.logLevel = Application.LOG_DEBUG
     }
 
-    fun error(tag: String, message: String, throwable: Throwable? = null) {
+    fun error(message: String, throwable: Throwable? = null) {
         if (level.value < 1) return
         if (throwable == null) {
-            Gdx.app.error(tag, message)
+            Gdx.app.error(scope, message)
         } else {
-            Gdx.app.error(tag, message, throwable)
+            Gdx.app.error(scope, message, throwable)
         }
     }
 
-    fun info(tag: String, message: String, throwable: Throwable? = null) {
+    fun info(message: String, throwable: Throwable? = null) {
         if (level.value < 2) return
         if (throwable == null) {
-            Gdx.app.log(tag, message)
+            Gdx.app.log(scope, message)
         } else {
-            Gdx.app.log(tag, message, throwable)
+            Gdx.app.log(scope, message, throwable)
         }
     }
 
-    fun debug(tag: String, message: String, throwable: Throwable? = null) {
+    fun debug(message: String, throwable: Throwable? = null) {
         if (level.value < 3) return
         if (throwable == null) {
-            Gdx.app.debug(tag, message)
+            Gdx.app.debug(scope, message)
         } else {
-            Gdx.app.debug(tag, message, throwable)
+            Gdx.app.debug(scope, message, throwable)
         }
     }
 
