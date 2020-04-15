@@ -1,12 +1,10 @@
 package com.disgraded.gdxmachine.sandbox.source.scenes
 
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.math.Circle
 import com.badlogic.gdx.math.Polygon
 import com.badlogic.gdx.math.Rectangle
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
-import com.disgraded.gdxmachine.framework.drawables.Mask
 import com.disgraded.gdxmachine.framework.drawables.Shape
 import com.disgraded.gdxmachine.framework.drawables.Sprite
 import com.disgraded.gdxmachine.framework.drawables.Text
@@ -22,6 +20,7 @@ class FirstScene : Scene() {
     private lateinit var text2: Text
 
     override fun initialize() {
+
         val assets = core.resources.get("core")
         sprite = Sprite()
         sprite.setTexture(assets.get<Texture>("no_image"))
@@ -45,7 +44,7 @@ class FirstScene : Scene() {
         text2.setPosition(300f, 300f)
         text2.opacity = .5f
 
-        val polygonVertices = floatArrayOf(-10f, -10f, 10f, -10f, 5f, 5f, 10f, 10f, -10f, 10f)
+        val polygonVertices = floatArrayOf(-10f, -10f, 10f, -10f, 5f, 5f, 10f, 10f, -10f, 10f, -10f, -10f)
         polygon = Shape(Polygon())
         polygon.shape.vertices = polygonVertices
         polygon.style = Shape.Style.LINE
