@@ -5,17 +5,61 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import com.disgraded.gdxmachine.framework.utils.Corner
 import com.disgraded.gdxmachine.framework.core.Prototype
+import com.disgraded.gdxmachine.framework.utils.Animation2D
 
 open class Sprite : Drawable2D(), Prototype<Sprite> {
 
     private var textureRegion: TextureRegion? = null
     private val colorMap = hashMapOf<Corner, Color>()
 
+    private val animationMap = HashMap<String, Animation2D>()
+    private var activeAnim: Animation2D? = null
+
+    // TODO: implement flip on texture & anim
+
     init {
         colorMap[Corner.TOP_LEFT] = Color.WHITE
         colorMap[Corner.TOP_RIGHT] = Color.WHITE
         colorMap[Corner.BOTTOM_LEFT] = Color.WHITE
         colorMap[Corner.BOTTOM_RIGHT] = Color.WHITE
+    }
+
+    fun addAnim(animation: Animation2D) {
+        if (animationMap.containsKey(animation.key)) {
+            throw RuntimeException("Animation ${animation.key} already exist")
+        }
+        animationMap[animation.key] = animation
+    }
+
+    fun removeAnim(key: String) {
+        if (!animationMap.containsKey(key)) {
+            throw RuntimeException("Animation $key doesn't exist")
+        }
+        animationMap.remove(key)
+    }
+
+    fun getAnim(key: String): Animation2D {
+        if (!animationMap.containsKey(key)) {
+            throw RuntimeException("Animation $key doesn't exist")
+        }
+        return animationMap[key]!!
+    }
+
+    fun getAnimList(): MutableSet<String> {
+        return animationMap.keys
+    }
+
+    fun getAnim(): Animation2D? = activeAnim
+
+    fun play(key: String) {
+        if (!animationMap.containsKey(key)) {
+            throw RuntimeException("Animation $key doesn't exist")
+        }
+        activeAnim = animationMap[key]
+    }
+
+    fun stop() {
+        activeAnim = null
     }
 
     fun setTexture(texture: Texture) {
@@ -27,6 +71,9 @@ open class Sprite : Drawable2D(), Prototype<Sprite> {
     }
 
     fun getTexture(): TextureRegion {
+        if (activeAnim != null) {
+            return activeAnim!!.getTexture()
+        }
         if (textureRegion == null) throw RuntimeException("Texture doesn't exist!")
         return textureRegion!!
     }

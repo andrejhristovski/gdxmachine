@@ -10,7 +10,7 @@ class ResourceApi(private val resourceModule: ResourceModule) {
         resourceModule.loadPackage(assetPackage, sync)
         return assetPackage
     }
-
+    // TODO: rename get resources to get packages
     fun get(key: String): AssetPackage = resourceModule.getPackage(key)
 
     fun unload(key: String) = resourceModule.unloadPackage(key)

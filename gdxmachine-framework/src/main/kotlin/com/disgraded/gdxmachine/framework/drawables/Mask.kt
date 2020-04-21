@@ -6,7 +6,7 @@ import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import com.disgraded.gdxmachine.framework.utils.Corner
 import com.disgraded.gdxmachine.framework.core.Prototype
 
-class Mask : Drawable2D(), Prototype<Mask> {
+open class Mask : Drawable2D(), Prototype<Mask> {
 
     private var textureRegionMask: TextureRegion? = null
     private var textureRegion: TextureRegion? = null

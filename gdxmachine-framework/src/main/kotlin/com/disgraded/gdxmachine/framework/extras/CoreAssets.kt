@@ -1,4 +1,4 @@
-package com.disgraded.gdxmachine.framework.utils
+package com.disgraded.gdxmachine.framework.extras
 
 import com.badlogic.gdx.assets.loaders.resolvers.ClasspathFileHandleResolver
 import com.badlogic.gdx.graphics.Texture

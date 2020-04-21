@@ -18,7 +18,7 @@ class ShapeBatch : Batch {
     }
 
     override fun draw(drawable: Drawable) {
-        val shape = drawable as Shape<*>
+        val shape = drawable as Shape
 
         val shapeType = when(shape.style) {
             Shape.Style.FILLED -> ShapeRenderer.ShapeType.Filled
@@ -31,10 +31,10 @@ class ShapeBatch : Batch {
         shapeRenderer.begin(shapeType)
         shapeRenderer.color.set(shape.color.r, shape.color.g, shape.color.b, shape.color.a * shape.opacity)
         when(shape.getType()) {
-            Circle::class -> drawCircle(shape, shape.shape as Circle)
-            Ellipse::class -> drawEllipse(shape, shape.shape as Ellipse)
-            Polygon::class -> drawPolygon(shape, shape.shape as Polygon)
-            Rectangle::class -> drawRectangle(shape, shape.shape as Rectangle)
+            Circle::class -> drawCircle(shape, shape.getShape2D() as Circle)
+            Ellipse::class -> drawEllipse(shape, shape.getShape2D() as Ellipse)
+            Polygon::class -> drawPolygon(shape, shape.getShape2D() as Polygon)
+            Rectangle::class -> drawRectangle(shape, shape.getShape2D() as Rectangle)
             else -> throw RuntimeException("Unsupported shape type ${shape.getType()}")
         }
         calls++
@@ -49,22 +49,20 @@ class ShapeBatch : Batch {
 
     override fun dispose() = shapeRenderer.dispose()
 
-    private fun drawRectangle(shape: Shape<*>, rectangle: Rectangle) {
-        shapeRenderer.rect(shape.x, shape.y, rectangle.width, rectangle.height)
+    private fun drawRectangle(shape: Shape, rectangle: Rectangle) {
+        shapeRenderer.rect(shape.x, shape.y, shape.anchorX, shape.anchorY, rectangle.width,
+                rectangle.height, shape.scaleX, shape.scaleY, shape.angle)
     }
 
-    private fun drawCircle(shape: Shape<*>, circle: Circle) {
+    private fun drawCircle(shape: Shape, circle: Circle) {
         shapeRenderer.circle(shape.x, shape.y, circle.radius)
     }
 
-    private fun drawEllipse(shape: Shape<*>, ellipse: Ellipse) {
+    private fun drawEllipse(shape: Shape, ellipse: Ellipse) {
         shapeRenderer.ellipse(shape.x, shape.y, ellipse.width, ellipse.height, shape.angle)
     }
 
-    private fun drawPolygon(shape: Shape<*>, polygon: Polygon) {
-        polygon.setPosition(shape.x, shape.y)
-        polygon.rotation = shape.angle
-        polygon.setScale(shape.scaleX, shape.scaleY)
+    private fun drawPolygon(shape: Shape, polygon: Polygon) {
         shapeRenderer.polygon(polygon.transformedVertices)
     }
 }

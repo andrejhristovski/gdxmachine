@@ -15,7 +15,6 @@ abstract class System(
     val uid = UUID.randomUUID().toString()
 
     protected val core = Core
-    private var entities = ArrayList<Entity>()
 
     protected abstract fun initialize(entities: ArrayList<Entity>)
 
@@ -34,7 +33,7 @@ abstract class System(
     }
 
     override fun removedFromEngine(engine: Engine?) {
-        super.removedFromEngine(engine)
         destroy(core.engine.get(family))
+        super.removedFromEngine(engine)
     }
 }

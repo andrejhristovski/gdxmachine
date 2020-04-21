@@ -1,5 +1,6 @@
 package com.disgraded.gdxmachine.framework.core.engine
 
+import com.disgraded.gdxmachine.framework.core.Core
 import java.util.*
 import kotlin.reflect.KClass
 import com.badlogic.ashley.core.Entity as EcsEntity
@@ -7,6 +8,8 @@ import com.badlogic.ashley.core.Entity as EcsEntity
 abstract class Entity: EcsEntity() {
 
     val uid = UUID.randomUUID().toString()
+
+    protected val core = Core
 
     abstract fun initialize()
 
@@ -24,8 +27,8 @@ abstract class Entity: EcsEntity() {
         return this
     }
 
-    fun get(componentClass: KClass<out Component>): Component {
-        return super.getComponent(componentClass.java) as Component
+    fun <T: Component> get(componentClass: KClass<T>): T? {
+        return super.getComponent(componentClass.java)
     }
 
 }

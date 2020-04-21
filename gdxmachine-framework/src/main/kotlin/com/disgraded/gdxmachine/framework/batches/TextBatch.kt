@@ -3,7 +3,6 @@ package com.disgraded.gdxmachine.framework.batches
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color as GdxColor
 import com.badlogic.gdx.graphics.GL20
-import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.framework.core.graphics.Batch
@@ -38,7 +37,11 @@ class TextBatch : Batch {
         textMatrix.translate(-additionalX, additionalY, 0f)
         textMatrix.scale(text.scaleX, text.scaleY, 1f)
         textBatch.projectionMatrix = textMatrix.mulLeft(projectionMatrix)
-        text.font.draw(textBatch, text.glyph, 0f, 0f)
+        try {
+            text.font!!.draw(textBatch, text.glyph, 0f, 0f)
+        }catch (e: Exception) {
+            throw RuntimeException("Text can not be drawn without font")
+        }
     }
 
     override fun end(): Int {

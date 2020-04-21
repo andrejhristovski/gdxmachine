@@ -10,12 +10,7 @@ abstract class Scene {
     protected val core = Core
     private val sceneManager = SceneManager.getInstance()
 
-    protected lateinit var mainLayer: Layer
-
-    fun prepare() {
-        mainLayer = core.graphics.createLayer()
-        mainLayer.setRenderer(Renderer2D())
-    }
+    abstract fun prepare()
 
     abstract fun initialize()
 

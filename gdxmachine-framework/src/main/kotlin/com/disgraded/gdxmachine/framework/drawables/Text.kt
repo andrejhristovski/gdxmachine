@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.utils.Align
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import com.disgraded.gdxmachine.framework.core.Prototype
+import java.lang.Exception
 
-class Text(var font: BitmapFont): Drawable2D(), Prototype<Text> {
+open class Text: Drawable2D(), Prototype<Text> {
 
+    var font: BitmapFont? = null
     val glyph = GlyphLayout()
 
     var color: Color = Color.WHITE
@@ -82,17 +84,20 @@ class Text(var font: BitmapFont): Drawable2D(), Prototype<Text> {
         if (offset != 0) {
             start = offset
         }
-        font.color = gdxColor
-        glyph.setText(font, content, start, limitLength, font.color, width, align, wrap, truncate)
+        try {
+            font!!.color = gdxColor
+            glyph.setText(font, content, start, limitLength, font!!.color, width, align, wrap, truncate)
+        } catch (e: Exception) {}
     }
 
     override fun copy(): Text {
-        val text = Text(font)
+        val text = Text()
         text.inherit(this)
         return text
     }
 
     override fun inherit(obj: Text) {
+        font = obj.font
         color = obj.color
         content = obj.content
         width = obj.width

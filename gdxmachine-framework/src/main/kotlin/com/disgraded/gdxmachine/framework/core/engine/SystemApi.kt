@@ -6,9 +6,9 @@ import kotlin.reflect.full.createInstance
 
 class SystemApi(private val engine: Engine) {
 
-    private val systemMap = HashMap<KClass<System>, System>()
+    private val systemMap = HashMap<KClass<out System>, System>()
 
-    fun add(systemClass: KClass<System>): System {
+    fun add(systemClass: KClass<out System>): System {
         if (systemMap.containsKey(systemClass)) {
             throw RuntimeException("The system of type $systemClass is already added")
         }
@@ -18,7 +18,7 @@ class SystemApi(private val engine: Engine) {
         return system
     }
 
-    fun remove(systemClass: KClass<System>) {
+    fun remove(systemClass: KClass<out System>) {
         if (systemMap.containsKey(systemClass)) {
             val system = systemMap[systemClass]!!
             engine.removeSystem(system)

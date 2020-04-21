@@ -2,7 +2,7 @@ package com.disgraded.gdxmachine.framework
 
 import com.disgraded.gdxmachine.framework.core.Core
 import com.disgraded.gdxmachine.framework.core.EntryPoint
-import com.disgraded.gdxmachine.framework.utils.CoreAssets
+import com.disgraded.gdxmachine.framework.extras.CoreAssets
 import com.disgraded.gdxmachine.framework.scenes.Scene
 import com.disgraded.gdxmachine.framework.scenes.SceneManager
 import kotlin.reflect.KClass
