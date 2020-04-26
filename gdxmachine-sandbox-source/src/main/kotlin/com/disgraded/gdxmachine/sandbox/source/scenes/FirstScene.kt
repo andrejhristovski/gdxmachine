@@ -1,17 +1,22 @@
 package com.disgraded.gdxmachine.sandbox.source.scenes
 
+import com.disgraded.gdxmachine.framework.renderers.Renderer2D
+import com.disgraded.gdxmachine.framework.renderers.Renderer2DLighting
 import com.disgraded.gdxmachine.framework.scenes.Scene
 import com.disgraded.gdxmachine.framework.systems.Render2DSystem
-import com.disgraded.gdxmachine.sandbox.source.entities.TestSprite
+import com.disgraded.gdxmachine.sandbox.source.entities.Background
+import com.disgraded.gdxmachine.sandbox.source.entities.FPSCounter
 
 class FirstScene : Scene() {
 
     override fun prepare() {
         core.engine.systems.add(Render2DSystem::class)
+        core.graphics.getLayer().setRenderer(Renderer2DLighting())
     }
 
     override fun initialize() {
-        core.engine.add(TestSprite())
+        core.engine.add(Background())
+        core.engine.add(FPSCounter())
     }
 
     override fun update(deltaTime: Float) {

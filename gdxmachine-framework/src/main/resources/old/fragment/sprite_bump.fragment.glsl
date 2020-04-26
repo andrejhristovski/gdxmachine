@@ -14,12 +14,11 @@ uniform int normal_exist;
 
 void main()
 {
-    // vec4 greyColor = vec4(vec3(dot(texColor.rgb, vec3(0.299, 0.587, 0.114))), texColor.a);
+    vec4 greyColor = vec4(vec3(dot(texColor.rgb, vec3(0.299, 0.587, 0.114))), texColor.a);
     vec4 texColor = texture2D(u_texture, v_texCoords);
     vec4 normalColor = vec4(.5, .5, 1, texColor.a);
     if (normal_exist == 1) {
         normalColor = vec4(texture2D(u_texture_normal, v_texCoords_normal).rgb, texColor.a);
     }
     gl_FragColor = normalColor;
-
 }

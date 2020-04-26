@@ -3,15 +3,15 @@ package com.disgraded.gdxmachine.framework.drawables
 import com.badlogic.gdx.math.Shape2D
 import com.disgraded.gdxmachine.framework.core.Prototype
 import kotlin.reflect.KClass
-import com.badlogic.gdx.math.Circle as MathCircle
+import com.badlogic.gdx.math.Circle as Circle2D
 
 open class Circle: Shape(), Prototype<Circle> {
 
-    private val shape2d = MathCircle()
+    private val shape2d = Circle2D()
 
     var radius: Float = 0f
 
-    override fun getType(): KClass<out Shape2D> = shape2d::class
+    override fun getShapeType(): KClass<out Shape> = Circle::class
 
     override fun getShape2D(): Shape2D {
         shape2d.set(x, y, radius)

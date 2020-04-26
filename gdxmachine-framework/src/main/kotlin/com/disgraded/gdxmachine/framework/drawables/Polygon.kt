@@ -3,15 +3,19 @@ package com.disgraded.gdxmachine.framework.drawables
 import com.badlogic.gdx.math.Shape2D
 import com.disgraded.gdxmachine.framework.core.Prototype
 import kotlin.reflect.KClass
-import com.badlogic.gdx.math.Polygon as MathPolygon
+import com.badlogic.gdx.math.Polygon as Polygon2D
 
 open class Polygon: Shape(), Prototype<Polygon> {
 
-    private val shape2d = MathPolygon()
+    private val shape2d = Polygon2D()
 
     var vertices = arrayListOf<Float>()
 
-    override fun getType(): KClass<out Shape2D> = shape2d::class
+    init {
+        style = Style.LINE
+    }
+
+    override fun getShapeType(): KClass<out Shape> = Polygon::class
 
     override fun getShape2D(): Shape2D {
         shape2d.setPosition(x, y)

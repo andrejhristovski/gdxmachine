@@ -5,17 +5,25 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import com.disgraded.gdxmachine.framework.utils.Corner
 import com.disgraded.gdxmachine.framework.core.Prototype
+import com.disgraded.gdxmachine.framework.core.graphics.Drawable
 import com.disgraded.gdxmachine.framework.utils.Animation2D
+import kotlin.reflect.KClass
 
 open class Sprite : Drawable2D(), Prototype<Sprite> {
 
-    private var textureRegion: TextureRegion? = null
+    companion object {
+        const val DIFFUSE_TEXTURE = "_diffuse"
+        const val NORMAL_TEXTURE = "_normal"
+        const val MASK_TEXTURE = "_mask"
+    }
+
     private val colorMap = hashMapOf<Corner, Color>()
 
-    private val animationMap = HashMap<String, Animation2D>()
-    private var activeAnim: Animation2D? = null
+    private val textureMap = hashMapOf<String, TextureRegion>()
 
-    // TODO: implement flip on texture & anim
+
+    var flipX = false
+    var flipY = false
 
     init {
         colorMap[Corner.TOP_LEFT] = Color.WHITE
@@ -24,59 +32,27 @@ open class Sprite : Drawable2D(), Prototype<Sprite> {
         colorMap[Corner.BOTTOM_RIGHT] = Color.WHITE
     }
 
-    fun addAnim(animation: Animation2D) {
-        if (animationMap.containsKey(animation.key)) {
-            throw RuntimeException("Animation ${animation.key} already exist")
+    fun setTexture(texture: Texture, key: String = DIFFUSE_TEXTURE) {
+        setTexture(TextureRegion(texture), key)
+    }
+
+    fun setTexture(textureRegion: TextureRegion, key: String = DIFFUSE_TEXTURE) {
+        textureMap[key] = textureRegion
+    }
+
+    fun getTexture(key: String = DIFFUSE_TEXTURE): TextureRegion? {
+        val texture = textureMap[key]
+        if (texture != null) {
+            val flipX = this.flipX != texture.isFlipX
+            val flipY = this.flipY != texture.isFlipY
+            texture.flip(flipX, flipY)
         }
-        animationMap[animation.key] = animation
+        return texture
     }
 
-    fun removeAnim(key: String) {
-        if (!animationMap.containsKey(key)) {
-            throw RuntimeException("Animation $key doesn't exist")
-        }
-        animationMap.remove(key)
-    }
+    fun removeTexture(key: String = DIFFUSE_TEXTURE) = textureMap.remove(key)
 
-    fun getAnim(key: String): Animation2D {
-        if (!animationMap.containsKey(key)) {
-            throw RuntimeException("Animation $key doesn't exist")
-        }
-        return animationMap[key]!!
-    }
-
-    fun getAnimList(): MutableSet<String> {
-        return animationMap.keys
-    }
-
-    fun getAnim(): Animation2D? = activeAnim
-
-    fun play(key: String) {
-        if (!animationMap.containsKey(key)) {
-            throw RuntimeException("Animation $key doesn't exist")
-        }
-        activeAnim = animationMap[key]
-    }
-
-    fun stop() {
-        activeAnim = null
-    }
-
-    fun setTexture(texture: Texture) {
-        setTexture(TextureRegion(texture))
-    }
-
-    fun setTexture(textureRegion: TextureRegion) {
-        this.textureRegion = textureRegion
-    }
-
-    fun getTexture(): TextureRegion {
-        if (activeAnim != null) {
-            return activeAnim!!.getTexture()
-        }
-        if (textureRegion == null) throw RuntimeException("Texture doesn't exist!")
-        return textureRegion!!
-    }
+    fun clearAllTextures() = textureMap.clear()
 
     fun setColor(color: Color) {
         colorMap[Corner.TOP_LEFT] = color
@@ -107,6 +83,8 @@ open class Sprite : Drawable2D(), Prototype<Sprite> {
         }
     }
 
+    override fun getType(): KClass<out Drawable> = Sprite::class
+
     override fun copy(): Sprite {
         val sprite = Sprite()
         sprite.inherit(this)
@@ -114,11 +92,15 @@ open class Sprite : Drawable2D(), Prototype<Sprite> {
     }
 
     override fun inherit(obj: Sprite) {
-        setTexture(obj.getTexture())
-        setColor(obj.getColor(Corner.TOP_LEFT))
-        setColor(obj.getColor(Corner.TOP_RIGHT))
-        setColor(obj.getColor(Corner.BOTTOM_LEFT))
-        setColor(obj.getColor(Corner.BOTTOM_RIGHT))
+        setColor(Corner.TOP_LEFT, obj.getColor(Corner.TOP_LEFT))
+        setColor(Corner.TOP_RIGHT, obj.getColor(Corner.TOP_RIGHT))
+        setColor(Corner.BOTTOM_LEFT, obj.getColor(Corner.BOTTOM_LEFT))
+        setColor(Corner.BOTTOM_RIGHT, obj.getColor(Corner.BOTTOM_RIGHT))
+
+        for ((key, texture) in obj.textureMap) {
+            textureMap[key] = texture
+        }
+
         super.inherit(obj)
     }
 }

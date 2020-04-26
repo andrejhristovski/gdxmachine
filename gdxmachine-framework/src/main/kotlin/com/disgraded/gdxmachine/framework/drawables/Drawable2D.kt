@@ -29,6 +29,7 @@ abstract class Drawable2D: Transform2D(), Drawable {
         anchorX = obj.anchorX
         anchorY = obj.anchorY
         angle = obj.angle
+        opacity = obj.opacity
     }
 
     override fun getOrder(): Long = z.toLong()

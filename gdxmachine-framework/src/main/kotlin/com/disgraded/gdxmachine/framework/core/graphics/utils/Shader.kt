@@ -15,4 +15,8 @@ class Shader(vertex: ShaderData, fragment: ShaderData): ShaderProgram(vertex.con
         fun BONEWEIGHT(index: Short = 0) = "a_boneWeight$index"
         fun GENERAL(name: String, index: Short = 0) = "a_general_$name$index"
     }
+
+    init {
+        pedantic = false
+    }
 }

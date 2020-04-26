@@ -21,14 +21,17 @@ class BatchManager: Disposable {
         }
 
         for (drawable in drawableList) {
-            val batch = batchMap[drawable::class] ?: continue
+            val batch = batchMap[drawable.getType()] ?: continue
             if (batch != currentBatch) {
                 if (currentBatch != null) gpuCalls += currentBatch!!.end()
                 currentBatch = batch
             }
             currentBatch!!.draw(drawable)
         }
-        if (currentBatch != null) gpuCalls += currentBatch!!.end()
+        if (currentBatch != null) {
+            gpuCalls += currentBatch!!.end()
+            currentBatch = null
+        }
         return gpuCalls
     }
 

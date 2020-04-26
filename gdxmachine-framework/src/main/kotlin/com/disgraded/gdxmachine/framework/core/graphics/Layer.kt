@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Scaling
 import com.badlogic.gdx.utils.viewport.ScalingViewport
+import com.disgraded.gdxmachine.framework.core.Core
 
 class Layer(val key: String, private var width: Float, private var height: Float, scaling: Scaling):
         ScalingViewport(scaling, width, height, OrthographicCamera()), Disposable {
@@ -11,7 +12,7 @@ class Layer(val key: String, private var width: Float, private var height: Float
     private val drawableList = arrayListOf<Drawable>()
 
     private var renderer: Renderer? = null
-    var layerScale: LayerScale? = null
+    private var layerScale: LayerScale? = null
 
     var visible = true
     var priority = 0
@@ -31,6 +32,7 @@ class Layer(val key: String, private var width: Float, private var height: Float
     }
 
     override fun update(screenWidth: Int, screenHeight: Int, centerCamera: Boolean) {
+        setWorldSize(Core.graphics.viewport.x, Core.graphics.viewport.y)
         if (layerScale == null) {
             super.update(screenWidth, screenHeight, centerCamera)
         }
@@ -48,5 +50,9 @@ class Layer(val key: String, private var width: Float, private var height: Float
             this.renderer!!.dispose()
         }
         this.renderer = renderer
+    }
+
+    fun setScale(layerScale: LayerScale) {
+        this.layerScale = layerScale
     }
 }

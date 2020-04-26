@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.utils.Align
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import com.disgraded.gdxmachine.framework.core.Prototype
+import com.disgraded.gdxmachine.framework.core.graphics.Drawable
 import java.lang.Exception
+import kotlin.reflect.KClass
 
 open class Text: Drawable2D(), Prototype<Text> {
 
@@ -89,6 +91,8 @@ open class Text: Drawable2D(), Prototype<Text> {
             glyph.setText(font, content, start, limitLength, font!!.color, width, align, wrap, truncate)
         } catch (e: Exception) {}
     }
+
+    override fun getType(): KClass<out Drawable> = Text::class
 
     override fun copy(): Text {
         val text = Text()

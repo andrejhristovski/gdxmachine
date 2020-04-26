@@ -1,6 +1,7 @@
 package com.disgraded.gdxmachine.framework.core.graphics
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Graphics
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.utils.Scaling
 import com.disgraded.gdxmachine.framework.core.Module
@@ -8,6 +9,12 @@ import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
 import com.disgraded.gdxmachine.framework.core.resources.assets.ShaderData
 
 class GraphicsModule : Module {
+
+    companion object {
+
+        private val samplingMask = if (Gdx.graphics.bufferFormat.coverageSampling) GL20.GL_COVERAGE_BUFFER_BIT_NV else 0
+        fun getMask(): Int  = GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT or samplingMask
+    }
 
     var gpuCalls: Int = 0
 
@@ -23,7 +30,7 @@ class GraphicsModule : Module {
 
     fun update() {
         Gdx.gl.glClearColor(0f, 0f ,0f, 1f)
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+        Gdx.gl.glClear(getMask())
         var gpuCalls = 0
         for ((_, viewport) in layerMap.toList().sortedBy { it.second.priority }) {
             gpuCalls += viewport.render()

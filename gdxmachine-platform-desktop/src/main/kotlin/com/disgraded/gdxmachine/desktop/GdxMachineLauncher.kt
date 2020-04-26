@@ -8,11 +8,17 @@ import com.disgraded.gdxmachine.framework.core.GdxRuntime
 class GdxMachineLauncher {
 
     fun run(entryPoint: EntryPoint, cfg: Lwjgl3ApplicationConfiguration? = null) {
+
         var configuration = Lwjgl3ApplicationConfiguration()
+
+        val samples = Lwjgl3ApplicationConfiguration::class.java.getDeclaredField("samples")
+        samples.isAccessible = true
+        samples.setInt(configuration, 16)
+
         configuration.setTitle("GdxMachine Desktop Game")
+        configuration.setDecorated(true)
+        configuration.useVsync(true)
         configuration.setWindowedMode(1280, 720)
-        configuration.setDecorated(false)
-        configuration.useVsync(false)
         if (cfg !== null) {
             configuration = cfg
         }

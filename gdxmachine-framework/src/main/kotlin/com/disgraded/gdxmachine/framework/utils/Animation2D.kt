@@ -3,7 +3,6 @@ package com.disgraded.gdxmachine.framework.utils
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import com.disgraded.gdxmachine.framework.core.Core
 import com.badlogic.gdx.utils.Array as GdxArray
 
 class Animation2D(val key: String, frames: GdxArray<TextureRegion>) : Animation<TextureRegion>(0.025f, frames) {
@@ -47,8 +46,8 @@ class Animation2D(val key: String, frames: GdxArray<TextureRegion>) : Animation<
 
     fun update(deltaTime: Float) {
         accumulator += deltaTime * speed
-        if (accumulator > animationDuration * 100) {
-            accumulator -= animationDuration * 100
+        if (accumulator > animationDuration) {
+            accumulator -= animationDuration
         }
     }
 }
