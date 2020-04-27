@@ -1,7 +1,7 @@
 package com.disgraded.gdxmachine.framework.drawables
 import com.badlogic.gdx.math.Shape2D
-import com.disgraded.gdxmachine.framework.core.Prototype
 import com.disgraded.gdxmachine.framework.core.graphics.Drawable
+import com.disgraded.gdxmachine.framework.core.graphics.Drawable2D
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import kotlin.reflect.KClass
 

@@ -16,8 +16,8 @@ class BatchManager: Disposable {
 
     fun execute(drawableList: ArrayList<Drawable>, projectionMatrix: Matrix4): Int {
         var gpuCalls = 0
-        for ((_, batch) in batchMap) {
-            batch.setProjectionMatrix(projectionMatrix)
+        for (key in batchMap.keys) {
+            batchMap[key]!!.setProjectionMatrix(projectionMatrix)
         }
 
         for (drawable in drawableList) {
@@ -36,8 +36,8 @@ class BatchManager: Disposable {
     }
 
     override fun dispose() {
-        for ((_, batch) in batchMap) {
-            batch.dispose()
+        for (key in batchMap.keys) {
+            batchMap[key]!!.dispose()
         }
     }
 }

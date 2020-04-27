@@ -1,8 +1,6 @@
 package com.disgraded.gdxmachine.framework.scenes
 
 import com.disgraded.gdxmachine.framework.core.Core
-import com.disgraded.gdxmachine.framework.core.graphics.Layer
-import com.disgraded.gdxmachine.framework.renderers.Renderer2D
 import kotlin.reflect.KClass
 
 abstract class Scene {

@@ -14,6 +14,7 @@ import com.disgraded.gdxmachine.framework.core.graphics.Batch
 import com.disgraded.gdxmachine.framework.core.graphics.Drawable
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
+import com.disgraded.gdxmachine.framework.core.graphics.utils.Transform2D
 import com.disgraded.gdxmachine.framework.drawables.Sprite
 import com.disgraded.gdxmachine.framework.utils.Corner
 
@@ -93,6 +94,7 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
 
     override fun draw(drawable: Drawable) {
         val sprite = drawable as Sprite
+        if (!sprite.isUpdated()) sprite.update()
 
         if (mode == Mode.DIFFUSE) {
             checkShader(sprite.shader)
@@ -115,7 +117,7 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
         if (bufferedCalls >= maxCalls) {
             flush()
         }
-        append(sprite, texture, mask)
+        append(sprite, sprite.absolute, texture, mask)
     }
 
     override fun end(): Int {
@@ -151,14 +153,14 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
         }
     }
 
-    private fun append(sprite: Sprite, texture: TextureRegion, mask: TextureRegion) {
+    private fun append(sprite: Sprite, transform2D: Transform2D, texture: TextureRegion, mask: TextureRegion) {
         val idx = bufferedCalls * bufferSize
 
-        val sizeX = texture.regionWidth * sprite.scaleX
-        val sizeY = texture.regionHeight * sprite.scaleY
+        val sizeX = texture.regionWidth * transform2D.scaleX
+        val sizeY = texture.regionHeight * transform2D.scaleY
 
-        var x1 = 0 - (sizeX * sprite.anchorX)
-        var y1 = 0 - (sizeY * sprite.anchorY)
+        var x1 = 0 - (sizeX * transform2D.anchorX)
+        var y1 = 0 - (sizeY * transform2D.anchorY)
         var x2 = x1
         var y2 = y1 + sizeY
         var x3 = x1 + sizeX
@@ -166,9 +168,9 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
         var x4 = x1 + sizeX
         var y4 = y1
 
-        if (sprite.angle != 0f) {
-            val cos = MathUtils.cosDeg(sprite.angle)
-            val sin = MathUtils.sinDeg(sprite.angle)
+        if (transform2D.angle != 0f) {
+            val cos = MathUtils.cosDeg(transform2D.angle)
+            val sin = MathUtils.sinDeg(transform2D.angle)
             val rx1 = cos * x1 - sin * y1
             val ry1 = sin * x1 + cos * y1
             val rx2 = cos * x2 - sin * y2
@@ -185,14 +187,14 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
             y4 = y3 - (y2 - y1)
         }
 
-        x1 += sprite.x
-        x2 += sprite.x
-        x3 += sprite.x
-        x4 += sprite.x
-        y1 += sprite.y
-        y2 += sprite.y
-        y3 += sprite.y
-        y4 += sprite.y
+        x1 += transform2D.x
+        x2 += transform2D.x
+        x3 += transform2D.x
+        x4 += transform2D.x
+        y1 += transform2D.y
+        y2 += transform2D.y
+        y3 += transform2D.y
+        y4 += transform2D.y
 
         tempColor.set(sprite.getColor(Corner.BOTTOM_LEFT))
         tempColor.setOpacity(sprite.opacity)

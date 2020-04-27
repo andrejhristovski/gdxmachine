@@ -44,9 +44,8 @@ class SystemApi(private val engine: Engine) {
     }
 
     fun removeAll() {
-        for ((systemClass) in systemMap) {
-            remove(systemClass)
+        for (key in systemMap.keys) {
+            remove(key)
         }
-        systemMap.clear()
     }
 }

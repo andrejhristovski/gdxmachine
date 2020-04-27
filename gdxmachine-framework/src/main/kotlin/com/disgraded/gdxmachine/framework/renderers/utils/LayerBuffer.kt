@@ -16,7 +16,7 @@ class LayerBuffer(private val format: Pixmap.Format, private var hasDepth: Boole
     private val sprite = Sprite()
     private val texture = TextureRegion()
 
-    val color = Color.WHITE.copy()
+    val color = Color.BLACK.copy()
 
     init {
         sprite.flipY = true

@@ -1,13 +1,11 @@
 package com.disgraded.gdxmachine.framework.systems
 
 import com.badlogic.ashley.core.Family
-import com.badlogic.gdx.math.Vector2
 import com.disgraded.gdxmachine.framework.components.*
 import com.disgraded.gdxmachine.framework.core.engine.Entity
 import com.disgraded.gdxmachine.framework.core.engine.System
-import com.disgraded.gdxmachine.framework.drawables.Drawable2D
+import com.disgraded.gdxmachine.framework.core.graphics.Layer
 import com.disgraded.gdxmachine.framework.renderers.Renderer2D
-import com.disgraded.gdxmachine.framework.utils.Transform2D
 
 class Render2DSystem: System(
         Family.all(
@@ -16,9 +14,11 @@ class Render2DSystem: System(
         ).get()
 ) {
 
+    private lateinit var defaultLayer: Layer
+
     override fun initialize(entities: ArrayList<Entity>) {
-        val layer = core.graphics.createLayer()
-        layer.setRenderer(Renderer2D())
+        defaultLayer = core.graphics.createLayer()
+        defaultLayer.setRenderer(Renderer2D())
     }
 
     override fun update(deltaTime: Float, entities: ArrayList<Entity>) {
@@ -30,12 +30,11 @@ class Render2DSystem: System(
     private fun processEntity(entity: Entity) {
         val transform = entity.get(Transform2DComponent::class)!!
         val render = entity.get(Render2DComponent::class)!!
-        render.update(transform)
-        val drawables = render.getAll(true)
-        for (drawable in drawables) {
-            core.graphics.getLayer().draw(drawable)
-        }
 
+        render.getAll().forEach {
+            it.update(transform)
+            defaultLayer.draw(it)
+        }
     }
 
     override fun destroy(entities: ArrayList<Entity>) {

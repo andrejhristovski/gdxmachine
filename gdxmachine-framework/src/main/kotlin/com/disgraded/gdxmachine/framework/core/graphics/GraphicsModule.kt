@@ -1,7 +1,6 @@
 package com.disgraded.gdxmachine.framework.core.graphics
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Graphics
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.utils.Scaling
 import com.disgraded.gdxmachine.framework.core.Module
@@ -20,6 +19,7 @@ class GraphicsModule : Module {
 
     val api = GraphicsApi(this)
 
+    private val layerList = arrayListOf<Layer>()
     private val layerMap = hashMapOf<String, Layer>()
 
     private val shaderMap = hashMapOf<String, Shader>()
@@ -32,26 +32,29 @@ class GraphicsModule : Module {
         Gdx.gl.glClearColor(0f, 0f ,0f, 1f)
         Gdx.gl.glClear(getMask())
         var gpuCalls = 0
-        for ((_, viewport) in layerMap.toList().sortedBy { it.second.priority }) {
-            gpuCalls += viewport.render()
-        }
+
+        layerList.sort()
+        layerList.forEach { gpuCalls += it.render() }
         this.gpuCalls = gpuCalls
     }
 
     fun resize(width: Int, height: Int) {
-        for ((_, viewport) in layerMap) viewport.update(width, height)
+        layerList.forEach { it.update(width, height) }
     }
 
     fun clear() {
-        for ((_, viewport) in layerMap) viewport.dispose()
+        layerList.forEach { it.dispose() }
+        layerList.clear()
         layerMap.clear()
     }
 
     fun createLayer(key: String, width: Float, height: Float, scaling: Scaling): Layer {
         if (layerMap.containsKey(key)) throw RuntimeException("Layer [$key] already exist!")
-        layerMap[key] = Layer(key, width, height, scaling)
-        layerMap[key]!!.update(Gdx.graphics.width, Gdx.graphics.height)
-        return layerMap[key]!!
+        val layer = Layer(key, width, height, scaling)
+        layer.update(Gdx.graphics.width, Gdx.graphics.height)
+        layerMap[key] = layer
+        layerList.add(layer)
+        return layer
     }
 
     fun getLayer(key: String): Layer {
@@ -61,6 +64,7 @@ class GraphicsModule : Module {
 
     fun removeLayer(key: String) {
         if (!layerMap.containsKey(key)) throw RuntimeException("There is no layer assigned as $key")
+        layerList.remove(layerMap[key]!!)
         layerMap[key]!!.dispose()
         layerMap.remove(key)
     }

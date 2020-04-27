@@ -11,16 +11,16 @@ class ResourceModule : Module {
     override fun load() {}
 
     override fun unload() {
-        for ((_, assetPackage) in packages) {
-            assetPackage.dispose()
+        for (key in packages.keys) {
+            packages[key]!!.dispose()
         }
         packages.clear()
     }
 
     fun update() {
-        for ((_, assetPackage) in packages) {
-            if (assetPackage.done) assetPackage.sync(true)
-            assetPackage.proceed()
+        for (key in packages.keys) {
+            if (packages[key]!!.done) packages[key]!!.sync(true)
+            packages[key]!!.proceed()
         }
     }
 

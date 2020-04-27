@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Align
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import com.disgraded.gdxmachine.framework.core.Prototype
 import com.disgraded.gdxmachine.framework.core.graphics.Drawable
+import com.disgraded.gdxmachine.framework.core.graphics.Drawable2D
 import java.lang.Exception
 import kotlin.reflect.KClass
 

@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.disgraded.gdxmachine.framework.core.Core
 
 class Layer(val key: String, private var width: Float, private var height: Float, scaling: Scaling):
-        ScalingViewport(scaling, width, height, OrthographicCamera()), Disposable {
+        ScalingViewport(scaling, width, height, OrthographicCamera()), Comparable<Layer>, Disposable {
 
     private val drawableList = arrayListOf<Drawable>()
 
@@ -16,6 +16,7 @@ class Layer(val key: String, private var width: Float, private var height: Float
 
     var visible = true
     var priority = 0
+    var sortable = true
 
     fun draw(drawable: Drawable) {
         if (drawable.isExecutable()) drawableList.add(drawable)
@@ -25,7 +26,9 @@ class Layer(val key: String, private var width: Float, private var height: Float
         if (renderer == null) throw RuntimeException("Layer [$key] doesn't contain renderer")
         if (!visible) return 0
         apply()
-        drawableList.sortBy { it.getOrder() }
+        if (sortable) {
+            drawableList.sort()
+        }
         val gpuCalls = renderer!!.render(drawableList, this)
         drawableList.clear()
         return gpuCalls
@@ -55,4 +58,6 @@ class Layer(val key: String, private var width: Float, private var height: Float
     fun setScale(layerScale: LayerScale) {
         this.layerScale = layerScale
     }
+
+    override fun compareTo(other: Layer): Int = priority.compareTo(other.priority)
 }

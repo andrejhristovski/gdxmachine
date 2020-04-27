@@ -53,7 +53,7 @@ class Renderer2DLighting: Renderer {
 
         // final render
         spriteBatch.setProjectionMatrix(layer.camera.projection)
-        spriteBatch.draw(bumpBuffer.getSprite())
+        spriteBatch.draw(diffuseBuffer.getSprite())
         gpuCalls += spriteBatch.end()
         return gpuCalls
     }

@@ -1,12 +1,15 @@
-package com.disgraded.gdxmachine.framework.drawables
+package com.disgraded.gdxmachine.framework.core.graphics
 
-import com.disgraded.gdxmachine.framework.core.graphics.Drawable
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
-import com.disgraded.gdxmachine.framework.utils.Transform2D
+import com.disgraded.gdxmachine.framework.core.graphics.utils.Transform2D
+import kotlin.math.abs
 
 abstract class Drawable2D: Transform2D(), Drawable {
 
     override var shader: Shader? = null
+    val absolute = Transform2D()
+
+    private var updated = false
 
     var visible: Boolean = true
     open var opacity = 1f
@@ -21,18 +24,23 @@ abstract class Drawable2D: Transform2D(), Drawable {
     fun inherit(obj: Drawable2D) {
         shader = obj.shader
         visible = obj.visible
-        x = obj.x
-        y = obj.y
-        z = obj.z
-        scaleX = obj.scaleX
-        scaleY = obj.scaleY
-        anchorX = obj.anchorX
-        anchorY = obj.anchorY
-        angle = obj.angle
         opacity = obj.opacity
+        set(obj)
     }
 
-    override fun getOrder(): Long = z.toLong()
+    fun isUpdated(): Boolean = updated
+
+    fun update(transform2D: Transform2D? = null) {
+        if (updated) return
+        if (transform2D != null) {
+            absolute.apply(this, transform2D)
+        } else {
+            absolute.set(this)
+        }
+        updated = true
+    }
 
     override fun isExecutable(): Boolean = visible
+
+    override fun getOrder(): Float = absolute.z
 }

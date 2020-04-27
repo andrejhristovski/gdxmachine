@@ -36,15 +36,15 @@ class ListenerApi(private val engine: Engine) {
 
     fun getAll(): ArrayList<Listener> {
         val list = ArrayList<Listener>()
-        for ((_, listener) in listenerMap) {
-            list.add(listener)
+        for (key in listenerMap.keys) {
+            list.add(listenerMap[key]!!)
         }
         return list
     }
 
     fun removeAll() {
-        for ((_, listener) in listenerMap) {
-            remove(listener)
+        for (key in listenerMap.keys) {
+            remove(listenerMap[key]!!)
         }
         listenerMap.clear()
     }

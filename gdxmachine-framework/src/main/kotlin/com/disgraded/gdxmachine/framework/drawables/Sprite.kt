@@ -6,7 +6,7 @@ import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import com.disgraded.gdxmachine.framework.utils.Corner
 import com.disgraded.gdxmachine.framework.core.Prototype
 import com.disgraded.gdxmachine.framework.core.graphics.Drawable
-import com.disgraded.gdxmachine.framework.utils.Animation2D
+import com.disgraded.gdxmachine.framework.core.graphics.Drawable2D
 import kotlin.reflect.KClass
 
 open class Sprite : Drawable2D(), Prototype<Sprite> {
@@ -97,8 +97,8 @@ open class Sprite : Drawable2D(), Prototype<Sprite> {
         setColor(Corner.BOTTOM_LEFT, obj.getColor(Corner.BOTTOM_LEFT))
         setColor(Corner.BOTTOM_RIGHT, obj.getColor(Corner.BOTTOM_RIGHT))
 
-        for ((key, texture) in obj.textureMap) {
-            textureMap[key] = texture
+        for (key in obj.textureMap.keys) {
+            textureMap[key] = obj.textureMap[key]!!
         }
 
         super.inherit(obj)

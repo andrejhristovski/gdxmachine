@@ -32,15 +32,16 @@ class TextBatch(shaderName: String = "text.tint", private val forceShader: Boole
         }
 
         val text = drawable as Text
+        if (!text.isUpdated()) text.update()
 
         textMatrix.idt()
-        val additionalX = text.glyph.width * text.anchorX * text.scaleX
-        val additionalY = text.glyph.height * text.anchorY * text.scaleY
+        val additionalX = text.glyph.width * text.absolute.anchorX * text.absolute.scaleX
+        val additionalY = text.glyph.height * text.absolute.anchorY * text.absolute.scaleY
 
-        textMatrix.setToTranslation(text.x, text.y, 0f)
-        textMatrix.rotate(0f, 0f, 1f, text.angle)
+        textMatrix.setToTranslation(text.absolute.x, text.absolute.y, 0f)
+        textMatrix.rotate(0f, 0f, 1f, text.absolute.angle)
         textMatrix.translate(-additionalX, additionalY, 0f)
-        textMatrix.scale(text.scaleX, text.scaleY, 1f)
+        textMatrix.scale(text.absolute.scaleX, text.absolute.scaleY, 1f)
         textBatch.projectionMatrix = textMatrix.mulLeft(projectionMatrix)
         try {
             text.font!!.draw(textBatch, text.glyph, 0f, 0f)

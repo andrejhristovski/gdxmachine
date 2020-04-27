@@ -4,10 +4,8 @@ import com.badlogic.gdx.graphics.Texture
 import com.disgraded.gdxmachine.framework.components.Render2DComponent
 import com.disgraded.gdxmachine.framework.components.Transform2DComponent
 import com.disgraded.gdxmachine.framework.core.engine.Entity
-import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import com.disgraded.gdxmachine.framework.drawables.Rectangle
 import com.disgraded.gdxmachine.framework.drawables.Sprite
-import com.disgraded.gdxmachine.framework.utils.Corner
 
 class Background: Entity() {
 
@@ -19,7 +17,6 @@ class Background: Entity() {
     }
 
     override fun initialize() {
-        val transform = get(Transform2DComponent::class)!!
         val render = get(Render2DComponent::class)!!
 
         background = Sprite()
@@ -31,8 +28,8 @@ class Background: Entity() {
         val wallTexture = core.resources.get("test").get<Texture>("wall")
         val wallTextureNormalMap = core.resources.get("test").get<Texture>("wall.normal")
 
-        for (i in -2..2) {
-            for(j in -2..2) {
+        for (i in -50..50) {
+            for(j in -50..50) {
                 if (i == 0 && j == 0) continue
                 val wall = Sprite()
                 wall.setTexture(wallTexture)
