@@ -22,28 +22,30 @@ class FPSCounter: Entity() {
         val render = get(Render2DComponent::class)!!
 
         transform.x = 510f
-        transform.y = 250f
+        transform.y = 270f
         transform.z = 10f
 
         text = Text()
-        text.font = core.resources.get("engine").get("display")
+        text.font = core.resources.get("engine").get("mono")
         text.color = Color.AMBER
-        text.z = 1000f
+        text.z = 0f
         render.add("main", text)
+        text.setScale(.6f)
 
         bg = Rectangle()
         bg.width = 220f
-        bg.height = 190f
+        bg.height = 150f
         bg.opacity = .5f
         bg.color = Color.BLACK
+        bg.z = -1f
         render.add("bg", bg)
     }
 
     override fun update(deltaTime: Float) {
         text.content = "FPS:${core.graphics.getFPS()}\n" +
-                "GPU CALLS:${core.graphics.getGPUCalls()}\n" +
-                "HEAP:${core.app.memory.heap} MB\n" +
-                "NATIVE:${core.app.memory.native} MB"
+                "GPU calls:${core.graphics.getGPUCalls()}\n" +
+                "Heap:${core.app.memory.heap} MB\n" +
+                "Native:${core.app.memory.native} MB"
     }
 
     override fun destroy() {

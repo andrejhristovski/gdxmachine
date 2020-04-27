@@ -39,7 +39,7 @@ class GraphicsModule : Module {
     }
 
     fun resize(width: Int, height: Int) {
-        layerList.forEach { it.update(width, height) }
+        layerList.forEach { it.update(width, height, true) }
     }
 
     fun clear() {

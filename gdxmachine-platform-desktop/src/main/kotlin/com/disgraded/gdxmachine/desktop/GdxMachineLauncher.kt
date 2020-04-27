@@ -13,11 +13,11 @@ class GdxMachineLauncher {
 
         val samples = Lwjgl3ApplicationConfiguration::class.java.getDeclaredField("samples")
         samples.isAccessible = true
-        samples.setInt(configuration, 16)
+        samples.setInt(configuration, 8)
 
         configuration.setTitle("GdxMachine Desktop Game")
         configuration.setDecorated(true)
-        configuration.useVsync(false)
+        configuration.useVsync(true)
         configuration.setWindowedMode(1280, 720)
         if (cfg !== null) {
             configuration = cfg

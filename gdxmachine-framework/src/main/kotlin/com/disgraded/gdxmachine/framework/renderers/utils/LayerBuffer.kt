@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.FrameBuffer
 import com.badlogic.gdx.utils.Disposable
+import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.disgraded.gdxmachine.framework.core.graphics.GraphicsModule
 import com.disgraded.gdxmachine.framework.core.graphics.Layer
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
@@ -28,8 +29,7 @@ class LayerBuffer(private val format: Pixmap.Format, private var hasDepth: Boole
         Gdx.gl.glClearColor(color.r, color.g ,color.b, 1f)
         Gdx.gl.glClear(GraphicsModule.getMask())
         action()
-        frameBuffer.end()
-        layer.apply()
+        frameBuffer.end(layer.screenX, layer.screenY, layer.screenWidth, layer.screenHeight)
     }
 
     private fun update(layer: Layer) {

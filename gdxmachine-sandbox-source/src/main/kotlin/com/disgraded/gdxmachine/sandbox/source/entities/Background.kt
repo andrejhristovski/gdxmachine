@@ -28,8 +28,8 @@ class Background: Entity() {
         val wallTexture = core.resources.get("test").get<Texture>("wall")
         val wallTextureNormalMap = core.resources.get("test").get<Texture>("wall.normal")
 
-        for (i in -50..50) {
-            for(j in -50..50) {
+        for (i in -5..5) {
+            for(j in -5..5) {
                 if (i == 0 && j == 0) continue
                 val wall = Sprite()
                 wall.setTexture(wallTexture)
