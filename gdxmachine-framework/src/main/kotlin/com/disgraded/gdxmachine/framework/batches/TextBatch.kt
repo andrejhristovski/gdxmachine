@@ -10,14 +10,35 @@ import com.disgraded.gdxmachine.framework.core.graphics.Drawable
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
 import com.disgraded.gdxmachine.framework.drawables.Text
 
-class TextBatch(shaderName: String = "text.tint", private val forceShader: Boolean = false) : Batch {
+class TextBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
+
+    enum class Mode {
+        DIFFUSE, BUMP
+    }
 
     private val textBatch = SpriteBatch(8191)
     private lateinit var projectionMatrix: Matrix4
     private var textMatrix = Matrix4()
-    private val defaultShader: Shader = Core.graphics.getShader(shaderName)
-    private var shader: Shader = defaultShader
+    private val defaultShader: Shader
+    private var shader: Shader
     private var gpuCalls = 0
+
+    private val forceShader: Boolean
+
+    init {
+        when(mode) {
+            Mode.DIFFUSE -> {
+                forceShader = false
+                defaultShader = Core.graphics.getShader("text.tint")
+            }
+
+            Mode.BUMP -> {
+                forceShader = true
+                defaultShader = Core.graphics.getShader("text.bump")
+            }
+        }
+        shader = defaultShader
+    }
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4) {
         this.projectionMatrix = projectionMatrix

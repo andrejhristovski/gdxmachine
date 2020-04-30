@@ -6,17 +6,18 @@ import com.badlogic.gdx.graphics.Mesh
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.graphics.VertexAttribute as Attribute
-import com.badlogic.gdx.graphics.VertexAttributes as Attributes
 import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.framework.core.Core
 import com.disgraded.gdxmachine.framework.core.graphics.Batch
 import com.disgraded.gdxmachine.framework.core.graphics.Drawable
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
+import com.disgraded.gdxmachine.framework.core.graphics.utils.Mesh2D
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Transform2D
 import com.disgraded.gdxmachine.framework.drawables.Sprite
 import com.disgraded.gdxmachine.framework.utils.Corner
+import com.badlogic.gdx.graphics.VertexAttribute as Attribute
+import com.badlogic.gdx.graphics.VertexAttributes as Attributes
 
 class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
 
@@ -27,6 +28,7 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
     private val bufferSize = 28
     private val verticesPerBuffer = 4
     private val indicesPerBuffer = 6
+    private var idx = 0
     private val maxCalls = Short.MAX_VALUE / verticesPerBuffer
     private var bufferedCalls = 0
     private var gpuCalls = 0
@@ -34,6 +36,10 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
     private val mesh: Mesh
     private val vertices: FloatArray
     private val indices: ShortArray
+
+    private var verticesCount = 0
+    private var indicesCount = 0
+    private val mesh2d = Mesh2D()
 
     private lateinit var projectionMatrix: Matrix4
     private val defaultShader: Shader
@@ -47,6 +53,12 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
     private var textureExists = 0
 
     private val tempColor = Color("#ffffff")
+
+    private val blendEquation: Int
+    private val blendSrcRGB: Int
+    private val blendDstRGB: Int
+    private val blendSrcAlpha: Int
+    private val blendDstAlpha: Int
 
     init {
         val maxVertices = verticesPerBuffer * maxCalls
@@ -86,6 +98,23 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
         noTexture = TextureRegion(texture)
         noMask = TextureRegion(mask)
         noNormal = TextureRegion(normal)
+
+        when(mode) {
+            Mode.DIFFUSE -> {
+                blendEquation = GL20.GL_FUNC_ADD
+                blendSrcRGB = GL20.GL_SRC_ALPHA
+                blendDstRGB = GL20.GL_ONE_MINUS_SRC_ALPHA
+                blendSrcAlpha = GL20.GL_SRC_ALPHA
+                blendDstAlpha = GL20.GL_ONE_MINUS_SRC_ALPHA
+            }
+            Mode.BUMP -> {
+                blendEquation = GL20.GL_FUNC_ADD
+                blendSrcRGB = GL20.GL_SRC_ALPHA
+                blendDstRGB = GL20.GL_ONE_MINUS_SRC_ALPHA
+                blendSrcAlpha = GL20.GL_ONE
+                blendDstAlpha = GL20.GL_ONE_MINUS_SRC_ALPHA
+            }
+        }
     }
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4) {
@@ -117,7 +146,7 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
         if (bufferedCalls >= maxCalls) {
             flush()
         }
-        append(sprite, sprite.absolute, texture, mask)
+        append(sprite.absolute, sprite, texture, mask)
     }
 
     override fun end(): Int {
@@ -153,53 +182,14 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
         }
     }
 
-    private fun append(sprite: Sprite, transform2D: Transform2D, texture: TextureRegion, mask: TextureRegion) {
-        val idx = bufferedCalls * bufferSize
-
-        val sizeX = texture.regionWidth * transform2D.scaleX
-        val sizeY = texture.regionHeight * transform2D.scaleY
-
-        var x1 = 0 - (sizeX * transform2D.anchorX)
-        var y1 = 0 - (sizeY * transform2D.anchorY)
-        var x2 = x1
-        var y2 = y1 + sizeY
-        var x3 = x1 + sizeX
-        var y3 = y1 + sizeY
-        var x4 = x1 + sizeX
-        var y4 = y1
-
-        if (transform2D.angle != 0f) {
-            val cos = MathUtils.cosDeg(transform2D.angle)
-            val sin = MathUtils.sinDeg(transform2D.angle)
-            val rx1 = cos * x1 - sin * y1
-            val ry1 = sin * x1 + cos * y1
-            val rx2 = cos * x2 - sin * y2
-            val ry2 = sin * x2 + cos * y2
-            val rx3 = cos * x3 - sin * y3
-            val ry3 = sin * x3 + cos * y3
-            x1 = rx1
-            y1 = ry1
-            x2 = rx2
-            y2 = ry2
-            x3 = rx3
-            y3 = ry3
-            x4 = x1 + (x3 - x2)
-            y4 = y3 - (y2 - y1)
-        }
-
-        x1 += transform2D.x
-        x2 += transform2D.x
-        x3 += transform2D.x
-        x4 += transform2D.x
-        y1 += transform2D.y
-        y2 += transform2D.y
-        y3 += transform2D.y
-        y4 += transform2D.y
+    private fun append(transform2D: Transform2D, sprite: Sprite, texture: TextureRegion, mask: TextureRegion) {
+        idx = bufferedCalls * bufferSize
+        mesh2d.set(transform2D, texture.regionWidth, texture.regionHeight)
 
         tempColor.set(sprite.getColor(Corner.BOTTOM_LEFT))
         tempColor.setOpacity(sprite.opacity)
-        vertices[idx] = x1
-        vertices[idx + 1] = y1
+        vertices[idx] = mesh2d.x1
+        vertices[idx + 1] = mesh2d.y1
         vertices[idx + 2] = tempColor.getBits()
         vertices[idx + 3] = texture.u
         vertices[idx + 4] = texture.v2
@@ -208,8 +198,8 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
 
         tempColor.set(sprite.getColor(Corner.TOP_LEFT))
         tempColor.setOpacity(sprite.opacity)
-        vertices[idx + 7] = x2
-        vertices[idx + 8] = y2
+        vertices[idx + 7] = mesh2d.x2
+        vertices[idx + 8] = mesh2d.y2
         vertices[idx + 9] = tempColor.getBits()
         vertices[idx + 10] = texture.u
         vertices[idx + 11] = texture.v
@@ -218,8 +208,8 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
 
         tempColor.set(sprite.getColor(Corner.TOP_RIGHT))
         tempColor.setOpacity(sprite.opacity)
-        vertices[idx + 14] = x3
-        vertices[idx + 15] = y3
+        vertices[idx + 14] = mesh2d.x3
+        vertices[idx + 15] = mesh2d.y3
         vertices[idx + 16] = tempColor.getBits()
         vertices[idx + 17] = texture.u2
         vertices[idx + 18] = texture.v
@@ -228,8 +218,8 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
 
         tempColor.set(sprite.getColor(Corner.BOTTOM_RIGHT))
         tempColor.setOpacity(sprite.opacity)
-        vertices[idx + 21] = x4
-        vertices[idx + 22] = y4
+        vertices[idx + 21] = mesh2d.x4
+        vertices[idx + 22] = mesh2d.y4
         vertices[idx + 23] = tempColor.getBits()
         vertices[idx + 24] = texture.u2
         vertices[idx + 25] = texture.v2
@@ -241,8 +231,13 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
     private fun flush() {
         if (bufferedCalls == 0) return
         gpuCalls++
-        val verticesCount = bufferedCalls * bufferSize
-        val indicesCount = bufferedCalls * indicesPerBuffer
+        verticesCount = bufferedCalls * bufferSize
+        indicesCount = bufferedCalls * indicesPerBuffer
+
+        Gdx.gl.glEnable(GL20.GL_BLEND)
+        Gdx.gl.glBlendEquation(blendEquation)
+        Gdx.gl.glBlendFuncSeparate(blendSrcRGB, blendDstRGB, blendSrcAlpha, blendDstAlpha)
+
 
         shader.begin()
         cachedTexture.bind(0)
@@ -255,9 +250,7 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
         mesh.setVertices(vertices, 0, verticesCount)
         mesh.setIndices(indices, 0, indicesCount)
 
-        Gdx.gl.glEnable(GL20.GL_BLEND)
-        Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,
-                GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+
         mesh.render(shader, GL20.GL_TRIANGLES, 0, indicesCount)
         shader.end()
         bufferedCalls = 0

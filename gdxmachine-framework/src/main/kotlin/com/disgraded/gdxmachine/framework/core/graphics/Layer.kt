@@ -3,11 +3,12 @@ package com.disgraded.gdxmachine.framework.core.graphics
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Scaling
+import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.ScalingViewport
 import com.disgraded.gdxmachine.framework.core.Core
 
-class Layer(val key: String, private var width: Float, private var height: Float, scaling: Scaling):
-        ScalingViewport(scaling, width, height, OrthographicCamera()), Comparable<Layer>, Disposable {
+class Layer(val key: String, width: Float, height: Float):
+        ExtendViewport(width, height, OrthographicCamera()), Comparable<Layer>, Disposable {
 
     private val drawableList = arrayListOf<Drawable>()
 
@@ -28,19 +29,25 @@ class Layer(val key: String, private var width: Float, private var height: Float
         if (sortable) {
             drawableList.sort()
         }
+        camera.update()
         val gpuCalls = renderer!!.render(drawableList, this)
         drawableList.clear()
         return gpuCalls
     }
 
-    override fun update(screenWidth: Int, screenHeight: Int, centerCamera: Boolean) {
-        setWorldSize(Core.graphics.viewport.x, Core.graphics.viewport.y)
+    fun updateLayer(screenWidth: Int, screenHeight: Int) {
+        minWorldWidth = Core.graphics.viewport.x
+        minWorldHeight = Core.graphics.viewport.y
         if (layerScale == null) {
-            super.update(screenWidth, screenHeight, centerCamera)
-        }
-        else {
+            super.update(screenWidth, screenHeight, false)
+        } else {
             layerScale!!.apply(this, screenWidth, screenHeight)
         }
+    }
+
+    fun applyProjection(centerCamera: Boolean = true) {
+        camera.update()
+        update(screenWidth, screenHeight, centerCamera)
     }
 
     override fun dispose() {

@@ -47,9 +47,7 @@ class GraphicsApi(private val graphicsModule: GraphicsModule) {
 
     fun setResizable(enable: Boolean) = Gdx.graphics.setResizable(enable)
 
-    fun createLayer(key: String = "default", width: Float = viewport.x, height: Float = viewport.y,
-                       scaling: Scaling = Scaling.fit): Layer
-            = graphicsModule.createLayer(key, width, height, scaling)
+    fun createLayer(key: String = "default"): Layer = graphicsModule.createLayer(key)
 
     fun getLayer(key: String = "default"): Layer = graphicsModule.getLayer(key)
 

@@ -34,12 +34,20 @@ class GraphicsModule : Module {
         var gpuCalls = 0
 
         layerList.sort()
-        layerList.forEach { gpuCalls += it.render() }
+        layerList.forEach {
+            if (it.visible) {
+                gpuCalls += it.render()
+            }
+        }
         this.gpuCalls = gpuCalls
     }
 
     fun resize(width: Int, height: Int) {
-        layerList.forEach { it.update(width, height, true) }
+        layerList.forEach {
+            if (it.visible) {
+                it.updateLayer(width, height)
+            }
+        }
     }
 
     fun clear() {
@@ -48,9 +56,9 @@ class GraphicsModule : Module {
         layerMap.clear()
     }
 
-    fun createLayer(key: String, width: Float, height: Float, scaling: Scaling): Layer {
+    fun createLayer(key: String): Layer {
         if (layerMap.containsKey(key)) throw RuntimeException("Layer [$key] already exist!")
-        val layer = Layer(key, width, height, scaling)
+        val layer = Layer(key, api.viewport.x, api.viewport.y)
         layer.update(Gdx.graphics.width, Gdx.graphics.height)
         layerMap[key] = layer
         layerList.add(layer)

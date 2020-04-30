@@ -13,7 +13,7 @@ class GdxMachineLauncher {
 
         val samples = Lwjgl3ApplicationConfiguration::class.java.getDeclaredField("samples")
         samples.isAccessible = true
-        samples.setInt(configuration, 8)
+        samples.setInt(configuration, 2)
 
         configuration.setTitle("GdxMachine Desktop Game")
         configuration.setDecorated(true)

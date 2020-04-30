@@ -14,12 +14,46 @@ import com.badlogic.gdx.math.Circle as Circle2D
 import com.badlogic.gdx.math.Ellipse as Ellipse2D
 import com.badlogic.gdx.math.Polygon as Polygon2D
 
-class ShapeBatch(private val forcedColor: Color = Color.TRANSPARENT) : Batch {
+class ShapeBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
+
+    enum class Mode {
+        DIFFUSE, BUMP
+    }
+
+    private val forcedColor: Color
 
     private val shapeRenderer = ShapeRenderer()
+    private val blendEquation: Int
+    private val blendSrcRGB: Int
+    private val blendDstRGB: Int
+    private val blendSrcAlpha: Int
+    private val blendDstAlpha: Int
+
     private var calls = 0
     private val transformMatrix = Matrix4()
     private var projectionMatrix = Matrix4()
+
+    init {
+        when(mode) {
+            Mode.DIFFUSE -> {
+                forcedColor = Color.TRANSPARENT
+                blendEquation = GL20.GL_FUNC_ADD
+                blendSrcRGB = GL20.GL_SRC_ALPHA
+                blendDstRGB = GL20.GL_ONE_MINUS_SRC_ALPHA
+                blendSrcAlpha = GL20.GL_SRC_ALPHA
+                blendDstAlpha = GL20.GL_ONE_MINUS_SRC_ALPHA
+            }
+            Mode.BUMP -> {
+                forcedColor = Color.NORMAL
+                blendEquation = GL20.GL_FUNC_ADD
+                blendSrcRGB = GL20.GL_SRC_ALPHA
+                blendDstRGB = GL20.GL_ONE_MINUS_SRC_ALPHA
+                blendSrcAlpha = GL20.GL_ONE
+                blendDstAlpha = GL20.GL_ONE_MINUS_SRC_ALPHA
+            }
+        }
+
+    }
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4) {
         this.projectionMatrix = projectionMatrix
@@ -34,8 +68,9 @@ class ShapeBatch(private val forcedColor: Color = Color.TRANSPARENT) : Batch {
             Shape.Style.POINT -> ShapeRenderer.ShapeType.Point
         }
 
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glEnable(GL20.GL_BLEND)
+        Gdx.gl.glBlendEquation(blendEquation)
+        Gdx.gl.glBlendFuncSeparate(blendSrcRGB, blendDstRGB, blendSrcAlpha, blendDstAlpha)
         shapeRenderer.begin(shapeType)
         if (forcedColor != Color.TRANSPARENT) {
             shapeRenderer.color.set(forcedColor.r, forcedColor.g, forcedColor.b, forcedColor.a * shape.opacity)
