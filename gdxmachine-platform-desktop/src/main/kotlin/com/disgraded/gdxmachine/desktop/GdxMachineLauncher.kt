@@ -7,21 +7,32 @@ import com.disgraded.gdxmachine.framework.core.GdxRuntime
 
 class GdxMachineLauncher {
 
-    fun run(entryPoint: EntryPoint, cfg: Lwjgl3ApplicationConfiguration? = null) {
+    enum class AA (val samples: Int) {
+        MSAA_2X(2), MSAA_4X(4), MSAA_8X(8), MSAA_16X(16)
+    }
 
-        var configuration = Lwjgl3ApplicationConfiguration()
+    var title = "GdxMachine Game"
+
+    var antiAliasing = AA.MSAA_2X
+    var vSync = true
+
+    var decorated = false
+    var width = 1280
+    var height = 720
+
+    fun run(entryPoint: EntryPoint) {
+
+        val configuration = Lwjgl3ApplicationConfiguration()
 
         val samples = Lwjgl3ApplicationConfiguration::class.java.getDeclaredField("samples")
         samples.isAccessible = true
-        samples.setInt(configuration, 2)
+        samples.setInt(configuration, antiAliasing.samples)
 
-        configuration.setTitle("GdxMachine Desktop Game")
-        configuration.setDecorated(true)
-        configuration.useVsync(true)
-        configuration.setWindowedMode(1280, 720)
-        if (cfg !== null) {
-            configuration = cfg
-        }
+        configuration.setTitle(title)
+        configuration.setDecorated(decorated)
+        configuration.useVsync(vSync)
+        configuration.setWindowedMode(width, height)
+        configuration.setAutoIconify(true)
         Lwjgl3Application(GdxRuntime(entryPoint), configuration)
     }
 }
