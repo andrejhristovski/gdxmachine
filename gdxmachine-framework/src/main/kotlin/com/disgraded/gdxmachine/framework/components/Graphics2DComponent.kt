@@ -2,8 +2,12 @@ package com.disgraded.gdxmachine.framework.components
 
 import com.disgraded.gdxmachine.framework.core.engine.Component
 import com.disgraded.gdxmachine.framework.core.graphics.Drawable2D
+import com.disgraded.gdxmachine.framework.core.graphics.Layer
 
-class Render2DComponent: Component {
+class Graphics2DComponent: Component {
+
+    var layer: Layer? = null
+
     private val map = hashMapOf<String, Drawable2D>()
     private val list = arrayListOf<Drawable2D>()
 

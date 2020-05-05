@@ -53,7 +53,6 @@ class TextBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
         }
 
         val text = drawable as Text
-        if (!text.isUpdated()) text.update()
 
         textMatrix.idt()
         val additionalX = text.glyph.width * text.absolute.anchorX * text.absolute.scaleX

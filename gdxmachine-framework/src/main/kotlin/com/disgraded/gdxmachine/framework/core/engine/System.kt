@@ -8,7 +8,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 abstract class System(
-        val family: Family = Family.all().get(),
+        private val family: Family = Family.all().get(),
         priority: Int = 0
 ): EntitySystem(priority) {
 

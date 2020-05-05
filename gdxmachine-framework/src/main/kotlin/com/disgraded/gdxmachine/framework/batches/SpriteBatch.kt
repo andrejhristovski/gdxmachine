@@ -123,7 +123,6 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
 
     override fun draw(drawable: Drawable) {
         val sprite = drawable as Sprite
-        if (!sprite.isUpdated()) sprite.update()
 
         if (mode == Mode.DIFFUSE) {
             checkShader(sprite.shader)

@@ -61,7 +61,6 @@ class ShapeBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
 
     override fun draw(drawable: Drawable) {
         val shape = drawable as Shape
-        if (!shape.isUpdated()) shape.update()
         val shapeType = when(shape.style) {
             Shape.Style.FILLED -> ShapeRenderer.ShapeType.Filled
             Shape.Style.LINE -> ShapeRenderer.ShapeType.Line

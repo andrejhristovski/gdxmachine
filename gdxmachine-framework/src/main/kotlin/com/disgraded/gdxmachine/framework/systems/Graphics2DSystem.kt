@@ -7,33 +7,43 @@ import com.disgraded.gdxmachine.framework.core.engine.System
 import com.disgraded.gdxmachine.framework.core.graphics.Layer
 import com.disgraded.gdxmachine.framework.renderers.Renderer2D
 
-class Render2DSystem: System(
+class Graphics2DSystem: System(
         Family.all(
                 Transform2DComponent::class.java,
-                Render2DComponent::class.java
+                Graphics2DComponent::class.java
         ).get()
 ) {
 
     private lateinit var defaultLayer: Layer
+    private lateinit var layer: Layer
+
+    private lateinit var transform: Transform2DComponent
+    private lateinit var graphics: Graphics2DComponent
 
     override fun initialize(entities: ArrayList<Entity>) {
-        defaultLayer = core.graphics.createLayer()
-        defaultLayer.setRenderer(Renderer2D())
+        if (core.graphics.getLayer() == null) {
+            core.graphics.createLayer().setRenderer(Renderer2D())
+        }
+        defaultLayer = core.graphics.getLayer()!!
     }
 
     override fun update(deltaTime: Float, entities: ArrayList<Entity>) {
-        for (entity in entities) {
-            processEntity(entity)
-        }
+        for (entity in entities) processEntity(entity)
     }
 
     private fun processEntity(entity: Entity) {
-        val transform = entity.get(Transform2DComponent::class)!!
-        val render = entity.get(Render2DComponent::class)!!
+        transform = entity.get(Transform2DComponent::class)!!
+        graphics = entity.get(Graphics2DComponent::class)!!
 
-        render.getAll().forEach {
+        layer = if (graphics.layer != null) {
+            graphics.layer!!
+        } else {
+            defaultLayer
+        }
+
+        graphics.getAll().forEach {
             it.update(transform)
-            defaultLayer.draw(it)
+            layer.draw(it)
         }
     }
 

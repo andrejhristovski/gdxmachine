@@ -49,11 +49,9 @@ class GraphicsApi(private val graphicsModule: GraphicsModule) {
 
     fun createLayer(key: String = "default"): Layer = graphicsModule.createLayer(key)
 
-    fun getLayer(key: String = "default"): Layer = graphicsModule.getLayer(key)
+    fun getLayer(key: String = "default"): Layer? = graphicsModule.getLayer(key)
 
     fun removeLayer(key: String = "default") = graphicsModule.removeLayer(key)
-
-    fun existLayer(key: String = "default"): Boolean = graphicsModule.existLayer(key)
 
     fun compileShader(key: String, vertex: ShaderData, fragment: ShaderData): Shader
             = graphicsModule.compileShader(key, vertex, fragment)

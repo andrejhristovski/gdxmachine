@@ -1,6 +1,6 @@
 package com.disgraded.gdxmachine.sandbox.source.entities
 
-import com.disgraded.gdxmachine.framework.components.Render2DComponent
+import com.disgraded.gdxmachine.framework.components.Graphics2DComponent
 import com.disgraded.gdxmachine.framework.components.Transform2DComponent
 import com.disgraded.gdxmachine.framework.core.engine.Entity
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
@@ -14,12 +14,14 @@ class FPSCounter: Entity() {
 
     init {
         add(Transform2DComponent())
-        add(Render2DComponent())
+        add(Graphics2DComponent())
     }
 
     override fun initialize() {
         val transform = get(Transform2DComponent::class)!!
-        val render = get(Render2DComponent::class)!!
+        val render = get(Graphics2DComponent::class)!!
+
+        render.layer = core.graphics.getLayer("gui")
 
         transform.x = 510f
         transform.y = 270f

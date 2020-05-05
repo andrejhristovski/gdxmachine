@@ -1,5 +1,6 @@
 package com.disgraded.gdxmachine.framework
 
+import com.badlogic.gdx.Gdx
 import com.disgraded.gdxmachine.framework.core.Core
 import com.disgraded.gdxmachine.framework.core.EntryPoint
 import com.disgraded.gdxmachine.framework.extras.EngineAssets

@@ -2,6 +2,7 @@ package com.disgraded.gdxmachine.framework.core.physics
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Box2D
 import com.badlogic.gdx.physics.box2d.World
 import com.disgraded.gdxmachine.framework.core.Module
 
@@ -14,22 +15,20 @@ class PhysicsModule : Module {
 
     val api = PhysicsApi(this)
 
-    override fun load() {
-
+    init {
+        Box2D.init()
     }
 
-    override fun unload() {
+    override fun load() {}
 
-    }
+    override fun unload() {}
 
-    fun update() {
-        worldList.forEach { updateWorld(it) }
-    }
+    fun update() = worldList.forEach { updateWorld(it) }
 
     private fun updateWorld(world: World) {
         val deltaTime = Gdx.graphics.deltaTime
         val frameTime = deltaTime.coerceAtMost(.25f)
-        val worldTimestamp = 1 / 300f * api.worldSpeed
+        val worldTimestamp = 1 / 45f
         accumulator += frameTime
         while (accumulator >= worldTimestamp) {
             world.step(worldTimestamp, api.velocityIterations, api.positionIterations)
@@ -45,10 +44,7 @@ class PhysicsModule : Module {
         return worldMap[key]!!
     }
 
-    fun getWorld(key: String): World {
-        if (!worldMap.containsKey(key)) throw RuntimeException("World [$key] doesn't exist!")
-        return worldMap[key]!!
-    }
+    fun getWorld(key: String): World? = worldMap[key]
 
     fun destroyWorld(key: String) {
         if (!worldMap.containsKey(key)) throw RuntimeException("World [$key] doesn't exist!")
@@ -57,10 +53,10 @@ class PhysicsModule : Module {
         worldMap.remove(key)
     }
 
-    fun existWorld(key: String): Boolean = worldMap.containsKey(key)
-
     fun clear() {
         worldList.forEach { it.dispose() }
         worldMap.clear()
     }
+
+    fun getWorldList(): ArrayList<World> = worldList
 }

@@ -1,5 +1,6 @@
 package com.disgraded.gdxmachine.framework.core.resources.loaders
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader
@@ -14,7 +15,8 @@ class ShaderLoader(resolver: FileHandleResolver) : AsynchronousAssetLoader<Shade
     private lateinit var content: String
 
     override fun loadAsync(manager: AssetManager, fileName: String, file: FileHandle, parameter: ShaderData.Parameters?) {
-        content = file.reader("utf-8").buffered().use(BufferedReader::readText)
+        content = file.readString()
+        println("content:, $content")
     }
 
     override fun loadSync(manager: AssetManager, fileName: String, file: FileHandle, parameter: ShaderData.Parameters?): ShaderData {

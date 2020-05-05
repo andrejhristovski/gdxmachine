@@ -47,6 +47,7 @@ class GdxRuntime(private val entryPoint: EntryPoint) : ApplicationListener {
     override fun render() {
         resourceModule.update()
         graphicsModule.update()
+        physicsModule.update()
         engineModule.update()
         entryPoint.update(Gdx.graphics.deltaTime)
     }

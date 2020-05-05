@@ -65,10 +65,7 @@ class GraphicsModule : Module {
         return layer
     }
 
-    fun getLayer(key: String): Layer {
-        if (!layerMap.containsKey(key)) throw RuntimeException("There is no layer assigned as $key")
-        return layerMap[key]!!
-    }
+    fun getLayer(key: String): Layer? = layerMap[key]
 
     fun removeLayer(key: String) {
         if (!layerMap.containsKey(key)) throw RuntimeException("There is no layer assigned as $key")
@@ -76,8 +73,6 @@ class GraphicsModule : Module {
         layerMap[key]!!.dispose()
         layerMap.remove(key)
     }
-
-    fun existLayer(key: String): Boolean = layerMap.containsKey(key)
 
     fun compileShader(key: String, vertex: ShaderData, fragment: ShaderData): Shader {
         if (shaderMap.containsKey(key)) throw RuntimeException("Shader [$key] already exist!")

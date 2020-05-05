@@ -9,8 +9,6 @@ abstract class Drawable2D: Transform2D(), Drawable {
     override var shader: Shader? = null
     val absolute = Transform2D()
 
-    private var updated = false
-
     var visible: Boolean = true
     open var opacity = 1f
         set(value) {
@@ -28,16 +26,12 @@ abstract class Drawable2D: Transform2D(), Drawable {
         set(obj)
     }
 
-    fun isUpdated(): Boolean = updated
-
     fun update(transform2D: Transform2D? = null) {
-        if (updated) return
         if (transform2D != null) {
             absolute.apply(this, transform2D)
         } else {
             absolute.set(this)
         }
-        updated = true
     }
 
     override fun isExecutable(): Boolean = visible
