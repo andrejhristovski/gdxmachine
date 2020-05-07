@@ -12,15 +12,15 @@ import java.io.BufferedReader
 
 class ShaderLoader(resolver: FileHandleResolver) : AsynchronousAssetLoader<ShaderData, ShaderData.Parameters>(resolver) {
 
-    private lateinit var content: String
+    private var content: String? = null
 
     override fun loadAsync(manager: AssetManager, fileName: String, file: FileHandle, parameter: ShaderData.Parameters?) {
         content = file.readString()
-        println("content:, $content")
     }
 
     override fun loadSync(manager: AssetManager, fileName: String, file: FileHandle, parameter: ShaderData.Parameters?): ShaderData {
-        return ShaderData(content)
+        content = file.readString()
+        return ShaderData(content!!)
     }
 
     override fun getDependencies(fileName: String, file: FileHandle, parameter: ShaderData.Parameters?): Array<AssetDescriptor<Any>>? {

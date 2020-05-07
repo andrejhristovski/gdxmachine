@@ -28,7 +28,7 @@ class PhysicsModule : Module {
     private fun updateWorld(world: World) {
         val deltaTime = Gdx.graphics.deltaTime
         val frameTime = deltaTime.coerceAtMost(.25f)
-        val worldTimestamp = 1 / 45f
+        val worldTimestamp = 1 / 90f
         accumulator += frameTime
         while (accumulator >= worldTimestamp) {
             world.step(worldTimestamp, api.velocityIterations, api.positionIterations)

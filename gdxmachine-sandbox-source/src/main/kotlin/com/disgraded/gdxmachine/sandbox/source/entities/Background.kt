@@ -29,15 +29,15 @@ class Background: Entity() {
 
         background = Sprite()
         background.shader = core.graphics.getShader("sprite.sepia")
-        background.setTexture(core.resources.get("test").get<Texture>("background"))
+        background.setTexture(core.resources.getPackage("boot").get<Texture>("background"))
         background.z=-1f
         graphics.add("main", background)
 
-        val wallTexture = core.resources.get("test").get<Texture>("wall")
-        val wallTextureNormalMap = core.resources.get("test").get<Texture>("wall.normal")
+        val wallTexture = core.resources.getPackage("boot").get<Texture>("wall")
+        val wallTextureNormalMap = core.resources.getPackage("boot").get<Texture>("wall.normal")
 
-        for (i in -50..50) {
-            for(j in -50..50) {
+        for (i in -10..10) {
+            for(j in -10..10) {
                 if (i == 0 && j == 0) continue
                 val wall = Sprite()
                 wall.visible = true

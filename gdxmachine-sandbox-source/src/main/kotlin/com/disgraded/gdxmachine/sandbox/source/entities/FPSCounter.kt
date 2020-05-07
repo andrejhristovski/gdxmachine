@@ -28,7 +28,7 @@ class FPSCounter: Entity() {
         transform.z = 10f
 
         text = Text()
-        text.font = core.resources.get("engine").get("mono")
+        text.font = core.resources.getPackage("engine").get("mono")
         text.color = Color.AMBER
         text.z = 0f
         render.add("main", text)

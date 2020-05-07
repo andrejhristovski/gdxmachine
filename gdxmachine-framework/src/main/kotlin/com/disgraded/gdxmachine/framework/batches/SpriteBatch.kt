@@ -87,9 +87,9 @@ class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
         defaultShader = Core.graphics.getShader(shaderName)
         shader = defaultShader
 
-        val texture = Core.resources.get("engine").get<Texture>("no_image")
-        val mask = Core.resources.get("engine").get<Texture>("no_mask")
-        val normal = Core.resources.get("engine").get<Texture>("no_normal")
+        val texture = Core.resources.getPackage("engine").get<Texture>("no_image")
+        val mask = Core.resources.getPackage("engine").get<Texture>("no_mask")
+        val normal = Core.resources.getPackage("engine").get<Texture>("no_normal")
 
         cachedTexture = texture
         cachedMask = texture

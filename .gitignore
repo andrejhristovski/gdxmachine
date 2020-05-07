@@ -6,7 +6,10 @@
 hs_err_pid*
 
 ## Android Studio and Intellij and Android in general
-/gdxmachine-platform-android/libs
+/gdxmachine-platform-android/src/main/jniLibs
+/gdxmachine-platform-android/src/main/assets/*
+!/gdxmachine-platform-android/src/main/assets/README.md
+
 .idea/
 *.ipr
 *.iws

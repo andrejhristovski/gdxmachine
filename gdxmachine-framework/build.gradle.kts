@@ -17,6 +17,7 @@ dependencies {
     api("com.badlogicgames.ashley:ashley:$ashleyVersion")
     api("com.badlogicgames.gdx:gdx-box2d:$gdxVersion")
     api("com.badlogicgames.gdx:gdx-freetype:$gdxVersion")
+    api("com.badlogicgames.gdx:gdx-controllers:$gdxVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
 }
