@@ -9,7 +9,7 @@ import com.disgraded.gdxmachine.framework.core.resources.assets.ShaderData
 
 class GraphicsApi(private val graphicsModule: GraphicsModule) {
 
-    var virtualViewport = Vector2(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
+    var viewport = Vector2(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
 
     fun getWidth() = Gdx.graphics.width
 
@@ -47,15 +47,11 @@ class GraphicsApi(private val graphicsModule: GraphicsModule) {
 
     fun setResizable(enable: Boolean) = Gdx.graphics.setResizable(enable)
 
-    fun createLayer(key: String = "default", width: Float = virtualViewport.x, height: Float = virtualViewport.y,
-                       scaling: Scaling = Scaling.fill): Layer
-            = graphicsModule.createLayer(key, width, height, scaling)
+    fun createLayer(key: String = "default"): Layer = graphicsModule.createLayer(key)
 
-    fun getLayer(key: String = "default"): Layer = graphicsModule.getLayer(key)
+    fun getLayer(key: String = "default"): Layer? = graphicsModule.getLayer(key)
 
     fun removeLayer(key: String = "default") = graphicsModule.removeLayer(key)
-
-    fun existLayer(key: String = "default"): Boolean = graphicsModule.existLayer(key)
 
     fun compileShader(key: String, vertex: ShaderData, fragment: ShaderData): Shader
             = graphicsModule.compileShader(key, vertex, fragment)

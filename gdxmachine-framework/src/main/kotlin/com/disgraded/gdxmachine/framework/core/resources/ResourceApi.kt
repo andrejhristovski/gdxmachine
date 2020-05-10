@@ -5,13 +5,12 @@ import kotlin.reflect.full.createInstance
 
 class ResourceApi(private val resourceModule: ResourceModule) {
 
-    fun load(assetPackageClass: KClass<out AssetPackage>, sync: Boolean = false): AssetPackage {
-        val assetPackage = assetPackageClass.createInstance()
+    fun load(assetPackage: AssetPackage, sync: Boolean = false): AssetPackage {
         resourceModule.loadPackage(assetPackage, sync)
         return assetPackage
     }
 
-    fun get(key: String): AssetPackage = resourceModule.getPackage(key)
+    fun getPackage(key: String): AssetPackage = resourceModule.getPackage(key)
 
     fun unload(key: String) = resourceModule.unloadPackage(key)
 

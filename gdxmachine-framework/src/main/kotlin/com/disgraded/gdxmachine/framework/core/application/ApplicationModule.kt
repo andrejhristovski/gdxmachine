@@ -9,8 +9,14 @@ class ApplicationModule : Module {
 
     val api = ApplicationApi(this)
 
+    var maxMemory = 0L
+
     override fun load() {
         Gdx.app.clipboard
+    }
+
+    fun update() {
+        maxMemory = if (maxMemory < api.memory.total) api.memory.total else maxMemory
     }
 
     override fun unload() {

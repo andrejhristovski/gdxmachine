@@ -7,7 +7,7 @@ val kotlinVersion: String by extra
 val ashleyVersion: String by extra
 
 
-val jniPath = "libs"
+val jniPath = "src/main/jniLibs"
 
 val armeabiDir = "$jniPath/armeabi/"
 val armeabi_v7aDir = "$jniPath/armeabi-v7a/"
@@ -33,11 +33,6 @@ android {
         targetSdkVersion(29)
         versionCode = versionNumber
         versionName = project.version.toString()
-    }
-    sourceSets {
-        val main by getting {
-            jniLibs.srcDirs(jniPath)
-        }
     }
 
     buildTypes {
@@ -78,6 +73,7 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(project(":framework"))
     api("com.badlogicgames.gdx:gdx-backend-android:$gdxVersion")
+    api("com.badlogicgames.gdx:gdx-controllers-android:$gdxVersion")
     natives("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi")
     natives("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a")
     natives("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a")
@@ -97,13 +93,6 @@ dependencies {
 
 val copyNatives by tasks.register("copyNatives") {
     group = "dependencies"
-    doFirst {
-        file(armeabiDir).mkdirs()
-        file(armeabi_v7aDir).mkdirs()
-        file(arm64_v8a).mkdirs()
-        file(x86_64Dir).mkdirs()
-        file(x86Dir).mkdirs()
-    }
 
     natives.forEach {
         var outputDir : File? = null
@@ -122,5 +111,15 @@ val copyNatives by tasks.register("copyNatives") {
     }
 }
 
-val preBuild by tasks.getting
+val copyAssets by tasks.register("copyAssets") {
+    group = "dependencies"
+    copy {
+        from("${project(":framework").projectDir}/src/main/resources")
+        include("**/*")
+        into("src/main/assets")
+    }
+}
+
+val preBuild: Task = tasks["preBuild"]
 preBuild.dependsOn("copyNatives")
+preBuild.dependsOn("copyAssets")

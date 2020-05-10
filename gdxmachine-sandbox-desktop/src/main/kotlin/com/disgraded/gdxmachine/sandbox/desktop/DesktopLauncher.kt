@@ -8,7 +8,11 @@ object DesktopLauncher {
     @JvmStatic
     fun main(arg: Array<String>) {
         GdxMachineLauncher().apply {
-
+            width = 1920
+            height = 1080
+            decorated = false
+            antiAliasing = GdxMachineLauncher.AA.MSAA_16X
+//            vSync = false
         }.run(SandboxGame())
     }
 }

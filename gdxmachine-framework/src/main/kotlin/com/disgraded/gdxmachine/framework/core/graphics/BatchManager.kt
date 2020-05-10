@@ -16,25 +16,28 @@ class BatchManager: Disposable {
 
     fun execute(drawableList: ArrayList<Drawable>, projectionMatrix: Matrix4): Int {
         var gpuCalls = 0
-        for ((_, batch) in batchMap) {
-            batch.setProjectionMatrix(projectionMatrix)
+        for (key in batchMap.keys) {
+            batchMap[key]!!.setProjectionMatrix(projectionMatrix)
         }
 
         for (drawable in drawableList) {
-            val batch = batchMap[drawable::class] ?: continue
+            val batch = batchMap[drawable.getType()] ?: continue
             if (batch != currentBatch) {
                 if (currentBatch != null) gpuCalls += currentBatch!!.end()
                 currentBatch = batch
             }
             currentBatch!!.draw(drawable)
         }
-        if (currentBatch != null) gpuCalls += currentBatch!!.end()
+        if (currentBatch != null) {
+            gpuCalls += currentBatch!!.end()
+            currentBatch = null
+        }
         return gpuCalls
     }
 
     override fun dispose() {
-        for ((_, batch) in batchMap) {
-            batch.dispose()
+        for (key in batchMap.keys) {
+            batchMap[key]!!.dispose()
         }
     }
 }

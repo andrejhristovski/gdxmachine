@@ -1,5 +1,6 @@
 package com.disgraded.gdxmachine.framework.core.resources.loaders
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.assets.AssetDescriptor
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader
@@ -11,14 +12,15 @@ import java.io.BufferedReader
 
 class ShaderLoader(resolver: FileHandleResolver) : AsynchronousAssetLoader<ShaderData, ShaderData.Parameters>(resolver) {
 
-    private lateinit var content: String
+    private var content: String? = null
 
     override fun loadAsync(manager: AssetManager, fileName: String, file: FileHandle, parameter: ShaderData.Parameters?) {
-        content = file.reader("utf-8").buffered().use(BufferedReader::readText)
+        content = file.readString()
     }
 
     override fun loadSync(manager: AssetManager, fileName: String, file: FileHandle, parameter: ShaderData.Parameters?): ShaderData {
-        return ShaderData(content)
+        content = file.readString()
+        return ShaderData(content!!)
     }
 
     override fun getDependencies(fileName: String, file: FileHandle, parameter: ShaderData.Parameters?): Array<AssetDescriptor<Any>>? {

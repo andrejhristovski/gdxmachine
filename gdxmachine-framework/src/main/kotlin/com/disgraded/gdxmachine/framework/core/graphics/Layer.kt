@@ -3,18 +3,21 @@ package com.disgraded.gdxmachine.framework.core.graphics
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.Scaling
+import com.badlogic.gdx.utils.viewport.ExtendViewport
 import com.badlogic.gdx.utils.viewport.ScalingViewport
+import com.disgraded.gdxmachine.framework.core.Core
 
-class Layer(val key: String, private var width: Float, private var height: Float, scaling: Scaling):
-        ScalingViewport(scaling, width, height, OrthographicCamera()), Disposable {
+class Layer(val key: String, width: Float, height: Float):
+        ExtendViewport(width, height, OrthographicCamera()), Comparable<Layer>, Disposable {
 
     private val drawableList = arrayListOf<Drawable>()
 
     private var renderer: Renderer? = null
-    var layerScale: LayerScale? = null
+    private var layerScale: LayerScale? = null
 
     var visible = true
     var priority = 0
+    var sortable = true
 
     fun draw(drawable: Drawable) {
         if (drawable.isExecutable()) drawableList.add(drawable)
@@ -23,20 +26,28 @@ class Layer(val key: String, private var width: Float, private var height: Float
     fun render(): Int {
         if (renderer == null) throw RuntimeException("Layer [$key] doesn't contain renderer")
         if (!visible) return 0
-        apply()
-        drawableList.sortBy { it.getOrder() }
+        if (sortable) {
+            drawableList.sort()
+        }
+        applyProjection(false)
         val gpuCalls = renderer!!.render(drawableList, this)
         drawableList.clear()
         return gpuCalls
     }
 
-    override fun update(screenWidth: Int, screenHeight: Int, centerCamera: Boolean) {
+    fun updateLayer(screenWidth: Int, screenHeight: Int) {
+        minWorldWidth = Core.graphics.viewport.x
+        minWorldHeight = Core.graphics.viewport.y
         if (layerScale == null) {
-            super.update(screenWidth, screenHeight, centerCamera)
-        }
-        else {
+            super.update(screenWidth, screenHeight, false)
+        } else {
             layerScale!!.apply(this, screenWidth, screenHeight)
         }
+    }
+
+    fun applyProjection(centerCamera: Boolean = true) {
+        camera.update()
+        update(screenWidth, screenHeight, centerCamera)
     }
 
     override fun dispose() {
@@ -49,4 +60,10 @@ class Layer(val key: String, private var width: Float, private var height: Float
         }
         this.renderer = renderer
     }
+
+    fun setScale(layerScale: LayerScale) {
+        this.layerScale = layerScale
+    }
+
+    override fun compareTo(other: Layer): Int = priority.compareTo(other.priority)
 }

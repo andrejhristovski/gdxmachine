@@ -2,6 +2,9 @@ package com.disgraded.gdxmachine.framework.core.input
 
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.controllers.Controller
+import com.badlogic.gdx.controllers.Controllers
+import com.badlogic.gdx.utils.Array
 
 class InputApi {
 
@@ -17,6 +20,9 @@ class InputApi {
     val onKeyTyped = Signal<String>()
     val onKeyDown = Signal<String>()
     val onKeyUp = Signal<String>()
+
+    val controllers: Array<Controller>?
+        get() = Controllers.getControllers()
 
     fun getAccelerometerX(): Float = Gdx.input.accelerometerX
 

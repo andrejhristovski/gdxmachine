@@ -1,69 +1,50 @@
 package com.disgraded.gdxmachine.sandbox.source.scenes
 
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.BitmapFont
-import com.badlogic.gdx.math.Circle
-import com.badlogic.gdx.math.Polygon
-import com.badlogic.gdx.math.Rectangle
-import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
-import com.disgraded.gdxmachine.framework.drawables.Mask
-import com.disgraded.gdxmachine.framework.drawables.Shape
-import com.disgraded.gdxmachine.framework.drawables.Sprite
-import com.disgraded.gdxmachine.framework.drawables.Text
+import com.badlogic.gdx.graphics.Camera
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.World
+import com.disgraded.gdxmachine.framework.core.graphics.Layer
+import com.disgraded.gdxmachine.framework.renderers.Renderer2D
 import com.disgraded.gdxmachine.framework.scenes.Scene
+import com.disgraded.gdxmachine.framework.systems.Physics2DSystem
+import com.disgraded.gdxmachine.framework.systems.Graphics2DSystem
+import com.disgraded.gdxmachine.sandbox.source.entities.Background
+import com.disgraded.gdxmachine.sandbox.source.entities.FPSCounter
+import com.disgraded.gdxmachine.sandbox.source.entities.PhysicsCircle
 
 class FirstScene : Scene() {
 
-    private lateinit var sprite: Sprite
-    private lateinit var text: Text
-    private lateinit var shape: Shape<Circle>
-    private lateinit var shape2: Shape<Rectangle>
-    private lateinit var polygon: Shape<Polygon>
-    private lateinit var text2: Text
+    private val renderer = Renderer2D()
+
+    private lateinit var layer: Layer
+    private lateinit var guiLayer: Layer
+    private lateinit var camera: Camera
+
+    private lateinit var world: World
+
+    override fun prepare() {
+        core.engine.systems.add(Physics2DSystem::class)
+        core.engine.systems.add(Graphics2DSystem::class)
+
+        layer = core.graphics.getLayer()!!
+        guiLayer = core.graphics.createLayer("gui")
+        guiLayer.setRenderer(renderer)
+
+        camera = layer.camera
+
+        world = core.physics.createWorld()
+        world.gravity = Vector2(0f, 0f)
+        renderer.world = world
+    }
 
     override fun initialize() {
-        val assets = core.resources.get("core")
-        sprite = Sprite()
-        sprite.setTexture(assets.get<Texture>("no_image"))
-        sprite.opacity = .5f
-
-        text = Text(assets.get("sans"))
-        text.color = Color.LIME
-        text.setPosition(500f, 300f)
-
-        shape = Shape(Circle(0f, 0f, 200f))
-        shape.style = Shape.Style.LINE
-        shape.color = Color.CYAN
-        shape.opacity = .5f
-
-        shape2 = Shape(Rectangle(0f, 0f, 100f, 100f))
-        shape2.x = -100f
-        shape2.color = Color.DEEP_PURPLE
-        shape2.opacity = .2f
-
-        text2 = text.copy()
-        text2.setPosition(300f, 300f)
-        text2.opacity = .5f
-
-        val polygonVertices = floatArrayOf(-10f, -10f, 10f, -10f, 5f, 5f, 10f, 10f, -10f, 10f)
-        polygon = Shape(Polygon())
-        polygon.shape.vertices = polygonVertices
-        polygon.style = Shape.Style.LINE
-        polygon.setScale(25f)
-        polygon.angle = 44f
-        polygon.x = 10f
+        core.engine.add(Background())
+        core.engine.add(FPSCounter())
+        core.engine.add(PhysicsCircle())
     }
 
     override fun update(deltaTime: Float) {
-        polygon.angle += 10f * deltaTime
-
-        text.content = "FPS: ${core.graphics.getFPS()} :: GPU: ${core.graphics.getGPUCalls()}"
-        mainLayer.draw(sprite)
-        mainLayer.draw(text)
-        mainLayer.draw(shape)
-        mainLayer.draw(shape2)
-        mainLayer.draw(text2)
-        mainLayer.draw(polygon)
+//        camera.position.x += 20f * deltaTime
     }
 
     override fun destroy() {

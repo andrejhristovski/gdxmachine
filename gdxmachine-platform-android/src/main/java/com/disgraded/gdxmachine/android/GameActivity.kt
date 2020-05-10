@@ -8,6 +8,9 @@ import com.disgraded.gdxmachine.framework.core.GdxRuntime
 import com.badlogic.gdx.backends.android.AndroidApplication as LibGDXAndroidActivity
 
 abstract class GameActivity :  LibGDXAndroidActivity() {
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -17,7 +20,5 @@ abstract class GameActivity :  LibGDXAndroidActivity() {
 
     abstract fun run(): EntryPoint
 
-    fun configure() : AndroidApplicationConfiguration {
-        return AndroidApplicationConfiguration()
-    }
+    abstract fun configure(): AndroidApplicationConfiguration
 }

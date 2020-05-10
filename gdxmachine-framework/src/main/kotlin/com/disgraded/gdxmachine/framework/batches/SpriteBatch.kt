@@ -4,25 +4,31 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Mesh
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.graphics.VertexAttribute as Attribute
-import com.badlogic.gdx.graphics.VertexAttributes as Attributes
 import com.badlogic.gdx.math.Matrix4
 import com.disgraded.gdxmachine.framework.core.Core
 import com.disgraded.gdxmachine.framework.core.graphics.Batch
 import com.disgraded.gdxmachine.framework.core.graphics.Drawable
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
+import com.disgraded.gdxmachine.framework.core.graphics.utils.Mesh2D
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
+import com.disgraded.gdxmachine.framework.core.graphics.utils.Transform2D
 import com.disgraded.gdxmachine.framework.drawables.Sprite
 import com.disgraded.gdxmachine.framework.utils.Corner
+import com.badlogic.gdx.graphics.VertexAttribute as Attribute
+import com.badlogic.gdx.graphics.VertexAttributes as Attributes
 
-class SpriteBatch : Batch {
+class SpriteBatch(private val mode: Mode = Mode.DIFFUSE) : Batch {
 
-    private val core = Core
+    enum class Mode {
+        DIFFUSE, BUMP
+    }
 
-    private val bufferSize = 20
+    private val bufferSize = 28
     private val verticesPerBuffer = 4
     private val indicesPerBuffer = 6
+    private var idx = 0
     private val maxCalls = Short.MAX_VALUE / verticesPerBuffer
     private var bufferedCalls = 0
     private var gpuCalls = 0
@@ -31,12 +37,28 @@ class SpriteBatch : Batch {
     private val vertices: FloatArray
     private val indices: ShortArray
 
+    private var verticesCount = 0
+    private var indicesCount = 0
+    private val mesh2d = Mesh2D()
+
     private lateinit var projectionMatrix: Matrix4
     private val defaultShader: Shader
     private var shader: Shader
-    private var cachedTexture: Texture? = null
+    private var cachedTexture: Texture
+    private var cachedMask: Texture
+
+    private var noTexture: TextureRegion
+    private var noMask: TextureRegion
+    private var noNormal: TextureRegion
+    private var textureExists = 0
 
     private val tempColor = Color("#ffffff")
+
+    private val blendEquation: Int
+    private val blendSrcRGB: Int
+    private val blendDstRGB: Int
+    private val blendSrcAlpha: Int
+    private val blendDstAlpha: Int
 
     init {
         val maxVertices = verticesPerBuffer * maxCalls
@@ -44,7 +66,8 @@ class SpriteBatch : Batch {
         val vertexAttributes = Attributes(
                 Attribute(Attributes.Usage.Position, 2, Shader.POSITION(0)),
                 Attribute(Attributes.Usage.ColorPacked, 4, Shader.COLOR(0)),
-                Attribute(Attributes.Usage.TextureCoordinates, 2, Shader.TEXCOORD(0))
+                Attribute(Attributes.Usage.TextureCoordinates, 2, Shader.TEXCOORD(0)),
+                Attribute(Attributes.Usage.TextureCoordinates, 2, Shader.TEXCOORD(1))
         )
         mesh = Mesh(false, maxVertices, maxIndices, vertexAttributes)
         vertices = FloatArray(maxCalls * bufferSize)
@@ -57,8 +80,41 @@ class SpriteBatch : Batch {
             if (module == 2 || module == 3) indices[i] = (idx + 2).toShort()
             if (module == 4) indices[i] = (idx + 3).toShort()
         }
-        defaultShader = core.graphics.getShader("sprite")
+        val shaderName = when(mode) {
+            Mode.DIFFUSE -> "sprite.tint"
+            Mode.BUMP -> "sprite.bump"
+        }
+        defaultShader = Core.graphics.getShader(shaderName)
         shader = defaultShader
+
+        val texture = Core.resources.getPackage("engine").get<Texture>("no_image")
+        val mask = Core.resources.getPackage("engine").get<Texture>("no_mask")
+        val normal = Core.resources.getPackage("engine").get<Texture>("no_normal")
+
+        cachedTexture = texture
+        cachedMask = texture
+
+
+        noTexture = TextureRegion(texture)
+        noMask = TextureRegion(mask)
+        noNormal = TextureRegion(normal)
+
+        when(mode) {
+            Mode.DIFFUSE -> {
+                blendEquation = GL20.GL_FUNC_ADD
+                blendSrcRGB = GL20.GL_SRC_ALPHA
+                blendDstRGB = GL20.GL_ONE_MINUS_SRC_ALPHA
+                blendSrcAlpha = GL20.GL_SRC_ALPHA
+                blendDstAlpha = GL20.GL_ONE_MINUS_SRC_ALPHA
+            }
+            Mode.BUMP -> {
+                blendEquation = GL20.GL_FUNC_ADD
+                blendSrcRGB = GL20.GL_SRC_ALPHA
+                blendDstRGB = GL20.GL_ONE_MINUS_SRC_ALPHA
+                blendSrcAlpha = GL20.GL_ONE
+                blendDstAlpha = GL20.GL_ONE_MINUS_SRC_ALPHA
+            }
+        }
     }
 
     override fun setProjectionMatrix(projectionMatrix: Matrix4) {
@@ -67,14 +123,35 @@ class SpriteBatch : Batch {
 
     override fun draw(drawable: Drawable) {
         val sprite = drawable as Sprite
-        checkShader(sprite.shader)
-        checkTexture(sprite.getTexture().texture)
-        if (bufferedCalls >= maxCalls) flush()
-        append(sprite)
+
+        if (mode == Mode.DIFFUSE) {
+            checkShader(sprite.shader)
+        }
+
+        val texture = when(mode) {
+            Mode.DIFFUSE -> sprite.getTexture(Sprite.DIFFUSE_TEXTURE) ?: noTexture
+            Mode.BUMP -> sprite.getTexture(Sprite.NORMAL_TEXTURE) ?: noNormal
+        }
+
+        val mask = when(mode) {
+            Mode.DIFFUSE -> sprite.getTexture(Sprite.MASK_TEXTURE) ?: noMask
+            Mode.BUMP -> sprite.getTexture(Sprite.MASK_TEXTURE) ?: sprite.getTexture(Sprite.DIFFUSE_TEXTURE) ?: noMask
+        }
+
+        textureExists = if (sprite.getTexture(Sprite.DIFFUSE_TEXTURE) != null) 1 else 0
+
+        checkTextures(texture, mask)
+
+        if (bufferedCalls >= maxCalls) {
+            flush()
+        }
+        append(sprite.absolute, sprite, texture, mask)
     }
 
     override fun end(): Int {
-        if (bufferedCalls > 0) flush()
+        if (bufferedCalls > 0) {
+            flush()
+        }
         val totalGpuCalls = gpuCalls
         gpuCalls = 0
         return  totalGpuCalls
@@ -84,109 +161,95 @@ class SpriteBatch : Batch {
 
     private fun checkShader(shader: Shader?) {
         if (shader == null) {
-            if (this.shader !== defaultShader) {
+            if (this.shader != defaultShader) {
                 flush()
                 this.shader = defaultShader
             }
         } else {
-            flush()
-            this.shader = shader
+            if (this.shader != shader) {
+                flush()
+                this.shader = shader
+            }
         }
     }
 
-    private fun checkTexture(texture: Texture) {
-        if (this.cachedTexture !== texture) {
+    private fun checkTextures(texture: TextureRegion, mask: TextureRegion) {
+        if (cachedTexture != texture.texture || cachedMask != mask.texture) {
             flush()
-            cachedTexture = texture
+            cachedTexture = texture.texture
+            cachedMask = mask.texture
         }
     }
 
-    private fun append(sprite: Sprite) {
-        val idx = bufferedCalls * bufferSize
+    private fun append(transform2D: Transform2D, sprite: Sprite, texture: TextureRegion, mask: TextureRegion) {
+        idx = bufferedCalls * bufferSize
+        mesh2d.set(transform2D, texture.regionWidth, texture.regionHeight)
 
-        val sizeX = sprite.getTexture().regionWidth * sprite.scaleX
-        val sizeY = sprite.getTexture().regionHeight * sprite.scaleY
+        tempColor.set(sprite.getColor(Corner.BOTTOM_LEFT))
+        tempColor.setOpacity(sprite.opacity)
+        vertices[idx] = mesh2d.x1
+        vertices[idx + 1] = mesh2d.y1
+        vertices[idx + 2] = tempColor.getBits()
+        vertices[idx + 3] = texture.u
+        vertices[idx + 4] = texture.v2
+        vertices[idx + 5] = mask.u
+        vertices[idx + 6] = mask.v2
 
-        var x1 = 0 - (sizeX * sprite.anchorX)
-        var y1 = 0 - (sizeY * sprite.anchorY)
-        var x2 = x1
-        var y2 = y1 + sizeY
-        var x3 = x1 + sizeX
-        var y3 = y1 + sizeY
-        var x4 = x1 + sizeX
-        var y4 = y1
+        tempColor.set(sprite.getColor(Corner.TOP_LEFT))
+        tempColor.setOpacity(sprite.opacity)
+        vertices[idx + 7] = mesh2d.x2
+        vertices[idx + 8] = mesh2d.y2
+        vertices[idx + 9] = tempColor.getBits()
+        vertices[idx + 10] = texture.u
+        vertices[idx + 11] = texture.v
+        vertices[idx + 12] = mask.u
+        vertices[idx + 13] = mask.v
 
-        if (sprite.angle != 0f) {
-            val cos = MathUtils.cosDeg(sprite.angle)
-            val sin = MathUtils.sinDeg(sprite.angle)
-            val rx1 = cos * x1 - sin * y1
-            val ry1 = sin * x1 + cos * y1
-            val rx2 = cos * x2 - sin * y2
-            val ry2 = sin * x2 + cos * y2
-            val rx3 = cos * x3 - sin * y3
-            val ry3 = sin * x3 + cos * y3
-            x1 = rx1
-            y1 = ry1
-            x2 = rx2
-            y2 = ry2
-            x3 = rx3
-            y3 = ry3
-            x4 = x1 + (x3 - x2)
-            y4 = y3 - (y2 - y1)
-        }
+        tempColor.set(sprite.getColor(Corner.TOP_RIGHT))
+        tempColor.setOpacity(sprite.opacity)
+        vertices[idx + 14] = mesh2d.x3
+        vertices[idx + 15] = mesh2d.y3
+        vertices[idx + 16] = tempColor.getBits()
+        vertices[idx + 17] = texture.u2
+        vertices[idx + 18] = texture.v
+        vertices[idx + 19] = mask.u2
+        vertices[idx + 20] = mask.v
 
-        x1 += sprite.x
-        x2 += sprite.x
-        x3 += sprite.x
-        x4 += sprite.x
-        y1 += sprite.y
-        y2 += sprite.y
-        y3 += sprite.y
-        y4 += sprite.y
-
-        vertices[idx] = x1
-        vertices[idx + 1] = y1
-        vertices[idx + 2] = tempColor.set(sprite.getColor(Corner.BOTTOM_LEFT)).setOpacity(sprite.opacity).getBits()
-        vertices[idx + 3] = sprite.getTexture().u
-        vertices[idx + 4] = sprite.getTexture().v2
-
-        vertices[idx + 5] = x2
-        vertices[idx + 6] = y2
-        vertices[idx + 7] = tempColor.set(sprite.getColor(Corner.TOP_LEFT)).setOpacity(sprite.opacity).getBits()
-        vertices[idx + 8] = sprite.getTexture().u
-        vertices[idx + 9] = sprite.getTexture().v
-
-        vertices[idx + 10] = x3
-        vertices[idx + 11] = y3
-        vertices[idx + 12] = tempColor.set(sprite.getColor(Corner.TOP_RIGHT)).setOpacity(sprite.opacity).getBits()
-        vertices[idx + 13] = sprite.getTexture().u2
-        vertices[idx + 14] = sprite.getTexture().v
-
-        vertices[idx + 15] = x4
-        vertices[idx + 16] = y4
-        vertices[idx + 17] = tempColor.set(sprite.getColor(Corner.BOTTOM_RIGHT)).setOpacity(sprite.opacity).getBits()
-        vertices[idx + 18] = sprite.getTexture().u2
-        vertices[idx + 19] = sprite.getTexture().v2
+        tempColor.set(sprite.getColor(Corner.BOTTOM_RIGHT))
+        tempColor.setOpacity(sprite.opacity)
+        vertices[idx + 21] = mesh2d.x4
+        vertices[idx + 22] = mesh2d.y4
+        vertices[idx + 23] = tempColor.getBits()
+        vertices[idx + 24] = texture.u2
+        vertices[idx + 25] = texture.v2
+        vertices[idx + 26] = mask.u2
+        vertices[idx + 27] = mask.v2
         bufferedCalls++
     }
 
     private fun flush() {
         if (bufferedCalls == 0) return
         gpuCalls++
-        val verticesCount = bufferedCalls * bufferSize
-        val indicesCount = bufferedCalls * indicesPerBuffer
+        verticesCount = bufferedCalls * bufferSize
+        indicesCount = bufferedCalls * indicesPerBuffer
+
+        Gdx.gl.glEnable(GL20.GL_BLEND)
+        Gdx.gl.glBlendEquation(blendEquation)
+        Gdx.gl.glBlendFuncSeparate(blendSrcRGB, blendDstRGB, blendSrcAlpha, blendDstAlpha)
+
 
         shader.begin()
-        cachedTexture!!.bind(0)
+        cachedTexture.bind(0)
+        cachedMask.bind(1)
         shader.setUniformMatrix("u_projectionTrans", projectionMatrix)
         shader.setUniformi("u_texture", 0)
+        shader.setUniformi("u_texture_mask", 1)
+        shader.setUniformi("u_texture_exists", textureExists)
 
         mesh.setVertices(vertices, 0, verticesCount)
         mesh.setIndices(indices, 0, indicesCount)
 
-        Gdx.gl.glEnable(GL20.GL_BLEND)
-        Gdx.gl.glBlendFuncSeparate(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA,
-                GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
+
         mesh.render(shader, GL20.GL_TRIANGLES, 0, indicesCount)
         shader.end()
         bufferedCalls = 0

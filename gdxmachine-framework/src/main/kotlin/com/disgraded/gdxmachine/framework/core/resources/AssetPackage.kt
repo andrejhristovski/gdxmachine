@@ -120,7 +120,7 @@ abstract class AssetPackage(val key: String, fileHandleResolver: FileHandleResol
             renderCount = fontParams.renderCount
             genMipMaps = true
             magFilter = Texture.TextureFilter.MipMapLinearNearest
-            minFilter = Texture.TextureFilter.MipMapLinearNearest
+            minFilter = Texture.TextureFilter.Linear
         }
         val params = FreetypeFontLoader.FreeTypeFontLoaderParameter()
         params.fontFileName = path

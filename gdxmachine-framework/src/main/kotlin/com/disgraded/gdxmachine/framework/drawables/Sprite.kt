@@ -5,11 +5,25 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Color
 import com.disgraded.gdxmachine.framework.utils.Corner
 import com.disgraded.gdxmachine.framework.core.Prototype
+import com.disgraded.gdxmachine.framework.core.graphics.Drawable
+import com.disgraded.gdxmachine.framework.core.graphics.Drawable2D
+import kotlin.reflect.KClass
 
 open class Sprite : Drawable2D(), Prototype<Sprite> {
 
-    private var textureRegion: TextureRegion? = null
+    companion object {
+        const val DIFFUSE_TEXTURE = "_diffuse"
+        const val NORMAL_TEXTURE = "_normal"
+        const val MASK_TEXTURE = "_mask"
+    }
+
     private val colorMap = hashMapOf<Corner, Color>()
+
+    private val textureMap = hashMapOf<String, TextureRegion>()
+
+
+    var flipX = false
+    var flipY = false
 
     init {
         colorMap[Corner.TOP_LEFT] = Color.WHITE
@@ -18,18 +32,27 @@ open class Sprite : Drawable2D(), Prototype<Sprite> {
         colorMap[Corner.BOTTOM_RIGHT] = Color.WHITE
     }
 
-    fun setTexture(texture: Texture) {
-        setTexture(TextureRegion(texture))
+    fun setTexture(texture: Texture, key: String = DIFFUSE_TEXTURE) {
+        setTexture(TextureRegion(texture), key)
     }
 
-    fun setTexture(textureRegion: TextureRegion) {
-        this.textureRegion = textureRegion
+    fun setTexture(textureRegion: TextureRegion, key: String = DIFFUSE_TEXTURE) {
+        textureMap[key] = textureRegion
     }
 
-    fun getTexture(): TextureRegion {
-        if (textureRegion == null) throw RuntimeException("Texture doesn't exist!")
-        return textureRegion!!
+    fun getTexture(key: String = DIFFUSE_TEXTURE): TextureRegion? {
+        val texture = textureMap[key]
+        if (texture != null) {
+            val flipX = this.flipX != texture.isFlipX
+            val flipY = this.flipY != texture.isFlipY
+            texture.flip(flipX, flipY)
+        }
+        return texture
     }
+
+    fun removeTexture(key: String = DIFFUSE_TEXTURE) = textureMap.remove(key)
+
+    fun clearAllTextures() = textureMap.clear()
 
     fun setColor(color: Color) {
         colorMap[Corner.TOP_LEFT] = color
@@ -60,6 +83,8 @@ open class Sprite : Drawable2D(), Prototype<Sprite> {
         }
     }
 
+    override fun getType(): KClass<out Drawable> = Sprite::class
+
     override fun copy(): Sprite {
         val sprite = Sprite()
         sprite.inherit(this)
@@ -67,11 +92,15 @@ open class Sprite : Drawable2D(), Prototype<Sprite> {
     }
 
     override fun inherit(obj: Sprite) {
-        setTexture(obj.getTexture())
-        setColor(obj.getColor(Corner.TOP_LEFT))
-        setColor(obj.getColor(Corner.TOP_RIGHT))
-        setColor(obj.getColor(Corner.BOTTOM_LEFT))
-        setColor(obj.getColor(Corner.BOTTOM_RIGHT))
+        setColor(Corner.TOP_LEFT, obj.getColor(Corner.TOP_LEFT))
+        setColor(Corner.TOP_RIGHT, obj.getColor(Corner.TOP_RIGHT))
+        setColor(Corner.BOTTOM_LEFT, obj.getColor(Corner.BOTTOM_LEFT))
+        setColor(Corner.BOTTOM_RIGHT, obj.getColor(Corner.BOTTOM_RIGHT))
+
+        for (key in obj.textureMap.keys) {
+            textureMap[key] = obj.textureMap[key]!!
+        }
+
         super.inherit(obj)
     }
 }

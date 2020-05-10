@@ -2,71 +2,61 @@ package com.disgraded.gdxmachine.framework.core.physics
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.Box2D
 import com.badlogic.gdx.physics.box2d.World
 import com.disgraded.gdxmachine.framework.core.Module
 
 class PhysicsModule : Module {
 
+    private val worldList = arrayListOf<World>()
     private val worldMap = hashMapOf<String, World>()
-    private val worldAccumulatorMap = hashMapOf<String, Float>()
+
+    private var accumulator = 0f
 
     val api = PhysicsApi(this)
 
-    override fun load() {
-
+    init {
+        Box2D.init()
     }
 
-    override fun unload() {
+    override fun load() {}
 
-    }
+    override fun unload() {}
 
-    fun update() {
-        for ((key, world) in worldMap) {
-            updateWorld(key, world)
-        }
-    }
+    fun update() = worldList.forEach { updateWorld(it) }
 
-    private fun updateWorld(key: String, world: World) {
+    private fun updateWorld(world: World) {
         val deltaTime = Gdx.graphics.deltaTime
-        var accumulator = worldAccumulatorMap[key]!!
         val frameTime = deltaTime.coerceAtMost(.25f)
-        val worldTimestamp = 1 / 300f * api.worldSpeed
+        val worldTimestamp = 1 / 90f
         accumulator += frameTime
         while (accumulator >= worldTimestamp) {
             world.step(worldTimestamp, api.velocityIterations, api.positionIterations)
             accumulator -= worldTimestamp
         }
-        worldAccumulatorMap[key] = accumulator
     }
 
     fun createWorld(key: String, doSleep: Boolean): World {
         if (worldMap.containsKey(key)) throw RuntimeException("Physics world assigned as $key already exist!")
-        worldMap[key] = World(Vector2(0f, 0f), doSleep)
-        worldAccumulatorMap[key] = 0f
+        val world = World(Vector2(0f, 0f), doSleep)
+        worldMap[key] = world
+        worldList.add(world)
         return worldMap[key]!!
     }
 
-    fun getWorld(key: String): World {
-        if (!worldMap.containsKey(key)) throw RuntimeException("World [$key] doesn't exist!")
-        return worldMap[key]!!
-    }
+    fun getWorld(key: String): World? = worldMap[key]
 
     fun destroyWorld(key: String) {
         if (!worldMap.containsKey(key)) throw RuntimeException("World [$key] doesn't exist!")
         worldMap[key]!!.dispose()
+        worldList.remove(worldMap[key]!!)
         worldMap.remove(key)
-        worldAccumulatorMap.remove(key)
-    }
-
-    fun existWorld(key: String): Boolean {
-        return worldMap.containsKey(key)
     }
 
     fun clear() {
-        for ((_, world) in worldMap) {
-            world.dispose()
-        }
+        worldList.forEach { it.dispose() }
         worldMap.clear()
-        worldAccumulatorMap.clear()
     }
+
+    fun getWorldList(): ArrayList<World> = worldList
 }

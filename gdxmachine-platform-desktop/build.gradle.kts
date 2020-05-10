@@ -18,6 +18,7 @@ dependencies {
     api("com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop")
     api("com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop")
     api("com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop")
+    api("com.badlogicgames.gdx:gdx-controllers-lwjgl3:$gdxVersion")
     api("com.badlogicgames.gdx:gdx-tools:$gdxVersion")
 }
 repositories {

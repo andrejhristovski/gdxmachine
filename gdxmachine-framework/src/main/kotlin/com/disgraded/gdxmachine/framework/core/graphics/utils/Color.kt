@@ -28,6 +28,8 @@ class Color : Prototype<Color> {
         val GREY: Color = Color("#9e9e9e")
         val BLUE_GREY: Color = Color("#607d8b")
         val BLACK: Color = Color("#000000")
+        val TRANSPARENT = Color("#ffffff", 0f)
+        val NORMAL = Color("#7f7fff", 1f)
 
         fun random(): Color {
             return Color(Math.random().toFloat(), Math.random().toFloat(), Math.random().toFloat(),
@@ -114,7 +116,7 @@ class Color : Prototype<Color> {
         return NumberUtils.intToFloatColor(color)
     }
 
-    fun getHex(): String = String.format("#%02x%02x%02x", r, g, b)
+    fun getHex(): String = String.format("#%02x%02x%02x", (r * 255).toInt(), (g * 255).toInt(), (b * 255).toInt())
 
     override fun copy(): Color {
         return Color(r, g, b, a)
