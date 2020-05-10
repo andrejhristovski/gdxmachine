@@ -29,7 +29,7 @@ class Layer(val key: String, width: Float, height: Float):
         if (sortable) {
             drawableList.sort()
         }
-        camera.update()
+        applyProjection(false)
         val gpuCalls = renderer!!.render(drawableList, this)
         drawableList.clear()
         return gpuCalls

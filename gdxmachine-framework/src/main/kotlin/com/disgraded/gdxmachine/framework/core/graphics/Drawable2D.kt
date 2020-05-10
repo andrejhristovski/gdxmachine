@@ -2,7 +2,6 @@ package com.disgraded.gdxmachine.framework.core.graphics
 
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Shader
 import com.disgraded.gdxmachine.framework.core.graphics.utils.Transform2D
-import kotlin.math.abs
 
 abstract class Drawable2D: Transform2D(), Drawable {
 
